@@ -1,13 +1,25 @@
-import type { PartnersData } from "@/lib/types";
+import Image from "next/image";
+import type { Partner, PartnersData } from "@/lib/types";
 
-const BOX_STYLES = [
-  "bg-brand-800 text-white",
-  "bg-white text-brand-900 border border-brand-200",
-  "bg-white text-brand-900 border border-brand-200",
-  "bg-brand-800 text-white",
-  "bg-white text-brand-900 border border-brand-200",
-  "bg-brand-500 text-white",
-];
+function LogoBox({ partner, className = "" }: { partner: Partner; className?: string }) {
+  const boxStyles =
+    partner.box === "blue"
+      ? "bg-brand-500 border-white/50"
+      : "bg-white border-brand-200";
+  return (
+    <div
+      className={`flex items-center justify-center rounded-[10px] border-[0.5px] px-8 py-6 ${boxStyles} ${className}`}
+    >
+      <Image
+        src={partner.logo}
+        alt={partner.name}
+        width={160}
+        height={48}
+        className="h-auto max-h-8 w-auto max-w-full object-contain"
+      />
+    </div>
+  );
+}
 
 export default function Partners({ data }: { data: PartnersData }) {
   return (
@@ -19,21 +31,14 @@ export default function Partners({ data }: { data: PartnersData }) {
             {data.subtitle}
           </h2>
         </div>
-        <p className="text-sm text-brand-900/50">{data.trustLine}</p>
+        <p className="text-sm text-brand-900/70">{data.trustLine}</p>
       </div>
 
       <div className="mt-10 grid gap-4 sm:grid-cols-[1.2fr_2fr]">
-        <div className="flex min-h-[140px] items-center justify-center rounded-2xl bg-brand-800 p-6 text-2xl font-semibold text-white">
-          {data.featuredPartner}
-        </div>
+        <LogoBox partner={data.featuredPartner} className="min-h-[140px] sm:min-h-full" />
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-          {data.partners.map((partner, i) => (
-            <div
-              key={`${partner}-${i}`}
-              className={`flex min-h-[64px] items-center justify-center rounded-xl px-3 py-4 text-center text-sm font-medium ${BOX_STYLES[i % BOX_STYLES.length]}`}
-            >
-              {partner}
-            </div>
+          {data.partners.map((partner) => (
+            <LogoBox key={partner.name} partner={partner} className="min-h-[64px]" />
           ))}
         </div>
       </div>

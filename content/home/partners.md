@@ -1,15 +1,28 @@
 ---
-# TODO: replace text placeholders with real partner logo files (SVG/PNG) once
-# available, then swap the PartnerLogo component to render <Image> instead of text.
 title: "Don't just study, innovate!"
 subtitle: "With industry leading partners:"
-trustLine: "Trusted by some of the world's most innovative teams"
-featuredPartner: "d-fine"
+trustLine: "Trusted by the world's most innovative teams"
+featuredPartner:
+  name: "d-fine"
+  logo: "/images/dfine.webp"
+  box: blue
 partners:
-  - "BCG X"
-  - "Oliver Wyman"
-  - "QuantumBlack, AI by McKinsey"
-  - "Partner"
-  - "Partner"
-  - "Partner"
+  - name: "BCG X"
+    logo: "/images/bcgx.webp"
+    box: blue
+  - name: "Oliver Wyman"
+    logo: "/images/oliverwyman.webp"
+    box: blue
+  - name: "QuantumBlack, AI by McKinsey"
+    logo: "/images/quantumblack.webp"
+    box: blue
+  - name: "Horváth"
+    logo: "/images/horvath.webp"
+    box: white
+  - name: "zeb"
+    logo: "/images/zeb.webp"
+    box: white
+  - name: "Leonteq"
+    logo: "/images/leonteq.webp"
+    box: white
 ---

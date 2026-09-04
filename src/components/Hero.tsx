@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import Logo from "./Logo";
-import RingLogo from "./RingLogo";
 import type { HeroData } from "@/lib/types";
 
 export default function Hero({
@@ -25,16 +24,15 @@ export default function Hero({
         <div className="absolute inset-0 bg-gradient-to-b from-brand-950/85 via-brand-950/35 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-white to-transparent" />
 
-        <div className="absolute inset-x-0 top-24 flex flex-col items-center px-4 text-center sm:top-28">
-          <RingLogo className="h-12 w-12 text-white sm:h-14 sm:w-14" />
-          <div className="mt-3 flex flex-wrap items-baseline justify-center gap-x-3 gap-y-1">
-            <span className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
-              STADS
-            </span>
-            <span className="text-xs text-white/75 sm:text-sm">
-              Students&apos; Association for Data Analytics &amp; Statistics
-            </span>
-          </div>
+        <div className="absolute inset-x-0 top-24 flex justify-center px-4 sm:top-28">
+          <Image
+            src="/images/logo_hero.webp"
+            alt="STADS - Students' Association for Data Analytics & Statistics"
+            width={658}
+            height={205}
+            priority
+            className="h-auto w-[220px] sm:w-[280px] md:w-[330px]"
+          />
         </div>
       </div>
 

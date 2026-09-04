@@ -25,26 +25,30 @@ export interface NutshellData {
   ctaHref: string;
 }
 
+export interface Partner {
+  name: string;
+  logo: string;
+  box: "blue" | "white";
+}
+
 export interface PartnersData {
   title: string;
   subtitle: string;
   trustLine: string;
-  featuredPartner: string;
-  partners: string[];
+  featuredPartner: Partner;
+  partners: Partner[];
 }
 
 export interface ProgramItem {
   title: string;
-  href: string;
+  description: string;
   image: string;
   imageAlt: string;
-  size: "small" | "large";
 }
 
 export interface ProgramData {
   title: string;
   titleAccent: string;
-  ctaLabel: string;
   items: ProgramItem[];
 }
 

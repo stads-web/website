@@ -6,7 +6,7 @@ stats:
     label: Members
   - value: "30+"
     label: Events per Semester
-  - value: "Est. 1997"
+  - value: "Est. 2017"
     label: ""
   - value: "Only student-led Data Science organization"
     label: "@Uni Mannheim"

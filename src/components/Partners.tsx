@@ -3,6 +3,9 @@ import type { PartnersData } from "@/lib/types";
 const BOX_STYLES = [
   "bg-brand-800 text-white",
   "bg-white text-brand-900 border border-brand-200",
+  "bg-white text-brand-900 border border-brand-200",
+  "bg-brand-800 text-white",
+  "bg-white text-brand-900 border border-brand-200",
   "bg-brand-500 text-white",
 ];
 

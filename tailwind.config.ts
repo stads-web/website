@@ -25,7 +25,7 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ["var(--font-inter)", "system-ui", "sans-serif"],
+        sans: ["var(--font-libre-franklin)", "system-ui", "sans-serif"],
         accent: ["var(--font-playfair)", "serif"],
       },
       maxWidth: {

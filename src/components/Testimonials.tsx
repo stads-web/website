@@ -4,8 +4,8 @@ import type { TestimonialsData } from "@/lib/types";
 export default function Testimonials({ data }: { data: TestimonialsData }) {
   return (
     <section className="mx-auto max-w-content px-4 py-16 text-center sm:px-6 sm:py-24">
-      <p className="text-xl text-brand-500 sm:text-2xl">{data.title}</p>
-      <h2 className="mx-auto max-w-2xl text-balance text-2xl font-semibold text-brand-900 sm:text-3xl">
+      <p className="text-2xl font-medium text-brand-900 sm:text-3xl md:text-[50px]">{data.title}</p>
+      <h2 className="mx-auto max-w-2xl text-balance text-2xl font-medium text-brand-900 sm:text-3xl md:text-[50px]">
         {data.subtitle}
       </h2>
 
@@ -13,7 +13,7 @@ export default function Testimonials({ data }: { data: TestimonialsData }) {
         {data.items.map((item, i) => (
           <figure
             key={item.name}
-            className={`rounded-2xl border border-brand-100 bg-white p-6 shadow-card ${
+            className={`rounded-[40px] border border-brand-100 bg-white p-8 shadow-[0px_5px_10px_rgba(0,0,0,0.05),0px_15px_30px_rgba(0,0,0,0.05),0px_30px_60px_rgba(0,0,0,0.1)] ${
               i % 2 === 1 ? "sm:mt-8" : ""
             }`}
           >

@@ -5,8 +5,8 @@ export default function FinalCta({ data }: { data: FinalCtaData }) {
   return (
     <section className="bg-brand-950 py-20 text-center sm:py-28">
       <div className="mx-auto max-w-content px-4 sm:px-6">
-        <p className="text-brand-300">{data.eyebrow}</p>
-        <h2 className="mt-2 text-3xl font-semibold text-white sm:text-4xl">
+        <p className="text-2xl text-brand-300">{data.eyebrow}</p>
+        <h2 className="mt-2 text-4xl font-medium text-white sm:text-5xl md:text-6xl lg:text-[80px]">
           {data.title}
         </h2>
         <Link

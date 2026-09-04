@@ -1,31 +1,24 @@
-import { iconMap } from "@/lib/icons";
 import type { WhyJoinData } from "@/lib/types";
+
+const EMOJI = ["💡", "📚", "👥", "🤝"];
 
 export default function WhyJoin({ data }: { data: WhyJoinData }) {
   return (
     <section className="mx-auto max-w-content px-4 py-16 sm:px-6 sm:py-24">
-      <div className="max-w-2xl">
-        <p className="text-xl text-brand-500 sm:text-2xl">{data.title}</p>
-        <h2 className="text-2xl font-semibold text-brand-900 sm:text-3xl">
-          {data.subtitle}
-        </h2>
-      </div>
+      <h2 className="max-w-3xl text-balance text-3xl font-medium sm:text-4xl md:text-[50px]">
+        <span className="text-brand-900">{data.title} </span>
+        <span className="text-brand-400/50">{data.subtitle}</span>
+      </h2>
 
-      <div className="mt-10 grid gap-8 sm:grid-cols-2">
-        {data.items.map((item) => {
-          const Icon = iconMap[item.icon];
-          return (
-            <div key={item.heading} className="flex gap-4">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-brand-100 text-brand-800">
-                {Icon && <Icon size={22} weight="bold" aria-hidden="true" />}
-              </div>
-              <div>
-                <p className="font-semibold text-brand-900">{item.heading}</p>
-                <p className="mt-1 text-brand-900/70">{item.text}</p>
-              </div>
-            </div>
-          );
-        })}
+      <div className="mt-12 flex max-w-2xl flex-col gap-8">
+        {data.items.map((item, i) => (
+          <div key={item.heading}>
+            <p className="text-lg font-medium text-brand-900">{item.heading}</p>
+            <p className="mt-2 text-base text-brand-900/70">
+              {EMOJI[i]} {item.text}
+            </p>
+          </div>
+        ))}
       </div>
     </section>
   );

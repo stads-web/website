@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Libre_Franklin, Playfair_Display } from "next/font/google";
+import { Inter, Libre_Franklin, Playfair_Display } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import Header from "@/components/Header";
@@ -10,6 +10,12 @@ import type { SiteData } from "@/lib/types";
 const libreFranklin = Libre_Franklin({
   subsets: ["latin"],
   variable: "--font-libre-franklin",
+  display: "swap",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
   display: "swap",
 });
 
@@ -35,7 +41,7 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${libreFranklin.variable} ${playfair.variable} font-sans antialiased`}>
+      <body className={`${libreFranklin.variable} ${inter.variable} ${playfair.variable} font-sans antialiased`}>
         <Header site={site} />
         {children}
         <Footer site={site} />

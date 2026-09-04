@@ -1,6 +1,5 @@
 import Link from "next/link";
 import Logo from "./Logo";
-import CookieSettingsButton from "./CookieSettingsButton";
 import { iconMap } from "@/lib/icons";
 import type { SiteData } from "@/lib/types";
 
@@ -41,9 +40,6 @@ export default function Footer({ site }: { site: SiteData }) {
                   </Link>
                 </li>
               ))}
-              <li>
-                <CookieSettingsButton className="cursor-pointer text-left hover:text-white" />
-              </li>
             </ul>
           </div>
 

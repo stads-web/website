@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
-import { ConsentProvider } from "@/lib/consent";
-import ConsentBanner from "@/components/ConsentBanner";
-import AnalyticsScripts from "@/components/AnalyticsScripts";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { readContent } from "@/lib/content";
@@ -38,13 +36,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} ${playfair.variable} font-sans antialiased`}>
-        <ConsentProvider>
-          <Header site={site} />
-          {children}
-          <Footer site={site} />
-          <ConsentBanner />
-          <AnalyticsScripts />
-        </ConsentProvider>
+        <Header site={site} />
+        {children}
+        <Footer site={site} />
+        <Analytics />
       </body>
     </html>
   );

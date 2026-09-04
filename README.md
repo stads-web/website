@@ -27,12 +27,11 @@ npm run dev
 
 Open http://localhost:3000.
 
-## Environment variables
+## Analytics
 
-Copy `.env.example` to `.env.local` to enable Google Analytics / Microsoft
-Clarity locally. In production these are set in Vercel → Project Settings →
-Environment Variables. Analytics only load after a visitor accepts the cookie
-banner (see `src/lib/consent.tsx`).
+Uses [Vercel Web Analytics](https://vercel.com/docs/analytics) (`<Analytics />`
+in `src/app/layout.tsx`) - cookie-less, no consent banner needed. Enable it
+once for the project in the Vercel dashboard under the "Analytics" tab.
 
 ## Deployment
 

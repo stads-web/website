@@ -3,6 +3,8 @@
 # NOTE: nav destinations below are placeholders - real sub-pages (for-students,
 # for-companies, our-team, events, join-us) will be built once their designs are provided.
 nav:
+  - label: Home
+    href: /
   - label: For Students
     href: /for-students
   - label: For Companies

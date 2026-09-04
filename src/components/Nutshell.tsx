@@ -12,7 +12,7 @@ export default function Nutshell({
     <section className="mx-auto max-w-content px-4 py-16 sm:px-6 sm:py-24">
       <div className="grid gap-10 md:grid-cols-[1.3fr_1fr] md:items-start md:gap-16">
         <div>
-          <h2 className="text-2xl font-bold text-brand-900 sm:text-3xl">
+          <h2 className="text-3xl font-medium text-brand-900 sm:text-4xl md:text-[50px]">
             {data.title}
           </h2>
           <p className="mt-3 max-w-2xl text-balance leading-relaxed text-brand-900/75">
@@ -21,7 +21,7 @@ export default function Nutshell({
         </div>
 
         <div className="rounded-2xl bg-brand-50 p-6 shadow-card">
-          <p className="text-xs font-semibold uppercase tracking-wide text-brand-500">
+          <p className="text-lg font-medium text-brand-900">
             {data.statsHeading}
           </p>
           <dl className="mt-4 space-y-3">

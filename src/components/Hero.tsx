@@ -41,11 +41,11 @@ export default function Hero({
       <div className="mx-auto max-w-content px-4 py-16 text-center sm:px-6 sm:py-24">
         <div className="relative inline-block">
           <Logo className="absolute -left-16 bottom-1 hidden h-16 w-16 sm:block" />
-          <h1 className="text-balance text-4xl leading-tight sm:text-5xl md:text-6xl">
-            <span className="block font-accent italic font-normal text-brand-500">
+          <h1 className="text-balance text-4xl leading-tight sm:text-5xl md:text-6xl lg:text-7xl xl:text-[88px]">
+            <span className="block bg-gradient-to-b from-brand-500 to-brand-800 bg-clip-text font-thin italic text-transparent">
               {data.taglineAccent}
             </span>
-            <span className="block font-bold text-brand-900">
+            <span className="block bg-gradient-to-b from-brand-500 to-brand-800 bg-clip-text font-bold text-transparent">
               {data.taglineBold}
             </span>
           </h1>

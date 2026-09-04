@@ -14,8 +14,8 @@ export default function Partners({ data }: { data: PartnersData }) {
     <section className="mx-auto max-w-content px-4 py-16 sm:px-6 sm:py-24">
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
-          <p className="text-xl text-brand-500 sm:text-2xl">{data.title}</p>
-          <h2 className="text-2xl font-semibold text-brand-900 sm:text-3xl">
+          <p className="text-2xl font-medium text-brand-400 sm:text-3xl md:text-[50px]">{data.title}</p>
+          <h2 className="text-2xl font-medium text-brand-900 sm:text-3xl md:text-[50px]">
             {data.subtitle}
           </h2>
         </div>

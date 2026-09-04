@@ -12,8 +12,8 @@ export default function Header({ site }: { site: SiteData }) {
 
   return (
     <header className="fixed inset-x-0 top-0 z-40">
-      <div className="mx-auto flex max-w-content items-center justify-center gap-6 px-4 py-4 sm:px-6">
-        <nav className="hidden items-center gap-1 rounded-full bg-brand-950/55 px-2 py-2 backdrop-blur-md md:flex">
+      <div className="mx-auto flex max-w-content items-center justify-center gap-[74px] px-4 py-4 sm:px-6">
+        <nav className="hidden items-center gap-[30px] rounded-full border border-white/15 bg-white/20 px-10 py-2 backdrop-blur-[10px] md:flex">
           {site.nav.map((item) => {
             const active =
               item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
@@ -21,10 +21,8 @@ export default function Header({ site }: { site: SiteData }) {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
-                  active
-                    ? "bg-white/15 text-white"
-                    : "text-white/80 hover:bg-white/10 hover:text-white"
+                className={`whitespace-nowrap text-[13px] font-normal text-white transition-colors hover:text-white ${
+                  active ? "[text-shadow:0px_4px_4px_rgba(0,0,0,0.25)]" : "text-white/85"
                 }`}
               >
                 {item.label}
@@ -33,12 +31,14 @@ export default function Header({ site }: { site: SiteData }) {
           })}
         </nav>
 
-        <Link
-          href={site.joinCta.href}
-          className="hidden shrink-0 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-brand-900 shadow-card transition-colors hover:bg-brand-100 md:block"
-        >
-          {site.joinCta.label}
-        </Link>
+        <div className="hidden shrink-0 items-center justify-center rounded-full border border-white/15 p-1.5 md:flex">
+          <Link
+            href={site.joinCta.href}
+            className="flex h-[30px] w-[109px] items-center justify-center rounded-full border border-white/15 bg-white text-center text-sm font-bold text-black shadow-[inset_0_0_6px_3px_rgba(255,255,255,0.25)] backdrop-blur-[7px] transition-colors hover:bg-brand-50"
+          >
+            {site.joinCta.label}
+          </Link>
+        </div>
 
         <div className="flex w-full items-center justify-between rounded-full bg-brand-950/55 px-4 py-2.5 backdrop-blur-md md:hidden">
           <Link href="/" className="text-sm font-semibold text-white" onClick={() => setOpen(false)}>

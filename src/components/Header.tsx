@@ -12,7 +12,7 @@ export default function Header({ site }: { site: SiteData }) {
 
   return (
     <header className="fixed inset-x-0 top-0 z-40">
-      <div className="mx-auto flex max-w-content items-center justify-between gap-4 px-4 py-4 sm:px-6">
+      <div className="mx-auto flex max-w-content items-center justify-center gap-6 px-4 py-4 sm:px-6">
         <nav className="hidden items-center gap-1 rounded-full bg-brand-950/55 px-2 py-2 backdrop-blur-md md:flex">
           {site.nav.map((item) => {
             const active =

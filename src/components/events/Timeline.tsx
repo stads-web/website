@@ -11,16 +11,17 @@ function TimelineItem({ item, index }: { item: EventFormat; index: number }) {
   const left = index % 2 === 0;
 
   return (
-    <div className="relative flex items-start gap-6 sm:gap-0">
-      <div className="absolute left-[19px] top-1 z-10 sm:left-1/2 sm:-translate-x-1/2">
+    <div className="relative flex items-start gap-3 sm:gap-0">
+      <div className="absolute left-3 top-1 z-10 sm:left-1/2 sm:-translate-x-1/2">
         <Reveal delay={0.1}>
-          <span className="flex h-10 w-10 items-center justify-center rounded-full border-4 border-white bg-brand-500 text-white shadow-card">
-            {Icon && <Icon size={18} weight="bold" aria-hidden="true" />}
+          <span className="flex h-8 w-8 items-center justify-center rounded-full border-4 border-white bg-brand-500 text-white shadow-card sm:h-10 sm:w-10">
+            {Icon && <Icon size={16} weight="bold" className="sm:hidden" aria-hidden="true" />}
+            {Icon && <Icon size={18} weight="bold" className="hidden sm:block" aria-hidden="true" />}
           </span>
         </Reveal>
       </div>
 
-      <div className="w-10 shrink-0 sm:hidden" />
+      <div className="w-9 shrink-0 sm:hidden" />
 
       <div
         className={`flex-1 pb-16 sm:grid sm:grid-cols-2 sm:gap-16 sm:pb-24 ${
@@ -56,10 +57,10 @@ export default function Timeline({ items }: { items: EventFormat[] }) {
 
   return (
     <div ref={ref} className="relative">
-      <div className="absolute left-[19px] top-0 h-full w-px bg-brand-100 sm:left-1/2" />
+      <div className="absolute left-[28px] top-0 h-full w-px bg-brand-100 sm:left-1/2" />
       <motion.div
         style={{ scaleY: clampedScale }}
-        className="absolute left-[19px] top-0 h-full w-px origin-top bg-gradient-to-b from-brand-500 to-brand-800 sm:left-1/2"
+        className="absolute left-[28px] top-0 h-full w-px origin-top bg-gradient-to-b from-brand-500 to-brand-800 sm:left-1/2"
       />
 
       <div className="relative">

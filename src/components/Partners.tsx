@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Reveal from "./motion/Reveal";
+import SplitText from "./motion/SplitText";
 import type { Partner, PartnersData } from "@/lib/types";
 
 function LogoBox({ partner, className = "" }: { partner: Partner; className?: string }) {
@@ -25,19 +26,19 @@ function LogoBox({ partner, className = "" }: { partner: Partner; className?: st
 export default function Partners({ data }: { data: PartnersData }) {
   return (
     <section className="mx-auto max-w-content px-4 py-16 sm:px-6 sm:py-24">
-      <Reveal>
-        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-          <div>
-            <p className="text-2xl font-medium text-brand-400 sm:text-3xl md:text-[50px]">
-              {data.title}
-            </p>
-            <h2 className="text-2xl font-medium text-brand-900 sm:text-3xl md:text-[50px]">
-              {data.subtitle}
-            </h2>
-          </div>
-          <p className="text-sm text-brand-900/70">{data.trustLine}</p>
+      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+        <div>
+          <p className="text-2xl font-medium text-brand-400 sm:text-3xl md:text-[50px]">
+            <SplitText text={data.title} />
+          </p>
+          <h2 className="text-2xl font-medium text-brand-900 sm:text-3xl md:text-[50px]">
+            <SplitText text={data.subtitle} delay={0.15} />
+          </h2>
         </div>
-      </Reveal>
+        <Reveal delay={0.3}>
+          <p className="text-sm text-brand-900/70">{data.trustLine}</p>
+        </Reveal>
+      </div>
 
       <div className="mt-10 grid gap-4 sm:grid-cols-[1.2fr_2fr]">
         <Reveal>

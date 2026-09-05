@@ -2,6 +2,7 @@ import Link from "next/link";
 import Reveal from "./motion/Reveal";
 import CountUp from "./motion/CountUp";
 import Magnetic from "./motion/Magnetic";
+import SplitText from "./motion/SplitText";
 import type { NutshellData } from "@/lib/types";
 
 export default function Nutshell({
@@ -14,14 +15,16 @@ export default function Nutshell({
   return (
     <section className="mx-auto max-w-content px-4 py-16 sm:px-6 sm:py-24">
       <div className="grid gap-10 md:grid-cols-[1.3fr_1fr] md:items-start md:gap-16">
-        <Reveal>
+        <div>
           <h2 className="text-3xl font-medium text-brand-900 sm:text-4xl md:text-[50px]">
-            {data.title}
+            <SplitText text={data.title} />
           </h2>
-          <p className="mt-3 max-w-2xl text-balance leading-relaxed text-brand-900/75">
-            {paragraph}
-          </p>
-        </Reveal>
+          <Reveal delay={0.25}>
+            <p className="mt-3 max-w-2xl text-balance leading-relaxed text-brand-900/75">
+              {paragraph}
+            </p>
+          </Reveal>
+        </div>
 
         <Reveal delay={0.12}>
           <div className="rounded-2xl bg-brand-50 p-6 shadow-card">

@@ -1,4 +1,5 @@
 import Reveal from "./motion/Reveal";
+import SplitText from "./motion/SplitText";
 import type { WhyJoinData } from "@/lib/types";
 
 const EMOJI = ["💡", "📚", "👥", "🤝"];
@@ -6,12 +7,14 @@ const EMOJI = ["💡", "📚", "👥", "🤝"];
 export default function WhyJoin({ data }: { data: WhyJoinData }) {
   return (
     <section className="mx-auto max-w-content px-4 py-16 sm:px-6 sm:py-24">
-      <Reveal>
-        <h2 className="max-w-3xl text-balance text-3xl font-medium sm:text-4xl md:text-[50px]">
-          <span className="text-brand-900">{data.title} </span>
-          <span className="text-brand-400/50">{data.subtitle}</span>
-        </h2>
-      </Reveal>
+      <h2 className="max-w-3xl text-balance text-3xl font-medium sm:text-4xl md:text-[50px]">
+        <SplitText text={data.title} className="text-brand-900" />{" "}
+        <SplitText
+          text={data.subtitle}
+          delay={0.2}
+          className="text-brand-400/50"
+        />
+      </h2>
 
       <div className="mt-12 flex max-w-2xl flex-col gap-8">
         {data.items.map((item, i) => (

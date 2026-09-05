@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import Reveal from "./motion/Reveal";
 import Magnetic from "./motion/Magnetic";
+import SplitText from "./motion/SplitText";
 import type { FinalCtaData } from "@/lib/types";
 
 export default function ContactCta({ data }: { data: FinalCtaData }) {
@@ -10,10 +11,10 @@ export default function ContactCta({ data }: { data: FinalCtaData }) {
       <div className="mx-auto max-w-content px-4 sm:px-6">
         <Reveal>
           <p className="text-2xl text-brand-400/70">{data.eyebrow}</p>
-          <h2 className="mt-2 text-4xl font-medium text-brand-900 sm:text-5xl md:text-6xl lg:text-[80px]">
-            {data.title}
-          </h2>
         </Reveal>
+        <h2 className="mt-2 text-4xl font-medium text-brand-900 sm:text-5xl md:text-6xl lg:text-[80px]">
+          <SplitText text={data.title} />
+        </h2>
         <Reveal delay={0.15}>
           <Magnetic className="mt-8 inline-block">
             <Link

@@ -9,6 +9,7 @@ import ScrollProgress from "@/components/motion/ScrollProgress";
 import Grain from "@/components/motion/Grain";
 import MeshBackdrop from "@/components/motion/MeshBackdrop";
 import FooterReveal from "@/components/motion/FooterReveal";
+import PageTransition from "@/components/motion/PageTransition";
 import { readContent } from "@/lib/content";
 import type { SiteData } from "@/lib/types";
 
@@ -53,7 +54,9 @@ export default function RootLayout({
           <Header site={site} />
           <div className="relative z-10 bg-white mb-[var(--footer-h)]">
             <MeshBackdrop />
-            <div className="relative z-10">{children}</div>
+            <div className="relative z-10">
+              <PageTransition>{children}</PageTransition>
+            </div>
           </div>
           <FooterReveal>
             <Footer site={site} />

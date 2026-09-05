@@ -10,6 +10,8 @@ import {
   useTransform,
 } from "framer-motion";
 import Reveal from "./motion/Reveal";
+import SplitText from "./motion/SplitText";
+import Spotlight from "./motion/Spotlight";
 import type { ProgramData, ProgramItem } from "@/lib/types";
 
 const COLUMN_OFFSETS = ["sm:mt-[121px]", "sm:mt-0", "sm:mt-[76px]"];
@@ -74,6 +76,7 @@ function ProgramCard({ item }: { item: ProgramItem }) {
                 Tap to learn more
               </span>
             </div>
+            <Spotlight />
           </div>
 
           <div className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden rounded-[40px] border border-white/60 bg-brand-800 p-8 text-center [backface-visibility:hidden] [transform:rotateY(180deg)]">
@@ -118,11 +121,14 @@ export default function Program({ data }: { data: ProgramData }) {
   return (
     <section ref={sectionRef} className="py-16 sm:py-24">
       <div className="mx-auto max-w-content px-4 sm:px-6">
-        <Reveal>
-          <h2 className="max-w-2xl text-balance text-3xl font-medium text-brand-900 sm:text-4xl md:text-[50px]">
-            {data.title} <span className="text-brand-500">{data.titleAccent}</span>
-          </h2>
-        </Reveal>
+        <h2 className="max-w-2xl text-balance text-3xl font-medium text-brand-900 sm:text-4xl md:text-[50px]">
+          <SplitText text={data.title} />{" "}
+          <SplitText
+            text={data.titleAccent}
+            delay={0.2}
+            className="text-brand-500"
+          />
+        </h2>
 
         <div className="mt-16 flex flex-col gap-5 sm:flex-row sm:items-start sm:gap-[29px]">
           {columns.map((col, i) => (

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { List, X } from "@phosphor-icons/react";
+import Magnetic from "./motion/Magnetic";
 import type { SiteData } from "@/lib/types";
 
 export default function Header({ site }: { site: SiteData }) {
@@ -54,12 +55,14 @@ export default function Header({ site }: { site: SiteData }) {
             scrolled ? "border-brand-100" : "border-white/15"
           }`}
         >
-          <Link
-            href={site.joinCta.href}
-            className="flex h-[30px] w-[109px] items-center justify-center rounded-full border border-white/15 bg-white text-center text-sm font-bold text-black shadow-[inset_0_0_6px_3px_rgba(255,255,255,0.25)] backdrop-blur-[7px] transition-colors hover:bg-brand-50"
-          >
-            {site.joinCta.label}
-          </Link>
+          <Magnetic strength={0.25}>
+            <Link
+              href={site.joinCta.href}
+              className="flex h-[30px] w-[109px] items-center justify-center rounded-full border border-white/15 bg-white text-center text-sm font-bold text-black shadow-[inset_0_0_6px_3px_rgba(255,255,255,0.25)] backdrop-blur-[7px] transition-colors hover:bg-brand-50"
+            >
+              {site.joinCta.label}
+            </Link>
+          </Magnetic>
         </div>
 
         <div className="flex w-full items-center justify-between rounded-full bg-brand-950/55 px-4 py-2.5 backdrop-blur-md md:hidden">

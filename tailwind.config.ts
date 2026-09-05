@@ -35,6 +35,25 @@ const config: Config = {
       boxShadow: {
         card: "0 1px 2px rgba(15, 29, 54, 0.06), 0 8px 24px rgba(15, 29, 54, 0.08)",
       },
+      keyframes: {
+        "drift-a": {
+          "0%, 100%": { transform: "translate3d(0, 0, 0) scale(1)" },
+          "50%": { transform: "translate3d(6%, 8%, 0) scale(1.12)" },
+        },
+        "drift-b": {
+          "0%, 100%": { transform: "translate3d(0, 0, 0) scale(1.08)" },
+          "50%": { transform: "translate3d(-7%, -6%, 0) scale(1)" },
+        },
+        "drift-c": {
+          "0%, 100%": { transform: "translate3d(0, 0, 0) scale(1)" },
+          "50%": { transform: "translate3d(9%, -5%, 0) scale(1.1)" },
+        },
+      },
+      animation: {
+        "drift-a": "drift-a 26s ease-in-out infinite",
+        "drift-b": "drift-b 32s ease-in-out infinite",
+        "drift-c": "drift-c 38s ease-in-out infinite",
+      },
     },
   },
   plugins: [require("@tailwindcss/typography")],

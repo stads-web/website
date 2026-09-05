@@ -4,6 +4,11 @@ import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import SmoothScroll from "@/components/motion/SmoothScroll";
+import ScrollProgress from "@/components/motion/ScrollProgress";
+import Grain from "@/components/motion/Grain";
+import MeshBackdrop from "@/components/motion/MeshBackdrop";
+import FooterReveal from "@/components/motion/FooterReveal";
 import { readContent } from "@/lib/content";
 import type { SiteData } from "@/lib/types";
 
@@ -42,9 +47,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${libreFranklin.variable} ${inter.variable} ${playfair.variable} font-sans antialiased`}>
-        <Header site={site} />
-        {children}
-        <Footer site={site} />
+        <ScrollProgress />
+        <Grain />
+        <SmoothScroll>
+          <Header site={site} />
+          <div className="relative z-10 bg-white mb-[var(--footer-h)]">
+            <MeshBackdrop />
+            <div className="relative z-10">{children}</div>
+          </div>
+          <FooterReveal>
+            <Footer site={site} />
+          </FooterReveal>
+        </SmoothScroll>
         <Analytics />
       </body>
     </html>

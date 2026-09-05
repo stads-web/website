@@ -1,15 +1,18 @@
+import Reveal from "../motion/Reveal";
 import type { MembershipData } from "@/lib/types";
 
 export default function Membership({ data }: { data: MembershipData }) {
   return (
     <section className="mx-auto max-w-content px-4 py-16 sm:px-6 sm:py-24">
-      <h2 className="text-balance bg-gradient-to-r from-brand-900 to-brand-800/80 bg-clip-text text-3xl font-medium text-transparent sm:text-4xl md:text-[50px]">
-        {data.title}
-      </h2>
+      <Reveal>
+        <h2 className="text-balance bg-gradient-to-r from-brand-900 to-brand-800/80 bg-clip-text text-3xl font-medium text-transparent sm:text-4xl md:text-[50px]">
+          {data.title}
+        </h2>
+      </Reveal>
 
       <div className="mt-12 grid gap-6 sm:grid-cols-3">
-        {data.tiers.map((tier) => (
-          <div key={tier.name}>
+        {data.tiers.map((tier, i) => (
+          <Reveal key={tier.name} delay={0.1 * i}>
             <div className="flex items-center justify-center rounded-full bg-brand-500 px-6 py-3">
               <p className="text-lg font-medium text-white">{tier.name}</p>
             </div>
@@ -18,7 +21,7 @@ export default function Membership({ data }: { data: MembershipData }) {
                 <li key={benefit}>{benefit}</li>
               ))}
             </ul>
-          </div>
+          </Reveal>
         ))}
       </div>
     </section>

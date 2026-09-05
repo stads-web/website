@@ -5,11 +5,20 @@
 :root {
   --background: #ffffff;
   --foreground: #0f1d36;
+  /* Overwritten at runtime once the footer has been measured. */
+  --footer-h: 520px;
+}
+
+html {
+  /* Matches the top of every page so an overscroll bounce never flashes white. */
+  background-color: #0f1d36;
+  overscroll-behavior: none;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
+  overscroll-behavior: none;
 }
 
 h1,

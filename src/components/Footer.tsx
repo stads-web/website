@@ -8,7 +8,8 @@ export default function Footer({ site }: { site: SiteData }) {
   return (
     <footer className="relative overflow-hidden bg-brand-950 text-white">
       {/* Mirrors the navy-to-white fade at the top of every page. */}
-      <div className="bg-gradient-to-b from-white via-brand-100 to-transparent">
+      {/* Stays light until well past the last line of text, then drops into navy. */}
+      <div className="bg-gradient-to-b from-white via-brand-100 via-[80%] to-transparent">
         <div className="mx-auto max-w-content px-4 pb-28 pt-16 sm:px-6 sm:pb-36 sm:pt-24">
           <div className="flex flex-col items-start gap-10 sm:flex-row sm:justify-between">
             <Image

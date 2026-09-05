@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUp } from "@phosphor-icons/react/dist/ssr";
+import CookieSettingsButton from "./CookieSettingsButton";
 import { iconMap } from "@/lib/icons";
 import type { SiteData } from "@/lib/types";
 
@@ -50,6 +51,9 @@ export default function Footer({ site }: { site: SiteData }) {
                       </Link>
                     </li>
                   ))}
+                  <li>
+                    <CookieSettingsButton className="cursor-pointer text-left text-[13px] text-brand-800/70 transition-colors hover:text-brand-900" />
+                  </li>
                 </ul>
               </div>
 

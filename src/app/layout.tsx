@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Inter, Libre_Franklin, Playfair_Display } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
+import { ConsentProvider } from "@/lib/consent";
+import ConsentBanner from "@/components/ConsentBanner";
+import AnalyticsScripts from "@/components/AnalyticsScripts";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SmoothScroll from "@/components/motion/SmoothScroll";
@@ -49,22 +52,26 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${libreFranklin.variable} ${inter.variable} ${playfair.variable} font-sans antialiased`}>
-        <ScrollProgress />
-        <Grain />
-        <Cursor />
-        <SmoothScroll>
-          <Header site={site} />
-          <div className="relative z-10 bg-white mb-[var(--footer-h)]">
-            <MeshBackdrop />
-            <div className="relative z-10">
-              <PageTransition>{children}</PageTransition>
+        <ConsentProvider>
+          <ScrollProgress />
+          <Grain />
+          <Cursor />
+          <SmoothScroll>
+            <Header site={site} />
+            <div className="relative z-10 bg-white mb-[var(--footer-h)]">
+              <MeshBackdrop />
+              <div className="relative z-10">
+                <PageTransition>{children}</PageTransition>
+              </div>
             </div>
-          </div>
-          <FooterReveal>
-            <Footer site={site} />
-          </FooterReveal>
-        </SmoothScroll>
-        <Analytics />
+            <FooterReveal>
+              <Footer site={site} />
+            </FooterReveal>
+          </SmoothScroll>
+          <ConsentBanner />
+          <AnalyticsScripts />
+          <Analytics />
+        </ConsentProvider>
       </body>
     </html>
   );

@@ -29,9 +29,18 @@ Open http://localhost:3000.
 
 ## Analytics
 
-Uses [Vercel Web Analytics](https://vercel.com/docs/analytics) (`<Analytics />`
-in `src/app/layout.tsx`) - cookie-less, no consent banner needed. Enable it
-once for the project in the Vercel dashboard under the "Analytics" tab.
+Two layers, both free:
+
+- **Vercel Web Analytics** (`<Analytics />` in `src/app/layout.tsx`) - cookie-less,
+  no consent needed. Enable it once for the project in the Vercel dashboard under
+  the "Analytics" tab.
+- **Google Analytics 4 + Microsoft Clarity** - gated behind the cookie consent
+  banner (`src/lib/consent.tsx`, `src/components/ConsentBanner.tsx`), only load
+  after a visitor clicks "Accept all". Copy `.env.example` to `.env.local` to
+  enable them locally; in production set `NEXT_PUBLIC_GA_ID` and
+  `NEXT_PUBLIC_CLARITY_ID` in Vercel → Project Settings → Environment Variables.
+  Both are free (GA4 forever, Clarity forever). Without the env vars the site
+  works fine - the scripts just never load.
 
 ## Deployment
 

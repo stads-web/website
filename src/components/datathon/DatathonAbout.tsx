@@ -16,7 +16,7 @@ export default function DatathonAbout({
 
   return (
     <section id="about" className="mx-auto max-w-content px-4 py-20 sm:px-6 sm:py-28">
-      <h2 className="max-w-3xl text-3xl font-medium text-brand-900 sm:text-4xl md:text-[50px]">
+      <h2 className="max-w-3xl text-3xl font-medium text-brand-900 sm:text-4xl md:text-[50px] md:leading-[1.1]">
         <SplitText text={data.title} />
       </h2>
 

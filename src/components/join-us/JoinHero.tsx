@@ -12,7 +12,7 @@ export default function JoinHero({ data }: { data: JoinHeroData }) {
           {data.eyebrow}
         </p>
       </Reveal>
-      <h1 className="mt-2 text-4xl font-medium text-brand-900 sm:text-5xl md:text-6xl lg:text-[80px]">
+      <h1 className="mt-2 text-4xl font-medium text-brand-900 sm:text-5xl md:text-6xl lg:text-[80px] lg:leading-[1.05]">
         <SplitText text={data.title} delay={0.1} />
       </h1>
       <Reveal delay={0.3}>

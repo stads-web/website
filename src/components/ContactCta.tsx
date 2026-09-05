@@ -12,7 +12,7 @@ export default function ContactCta({ data }: { data: FinalCtaData }) {
         <Reveal>
           <p className="text-2xl text-brand-400/70">{data.eyebrow}</p>
         </Reveal>
-        <h2 className="mt-2 text-4xl font-medium text-brand-900 sm:text-5xl md:text-6xl lg:text-[80px]">
+        <h2 className="mt-2 text-4xl font-medium text-brand-900 sm:text-5xl md:text-6xl lg:text-[80px] lg:leading-[1.05]">
           <SplitText text={data.title} />
         </h2>
         <Reveal delay={0.15}>

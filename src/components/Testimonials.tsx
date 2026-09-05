@@ -7,10 +7,10 @@ import type { TestimonialsData } from "@/lib/types";
 export default function Testimonials({ data }: { data: TestimonialsData }) {
   return (
     <section className="mx-auto max-w-content px-4 py-16 text-center sm:px-6 sm:py-24">
-      <p className="text-2xl font-medium text-brand-900 sm:text-3xl md:text-[50px]">
+      <p className="text-2xl font-medium text-brand-900 sm:text-3xl md:text-[50px] md:leading-[1.1]">
         <SplitText text={data.title} />
       </p>
-      <h2 className="mx-auto max-w-2xl text-balance text-2xl font-medium text-brand-900 sm:text-3xl md:text-[50px]">
+      <h2 className="mx-auto max-w-2xl text-balance text-2xl font-medium text-brand-900 sm:text-3xl md:text-[50px] md:leading-[1.1]">
         <SplitText text={data.subtitle} delay={0.15} />
       </h2>
 

@@ -12,7 +12,7 @@ export default function ChallengePartners({
       <p className="font-mono text-xs uppercase tracking-[0.3em] text-brand-500">
         {data.eyebrow}
       </p>
-      <h2 className="mt-3 max-w-2xl text-3xl font-medium text-brand-900 sm:text-4xl md:text-[50px]">
+      <h2 className="mt-3 max-w-2xl text-3xl font-medium text-brand-900 sm:text-4xl md:text-[50px] md:leading-[1.1]">
         <SplitText text={data.title} />
       </h2>
 

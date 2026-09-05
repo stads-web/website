@@ -7,7 +7,7 @@ const EMOJI = ["💡", "📚", "👥", "🤝"];
 export default function WhyJoin({ data }: { data: WhyJoinData }) {
   return (
     <section className="mx-auto max-w-content px-4 py-16 sm:px-6 sm:py-24">
-      <h2 className="max-w-3xl text-balance text-3xl font-medium sm:text-4xl md:text-[50px]">
+      <h2 className="max-w-3xl text-balance text-3xl font-medium sm:text-4xl md:text-[50px] md:leading-[1.1]">
         <SplitText text={data.title} className="text-brand-900" />{" "}
         <SplitText
           text={data.subtitle}

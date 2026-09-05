@@ -110,12 +110,20 @@ export interface WhoWeAreData {
 
 export interface MembershipTier {
   name: string;
-  benefits: string[];
+  note: string;
+  featured?: boolean;
+}
+
+export interface MembershipBenefit {
+  label: string;
+  tiers: boolean[];
 }
 
 export interface MembershipData {
   title: string;
+  intro: string;
   tiers: MembershipTier[];
+  benefits: MembershipBenefit[];
 }
 
 export interface FaqItem {

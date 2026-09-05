@@ -28,10 +28,10 @@ export default function Partners({ data }: { data: PartnersData }) {
     <section className="mx-auto max-w-content px-4 py-16 sm:px-6 sm:py-24">
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
-          <p className="text-2xl font-medium text-brand-400 sm:text-3xl md:text-[50px]">
+          <p className="text-2xl font-medium text-brand-400 sm:text-3xl md:text-[50px] md:leading-[1.1]">
             <SplitText text={data.title} />
           </p>
-          <h2 className="text-2xl font-medium text-brand-900 sm:text-3xl md:text-[50px]">
+          <h2 className="text-2xl font-medium text-brand-900 sm:text-3xl md:text-[50px] md:leading-[1.1]">
             <SplitText text={data.subtitle} delay={0.15} />
           </h2>
         </div>

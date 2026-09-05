@@ -13,7 +13,7 @@ export default function FinalCta({ data }: { data: FinalCtaData }) {
         <Reveal>
           <p className="text-2xl text-brand-300">{data.eyebrow}</p>
         </Reveal>
-        <h2 className="mt-2 text-4xl font-medium text-white sm:text-5xl md:text-6xl lg:text-[80px]">
+        <h2 className="mt-2 text-4xl font-medium text-white sm:text-5xl md:text-6xl lg:text-[80px] lg:leading-[1.05]">
           <SplitText text={data.title} />
         </h2>
         <Reveal delay={0.25}>

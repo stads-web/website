@@ -59,7 +59,7 @@ export default function SectionHeading({
       )}
 
       <h2
-        className={`${eyebrow ? "mt-5" : ""} text-balance text-4xl font-medium tracking-[-0.03em] sm:text-5xl md:text-6xl lg:text-[72px] lg:leading-[0.98] ${
+        className={`${eyebrow ? "mt-5" : ""} text-balance text-4xl font-medium tracking-[-0.03em] sm:text-5xl md:text-6xl leading-[1.1] lg:text-[72px] ${
           onLight ? "text-brand-900" : "text-white"
         }`}
       >

@@ -15,7 +15,7 @@ export default function DatathonCta({ data }: { data: DatathonCtaData }) {
             {data.eyebrow}
           </p>
         </Reveal>
-        <h2 className="mt-4 text-5xl font-medium text-white sm:text-6xl md:text-7xl lg:text-[92px]">
+        <h2 className="mt-4 text-5xl font-medium text-white sm:text-6xl md:text-7xl lg:text-[92px] lg:leading-[1.05]">
           <SplitText text={data.title} />
         </h2>
         <Reveal delay={0.2}>

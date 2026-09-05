@@ -11,7 +11,7 @@ export default function WhoWeAre({
   return (
     <section className="mx-auto max-w-content px-4 pb-16 pt-4 sm:px-6 sm:pb-20 sm:pt-6">
       <Reveal>
-        <h2 className="mx-auto max-w-2xl text-balance bg-gradient-to-r from-brand-900 to-brand-800/80 bg-clip-text text-center text-3xl font-medium text-transparent sm:text-4xl md:text-[50px]">
+        <h2 className="mx-auto max-w-2xl text-balance bg-gradient-to-r from-brand-900 to-brand-800/80 bg-clip-text text-center text-3xl font-medium text-transparent sm:text-4xl md:text-[50px] md:leading-[1.1]">
           {data.title}
         </h2>
       </Reveal>

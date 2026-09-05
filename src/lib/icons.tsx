@@ -5,6 +5,16 @@ import {
   Confetti,
   InstagramLogo,
   LinkedinLogo,
+  Code,
+  Handshake,
+  Megaphone,
+  GraduationCap,
+  Wallet,
+  Trophy,
+  CalendarCheck,
+  ChalkboardTeacher,
+  MicrophoneStage,
+  Flask,
 } from "@phosphor-icons/react/dist/ssr";
 import type { Icon } from "@phosphor-icons/react/lib";
 
@@ -15,4 +25,14 @@ export const iconMap: Record<string, Icon> = {
   confetti: Confetti,
   "instagram-logo": InstagramLogo,
   "linkedin-logo": LinkedinLogo,
+  code: Code,
+  handshake: Handshake,
+  megaphone: Megaphone,
+  "graduation-cap": GraduationCap,
+  wallet: Wallet,
+  trophy: Trophy,
+  "calendar-check": CalendarCheck,
+  "chalkboard-teacher": ChalkboardTeacher,
+  "microphone-stage": MicrophoneStage,
+  flask: Flask,
 };

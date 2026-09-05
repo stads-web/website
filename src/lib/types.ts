@@ -146,6 +146,62 @@ export interface OfferingsData {
   items: OfferingItem[];
 }
 
+export interface TeamMember {
+  name: string;
+  initials: string;
+}
+
+export interface LeadershipData {
+  eyebrow: string;
+  title: string;
+  members: TeamMember[];
+}
+
+export interface Department {
+  name: string;
+  icon: string;
+  text: string;
+}
+
+export interface DepartmentsData {
+  title: string;
+  items: Department[];
+}
+
+export interface EventFormat {
+  name: string;
+  icon: string;
+  cadence: string;
+  text: string;
+}
+
+export interface EventsData {
+  eyebrow: string;
+  title: string;
+  intro: string;
+  formats: EventFormat[];
+  ctaLabel: string;
+  ctaHref: string;
+}
+
+export interface JoinStep {
+  title: string;
+  text: string;
+}
+
+export interface JoinHeroData {
+  eyebrow: string;
+  title: string;
+  intro: string;
+  ctaLabel: string;
+  ctaHref: string;
+}
+
+export interface JoinStepsData {
+  title: string;
+  steps: JoinStep[];
+}
+
 export interface SiteData {
   nav: CtaLink[];
   joinCta: CtaLink;

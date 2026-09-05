@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import Reveal from "../motion/Reveal";
-import SplitText from "../motion/SplitText";
+import SectionHeading from "../motion/SectionHeading";
 import type { JoinStepsData } from "@/lib/types";
 
 export default function Steps({ data }: { data: JoinStepsData }) {
@@ -17,9 +17,7 @@ export default function Steps({ data }: { data: JoinStepsData }) {
 
   return (
     <section className="mx-auto max-w-content px-4 pb-16 pt-4 sm:px-6 sm:pb-24 sm:pt-6">
-      <h2 className="text-3xl font-medium text-brand-900 sm:text-4xl md:text-[50px]">
-        <SplitText text={data.title} />
-      </h2>
+      <SectionHeading eyebrow="How it works" title={data.title} />
 
       <div ref={ref} className="relative mt-16 max-w-2xl">
         <div className="absolute left-[27px] top-2 h-[calc(100%-2rem)] w-px bg-brand-100" />

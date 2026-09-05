@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { marked } from "marked";
 import Reveal from "../motion/Reveal";
+import SectionHeading from "../motion/SectionHeading";
 import type { CompanyIntroData } from "@/lib/types";
 
 export default function PartneringIntro({
@@ -14,11 +15,7 @@ export default function PartneringIntro({
 
   return (
     <section className="mx-auto max-w-content px-4 pb-16 pt-8 sm:px-6 sm:pb-20 sm:pt-10">
-      <Reveal>
-        <h2 className="mx-auto max-w-3xl text-balance bg-gradient-to-r from-brand-900 to-brand-500 bg-clip-text text-center text-3xl font-medium text-transparent sm:text-4xl md:text-[50px]">
-          {data.title}
-        </h2>
-      </Reveal>
+      <SectionHeading eyebrow="For companies" title={data.title} align="center" />
 
       <div className="mt-12 grid gap-10 md:grid-cols-[1.2fr_1fr] md:items-start md:gap-16">
         <Reveal delay={0.1}>

@@ -1,14 +1,12 @@
 import Image from "next/image";
 import Reveal from "../motion/Reveal";
-import SplitText from "../motion/SplitText";
+import SectionHeading from "../motion/SectionHeading";
 import type { OfferingsData } from "@/lib/types";
 
 export default function Offerings({ data }: { data: OfferingsData }) {
   return (
     <section className="mx-auto max-w-content px-4 pb-16 pt-4 sm:px-6 sm:pb-24 sm:pt-6">
-      <h2 className="text-3xl font-medium text-brand-900 sm:text-4xl md:text-[50px]">
-        <SplitText text={data.title} />
-      </h2>
+      <SectionHeading eyebrow="What we can do together" title={data.title} />
 
       <div className="mt-12 flex flex-col gap-16 sm:gap-20">
         {data.items.map((item) => (

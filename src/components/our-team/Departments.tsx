@@ -44,7 +44,7 @@ function DepartmentCard({ dept, index }: { dept: Department; index: number }) {
 
         {/* Full description rides up on hover, and on tap for touch devices. */}
         <div
-          className={`absolute inset-0 flex flex-col justify-end bg-brand-950/94 p-6 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100 ${
+          className={`absolute inset-0 flex flex-col justify-end bg-brand-950/95 p-6 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100 ${
             open ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
           }`}
         >

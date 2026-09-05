@@ -1,90 +1,69 @@
 "use client";
 
 import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { CaretRight } from "@phosphor-icons/react";
 import Reveal from "../motion/Reveal";
 import SectionHeading from "../motion/SectionHeading";
+import PortraitFrame from "./PortraitFrame";
 import { iconMap } from "@/lib/icons";
 import type { Department, DepartmentsData } from "@/lib/types";
 
-const EASE = [0.22, 1, 0.36, 1] as const;
-
-function DepartmentRow({
-  dept,
-  index,
-  open,
-  onToggle,
-}: {
-  dept: Department;
-  index: number;
-  open: boolean;
-  onToggle: () => void;
-}) {
+function DepartmentCard({ dept, index }: { dept: Department; index: number }) {
+  const [open, setOpen] = useState(false);
   const Icon = iconMap[dept.icon];
 
   return (
     <Reveal delay={0.05 * index}>
-      <div className="overflow-hidden rounded-2xl border border-brand-100 bg-white">
-        <button
-          type="button"
-          onClick={onToggle}
-          aria-expanded={open}
-          className="flex w-full items-center gap-5 p-5 text-left sm:p-6"
-        >
-          <span
-            className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full transition-colors duration-300 ${
-              open ? "bg-brand-800 text-white" : "bg-brand-100 text-brand-800"
-            }`}
-          >
-            {Icon && <Icon size={20} weight={open ? "fill" : "regular"} aria-hidden="true" />}
-          </span>
-          <span className="flex-1 text-lg font-medium text-brand-900">{dept.name}</span>
-          <motion.span
-            animate={{ rotate: open ? 90 : 0 }}
-            transition={{ duration: 0.3, ease: EASE }}
-            className="text-brand-400"
-          >
-            <CaretRight size={18} weight="bold" aria-hidden="true" />
-          </motion.span>
-        </button>
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        aria-label={`${dept.name} - what this team does`}
+        className="group relative block aspect-[3/4] w-full overflow-hidden rounded-[28px] border border-brand-100 text-left shadow-[0px_10px_20px_rgba(15,29,54,0.05),0px_30px_60px_rgba(15,29,54,0.08)]"
+      >
+        <PortraitFrame photo={dept.photo} name={dept.name} initials={dept.initials} />
 
-        <AnimatePresence initial={false}>
-          {open && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.4, ease: EASE }}
-              className="overflow-hidden"
-            >
-              <p className="px-5 pb-6 leading-relaxed text-brand-900/70 sm:px-6 sm:pl-[4.25rem]">
-                {dept.text}
-              </p>
-            </motion.div>
+        <span className="absolute left-5 top-5 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm">
+          {Icon && <Icon size={18} weight="bold" aria-hidden="true" />}
+        </span>
+        <span className="absolute right-5 top-5 font-mono text-[11px] text-white/40">
+          {String(index + 1).padStart(2, "0")}
+        </span>
+
+        <div className="absolute inset-x-0 bottom-0 p-5">
+          <p className="text-2xl font-medium text-white">{dept.name}</p>
+          {dept.lead ? (
+            <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.2em] text-white/55">
+              {dept.lead}
+            </p>
+          ) : (
+            <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.2em] text-white/35">
+              Department lead
+            </p>
           )}
-        </AnimatePresence>
-      </div>
+        </div>
+
+        {/* Full description rides up on hover, and on tap for touch devices. */}
+        <div
+          className={`absolute inset-0 flex flex-col justify-end bg-brand-950/94 p-6 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100 ${
+            open ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+          }`}
+        >
+          <p className="text-xl font-medium text-white">{dept.name}</p>
+          <p className="mt-3 text-[13px] leading-relaxed text-white/70">{dept.text}</p>
+        </div>
+      </button>
     </Reveal>
   );
 }
 
 export default function Departments({ data }: { data: DepartmentsData }) {
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
-
   return (
     <section className="mx-auto max-w-content px-4 pb-16 pt-4 sm:px-6 sm:pb-24 sm:pt-6">
-      <SectionHeading eyebrow="Seven teams" title={data.title} />
+      <SectionHeading eyebrow={data.eyebrow} title={data.title} intro={data.intro} />
 
-      <div className="mt-12 flex flex-col gap-4">
+      <div className="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {data.items.map((dept, i) => (
-          <DepartmentRow
-            key={dept.name}
-            dept={dept}
-            index={i}
-            open={openIndex === i}
-            onToggle={() => setOpenIndex(openIndex === i ? null : i)}
-          />
+          <DepartmentCard key={dept.name} dept={dept} index={i} />
         ))}
       </div>
     </section>

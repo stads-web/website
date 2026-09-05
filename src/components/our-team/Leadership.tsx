@@ -3,21 +3,16 @@
 import { useRef } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import Reveal from "../motion/Reveal";
-import SplitText from "../motion/SplitText";
+import SectionHeading from "../motion/SectionHeading";
 import Spotlight from "../motion/Spotlight";
+import PortraitFrame from "./PortraitFrame";
 import type { LeadershipData, TeamMember } from "@/lib/types";
-
-const GRADIENTS = [
-  "from-brand-400 to-brand-700",
-  "from-brand-500 to-brand-900",
-  "from-brand-300 to-brand-600",
-];
 
 function MemberCard({ member, index }: { member: TeamMember; index: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const rx = useMotionValue(0);
   const ry = useMotionValue(0);
-  const spring = { stiffness: 200, damping: 20, mass: 0.4 };
+  const spring = { stiffness: 200, damping: 22, mass: 0.4 };
   const rotateX = useSpring(rx, spring);
   const rotateY = useSpring(ry, spring);
 
@@ -25,10 +20,8 @@ function MemberCard({ member, index }: { member: TeamMember; index: number }) {
     if (!window.matchMedia("(hover: hover)").matches) return;
     const rect = ref.current?.getBoundingClientRect();
     if (!rect) return;
-    const px = (event.clientX - rect.left) / rect.width - 0.5;
-    const py = (event.clientY - rect.top) / rect.height - 0.5;
-    ry.set(px * 10);
-    rx.set(-py * 10);
+    ry.set(((event.clientX - rect.left) / rect.width - 0.5) * 9);
+    rx.set(-((event.clientY - rect.top) / rect.height - 0.5) * 9);
   };
 
   const reset = () => {
@@ -43,22 +36,23 @@ function MemberCard({ member, index }: { member: TeamMember; index: number }) {
           ref={ref}
           onMouseMove={onMove}
           onMouseLeave={reset}
-          style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-          className="group relative overflow-hidden rounded-[32px] border border-white/60 bg-brand-50 p-8 text-center shadow-[0px_5px_10px_rgba(0,0,0,0.05),0px_15px_30px_rgba(0,0,0,0.05),0px_30px_60px_rgba(0,0,0,0.1)]"
+          style={{ rotateX, rotateY }}
+          className="group relative aspect-[4/5] overflow-hidden rounded-[32px] border border-brand-100 shadow-[0px_10px_20px_rgba(15,29,54,0.06),0px_30px_60px_rgba(15,29,54,0.10)]"
         >
+          <PortraitFrame
+            photo={member.photo}
+            name={member.name}
+            initials={member.initials}
+          />
           <Spotlight />
-          <div
-            className={`relative mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br text-2xl font-medium text-white shadow-lg ${GRADIENTS[index % GRADIENTS.length]}`}
-            style={{ transform: "translateZ(40px)" }}
-          >
-            {member.initials}
+
+          <div className="absolute inset-x-0 bottom-0 p-6">
+            <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-white/50">
+              {member.role}
+            </p>
+            <p className="mt-2 text-2xl font-medium text-white">{member.name}</p>
+            <span className="mt-4 block h-px w-10 origin-left bg-white/30 transition-transform duration-500 group-hover:scale-x-[2.4]" />
           </div>
-          <p
-            className="relative mt-5 text-lg font-medium text-brand-900"
-            style={{ transform: "translateZ(30px)" }}
-          >
-            {member.name}
-          </p>
         </motion.div>
       </div>
     </Reveal>
@@ -67,17 +61,15 @@ function MemberCard({ member, index }: { member: TeamMember; index: number }) {
 
 export default function Leadership({ data }: { data: LeadershipData }) {
   return (
-    <section className="mx-auto max-w-content px-4 pb-16 pt-8 text-center sm:px-6 sm:pb-20 sm:pt-10">
-      <Reveal>
-        <p className="text-sm font-medium uppercase tracking-[0.2em] text-brand-500">
-          {data.eyebrow}
-        </p>
-      </Reveal>
-      <h2 className="mt-2 text-3xl font-medium text-brand-900 sm:text-4xl md:text-[50px]">
-        <SplitText text={data.title} delay={0.1} />
-      </h2>
+    <section className="mx-auto max-w-content px-4 pb-16 pt-8 sm:px-6 sm:pb-20 sm:pt-10">
+      <SectionHeading
+        eyebrow={data.eyebrow}
+        title={data.title}
+        intro={data.intro}
+        align="center"
+      />
 
-      <div className="mx-auto mt-12 grid max-w-3xl gap-6 sm:grid-cols-3">
+      <div className="mx-auto mt-14 grid max-w-4xl gap-6 sm:grid-cols-3">
         {data.members.map((member, i) => (
           <MemberCard key={member.name} member={member} index={i} />
         ))}

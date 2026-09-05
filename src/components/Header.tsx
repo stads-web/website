@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { List, X } from "@phosphor-icons/react";
-import Magnetic from "./motion/Magnetic";
 import type { SiteData } from "@/lib/types";
 
 export default function Header({ site }: { site: SiteData }) {
@@ -22,11 +21,13 @@ export default function Header({ site }: { site: SiteData }) {
 
   return (
     <header className="fixed inset-x-0 top-0 z-40">
-      <div className="relative mx-auto flex max-w-content items-center justify-center gap-[74px] px-4 py-4 sm:px-6">
+      {/* Three real columns rather than a centred group with an absolutely
+          placed logo - that version collided once the viewport narrowed. */}
+      <div className="mx-auto flex max-w-content items-center justify-between gap-6 px-4 py-4 sm:px-6">
         <Link
           href="/"
           aria-label="STADS home"
-          className="absolute left-4 hidden items-center md:flex lg:left-6"
+          className="hidden shrink-0 items-center lg:flex"
         >
           <Image
             src={scrolled ? "/images/stads_logo_dark.webp" : "/images/logo_hero.webp"}
@@ -34,12 +35,12 @@ export default function Header({ site }: { site: SiteData }) {
             width={351}
             height={109}
             priority
-            className="h-auto w-[124px] transition-opacity duration-300 lg:w-[150px]"
+            className="h-auto w-[112px] transition-opacity duration-300 xl:w-[140px]"
           />
         </Link>
 
         <nav
-          className={`hidden items-center gap-5 rounded-full px-8 py-2 backdrop-blur-[10px] transition-colors duration-300 md:flex lg:gap-[30px] lg:px-10 ${
+          className={`mx-auto hidden items-center gap-5 rounded-full px-8 py-2 backdrop-blur-[10px] transition-colors duration-300 lg:flex xl:gap-[30px] xl:px-10 ${
             scrolled ? "border border-brand-100 bg-white/90 shadow-card" : "border border-white/15 bg-white/20"
           }`}
         >
@@ -66,22 +67,31 @@ export default function Header({ site }: { site: SiteData }) {
           })}
         </nav>
 
-        <div
-          className={`hidden shrink-0 items-center justify-center rounded-full border p-1.5 transition-colors duration-300 md:flex ${
-            scrolled ? "border-brand-100" : "border-white/15"
-          }`}
-        >
-          <Magnetic strength={0.25}>
-            <Link
-              href={site.joinCta.href}
-              className="flex h-[30px] w-[109px] items-center justify-center rounded-full border border-white/15 bg-white text-center text-sm font-bold text-black shadow-[inset_0_0_6px_3px_rgba(255,255,255,0.25)] backdrop-blur-[7px] transition-colors hover:bg-brand-50"
-            >
-              {site.joinCta.label}
-            </Link>
-          </Magnetic>
+        {/* The button itself stays put; only the ring answers the cursor. */}
+        <div className="group relative hidden shrink-0 items-center justify-center p-1.5 lg:flex">
+          <span
+            aria-hidden
+            className={`pointer-events-none absolute inset-0 rounded-full border border-dashed opacity-0 transition-opacity duration-500 group-hover:animate-spin-slow group-hover:opacity-100 ${
+              scrolled ? "border-brand-300" : "border-white/50"
+            }`}
+          />
+          <span
+            aria-hidden
+            className={`pointer-events-none absolute inset-0 scale-95 rounded-full border transition-all duration-500 group-hover:scale-100 ${
+              scrolled
+                ? "border-brand-100 group-hover:border-brand-200"
+                : "border-white/15 group-hover:border-white/40"
+            }`}
+          />
+          <Link
+            href={site.joinCta.href}
+            className="relative flex h-[30px] w-[109px] items-center justify-center rounded-full border border-white/15 bg-white text-center text-sm font-bold text-black shadow-[inset_0_0_6px_3px_rgba(255,255,255,0.25)] backdrop-blur-[7px] transition-transform duration-300 hover:scale-[1.04]"
+          >
+            {site.joinCta.label}
+          </Link>
         </div>
 
-        <div className="flex w-full items-center justify-between rounded-full bg-brand-950/55 px-4 py-2.5 backdrop-blur-md md:hidden">
+        <div className="flex w-full items-center justify-between rounded-full bg-brand-950/55 px-4 py-2.5 backdrop-blur-md lg:hidden">
           <Link href="/" className="text-sm font-semibold text-white" onClick={() => setOpen(false)}>
             STADS
           </Link>
@@ -101,7 +111,7 @@ export default function Header({ site }: { site: SiteData }) {
       {open && (
         <nav
           id="mobile-nav"
-          className="mx-4 mt-1 rounded-2xl bg-brand-950/95 px-4 py-4 backdrop-blur-md sm:mx-6 md:hidden"
+          className="mx-4 mt-1 rounded-2xl bg-brand-950/95 px-4 py-4 backdrop-blur-md sm:mx-6 lg:hidden"
         >
           <ul className="flex flex-col gap-1">
             {site.nav.map((item) => (

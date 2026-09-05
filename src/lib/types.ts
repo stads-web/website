@@ -149,22 +149,30 @@ export interface OfferingsData {
 export interface TeamMember {
   name: string;
   initials: string;
+  role: string;
+  photo?: string;
 }
 
 export interface LeadershipData {
   eyebrow: string;
   title: string;
+  intro: string;
   members: TeamMember[];
 }
 
 export interface Department {
   name: string;
   icon: string;
+  initials: string;
+  lead?: string;
+  photo?: string;
   text: string;
 }
 
 export interface DepartmentsData {
+  eyebrow: string;
   title: string;
+  intro: string;
   items: Department[];
 }
 

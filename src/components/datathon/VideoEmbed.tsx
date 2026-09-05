@@ -38,7 +38,8 @@ export default function VideoEmbed({
   }
 
   return (
-    <div className="group relative overflow-hidden rounded-[32px] border border-white/60 shadow-[0px_15px_30px_rgba(0,0,0,0.06),0px_30px_60px_rgba(0,0,0,0.12)]">
+    <div>
+      <div className="group relative overflow-hidden rounded-[32px] border border-white/60 shadow-[0px_15px_30px_rgba(0,0,0,0.06),0px_30px_60px_rgba(0,0,0,0.12)]">
       <button
         type="button"
         onClick={() => setLoaded(true)}
@@ -63,14 +64,15 @@ export default function VideoEmbed({
           <span className="text-sm font-medium text-white">Watch on LinkedIn</span>
         </span>
       </button>
+      </div>
 
-      <p className="absolute inset-x-0 bottom-0 px-5 py-3 text-center text-[11px] text-white/60">
+      <p className="mt-3 text-xs text-brand-900/45">
         Loads content from LinkedIn only after you click.{" "}
         <a
           href={link}
           target="_blank"
           rel="noopener noreferrer"
-          className="underline underline-offset-2 hover:text-white"
+          className="underline underline-offset-2 hover:text-brand-900"
         >
           Open on LinkedIn instead
         </a>

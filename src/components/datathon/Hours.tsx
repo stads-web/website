@@ -149,21 +149,22 @@ export default function Hours({ data }: { data: HoursData }) {
     return () => query.removeEventListener("change", update);
   }, []);
 
-  if (!pinned) {
-    return (
-      <section className="bg-brand-950">
-        <StackedBeats data={data} />
-      </section>
-    );
-  }
+  // The stage changes height when it becomes pinned; make scroll tracking re-measure.
+  useEffect(() => {
+    window.dispatchEvent(new Event("resize"));
+  }, [pinned]);
 
   return (
     <section className="bg-brand-950">
+      {/* The ref stays mounted in both layouts - if it only existed in the
+          pinned branch, useScroll would fall back to tracking the whole page. */}
       <div
         ref={ref}
         className="relative"
-        style={{ height: `${data.beats.length * 100}vh` }}
+        style={pinned ? { height: `${data.beats.length * 100}vh` } : undefined}
       >
+        {!pinned && <StackedBeats data={data} />}
+        {pinned && (
         <div className="sticky top-0 flex h-screen flex-col overflow-hidden">
           <div className="mx-auto flex w-full max-w-content items-baseline justify-between px-4 pt-28 sm:px-6">
             <div>
@@ -198,15 +199,18 @@ export default function Hours({ data }: { data: HoursData }) {
             </div>
           </div>
         </div>
+        )}
       </div>
 
-      <div className="mx-auto max-w-content px-4 pb-24 sm:px-6">
-        <Reveal>
-          <p className="max-w-xl text-2xl font-medium text-white/70 sm:text-3xl">
-            <SplitText text={data.outro} />
-          </p>
-        </Reveal>
-      </div>
+      {pinned && (
+        <div className="mx-auto max-w-content px-4 pb-24 sm:px-6">
+          <Reveal>
+            <p className="max-w-xl text-2xl font-medium text-white/70 sm:text-3xl">
+              <SplitText text={data.outro} />
+            </p>
+          </Reveal>
+        </div>
+      )}
     </section>
   );
 }

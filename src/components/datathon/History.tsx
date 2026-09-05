@@ -93,6 +93,15 @@ export default function History({ data }: { data: HistoryData }) {
     };
   }, []);
 
+  // The track only exists once pinned, so measure again after that render lands.
+  useEffect(() => {
+    if (!pinned) return;
+    const track = trackRef.current;
+    if (!track) return;
+    setTravel(Math.max(0, track.scrollWidth - window.innerWidth + 64));
+    window.dispatchEvent(new Event("resize"));
+  }, [pinned]);
+
   const header = (
     <div className="mx-auto w-full max-w-content px-4 sm:px-6">
       <p className="font-mono text-xs uppercase tracking-[0.3em] text-brand-500">
@@ -109,52 +118,53 @@ export default function History({ data }: { data: HistoryData }) {
     </div>
   );
 
-  if (!pinned) {
-    return (
-      <section id="history" className="py-20 sm:py-24">
-        {header}
-        <div className="mx-auto mt-12 flex max-w-content flex-col gap-6 px-4 sm:px-6">
-          {data.editions.map((edition, i) => (
-            <Reveal key={edition.period} delay={0.05 * i}>
-              <div className="[&>article]:w-full">
-                <EditionCard edition={edition} index={i} />
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-    );
-  }
-
   return (
-    <section id="history">
+    <section id="history" className={pinned ? undefined : "py-20 sm:py-24"}>
+      {/* Kept mounted in both layouts so scroll tracking always has a target. */}
       <div
         ref={outerRef}
         className="relative"
-        style={{ height: `calc(100vh + ${travel}px)` }}
+        style={pinned ? { height: `calc(100vh + ${travel}px)` } : undefined}
       >
-        <div className="sticky top-0 flex h-screen flex-col justify-center overflow-hidden pt-24">
-          {header}
+        {!pinned && (
+          <>
+            {header}
+            <div className="mx-auto mt-12 flex max-w-content flex-col gap-6 px-4 sm:px-6">
+              {data.editions.map((edition, i) => (
+                <Reveal key={edition.period} delay={0.05 * i}>
+                  <div className="[&>article]:w-full">
+                    <EditionCard edition={edition} index={i} />
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </>
+        )}
 
-          <motion.div
-            ref={trackRef}
-            style={{ x }}
-            className="mt-10 flex items-stretch gap-6 px-4 sm:px-6"
-          >
-            {data.editions.map((edition, i) => (
-              <EditionCard key={edition.period} edition={edition} index={i} />
-            ))}
-          </motion.div>
+        {pinned && (
+          <div className="sticky top-0 flex h-screen flex-col justify-center overflow-hidden pt-24">
+            {header}
 
-          <div className="mx-auto mt-10 w-full max-w-content px-4 sm:px-6">
-            <div className="h-px w-full bg-brand-100">
-              <motion.div
-                style={{ scaleX: scrollYProgress }}
-                className="h-px origin-left bg-gradient-to-r from-brand-500 to-brand-900"
-              />
+            <motion.div
+              ref={trackRef}
+              style={{ x }}
+              className="mt-10 flex items-stretch gap-6 px-4 sm:px-6"
+            >
+              {data.editions.map((edition, i) => (
+                <EditionCard key={edition.period} edition={edition} index={i} />
+              ))}
+            </motion.div>
+
+            <div className="mx-auto mt-10 w-full max-w-content px-4 sm:px-6">
+              <div className="h-px w-full bg-brand-100">
+                <motion.div
+                  style={{ scaleX: scrollYProgress }}
+                  className="h-px origin-left bg-gradient-to-r from-brand-500 to-brand-900"
+                />
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );

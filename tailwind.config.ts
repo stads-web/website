@@ -49,8 +49,8 @@ const config: Config = {
           "50%": { transform: "translate3d(9%, -5%, 0) scale(1.1)" },
         },
         blink: {
-          "0%, 45%": { opacity: "1" },
-          "50%, 95%": { opacity: "0.25" },
+          "0%, 60%": { opacity: "1" },
+          "65%, 95%": { opacity: "0.5" },
           "100%": { opacity: "1" },
         },
       },

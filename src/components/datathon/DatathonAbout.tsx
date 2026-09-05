@@ -22,9 +22,10 @@ export default function DatathonAbout({
 
       <div className="mt-12 grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:items-start lg:gap-16">
         <Reveal delay={0.1}>
-          <div className="space-y-5 text-lg leading-relaxed text-brand-900/70 [&_strong]:font-bold [&_strong]:text-brand-900">
-            <div dangerouslySetInnerHTML={{ __html: html }} />
-          </div>
+          <div
+            className="text-lg leading-relaxed text-brand-900/70 [&_p+p]:mt-5 [&_strong]:font-bold [&_strong]:text-brand-900"
+            dangerouslySetInnerHTML={{ __html: html }}
+          />
         </Reveal>
 
         <Reveal delay={0.2}>

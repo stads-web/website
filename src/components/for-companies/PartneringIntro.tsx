@@ -20,7 +20,7 @@ export default function PartneringIntro({
       <div className="mt-12 grid gap-10 md:grid-cols-[1.2fr_1fr] md:items-start md:gap-16">
         <Reveal delay={0.1}>
           <div
-            className="max-w-2xl text-lg leading-relaxed text-brand-500 [&_strong]:font-bold [&_strong]:text-brand-500"
+            className="max-w-2xl text-lg leading-relaxed text-brand-500 [&_p+p]:mt-5 [&_strong]:font-bold [&_strong]:text-brand-900"
             dangerouslySetInnerHTML={{ __html: html }}
           />
         </Reveal>

@@ -71,9 +71,7 @@ export default function Header({ site }: { site: SiteData }) {
         <div className="group relative hidden shrink-0 items-center justify-center p-1.5 lg:flex">
           <span
             aria-hidden
-            className={`pointer-events-none absolute inset-0 rounded-full border border-dashed opacity-0 transition-opacity duration-500 group-hover:animate-spin-slow group-hover:opacity-100 ${
-              scrolled ? "border-brand-300" : "border-white/50"
-            }`}
+            className={`border-beam ${scrolled ? "border-beam--dark" : ""}`}
           />
           <span
             aria-hidden

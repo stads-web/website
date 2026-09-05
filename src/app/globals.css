@@ -36,6 +36,67 @@ h6 {
   }
 }
 
+/* A light beam running around a rounded outline: a rotating conic gradient
+   masked down to the border ring, so the inside stays transparent. */
+@property --beam-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.border-beam {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--beam-angle),
+    transparent 0 62%,
+    rgba(255, 255, 255, 0.15) 74%,
+    rgba(255, 255, 255, 0.95) 84%,
+    rgba(255, 255, 255, 0.15) 90%,
+    transparent 100%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.border-beam--dark {
+  background: conic-gradient(
+    from var(--beam-angle),
+    transparent 0 62%,
+    rgba(32, 55, 101, 0.15) 74%,
+    rgba(32, 55, 101, 0.9) 84%,
+    rgba(32, 55, 101, 0.15) 90%,
+    transparent 100%
+  );
+}
+
+.group:hover .border-beam {
+  opacity: 1;
+  animation: beam-run 2.4s linear infinite;
+}
+
+@keyframes beam-run {
+  to {
+    --beam-angle: 360deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .group:hover .border-beam {
+    animation: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

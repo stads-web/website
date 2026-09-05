@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import Reveal from "../motion/Reveal";
 import SectionHeading from "../motion/SectionHeading";
 import PortraitFrame from "./PortraitFrame";
@@ -72,22 +72,23 @@ export default function Departments({ data }: { data: DepartmentsData }) {
       <div className="mt-14 hidden gap-16 lg:grid lg:grid-cols-[minmax(0,380px)_1fr]">
         <div className="lg:sticky lg:top-28 lg:self-start">
           <div className="relative aspect-[4/5] overflow-hidden rounded-[32px] border border-brand-100 shadow-[0px_10px_20px_rgba(15,29,54,0.06),0px_30px_60px_rgba(15,29,54,0.10)]">
-            <AnimatePresence initial={false}>
-              <motion.div
-                key={current.name}
-                initial={{ opacity: 0, scale: 1.06 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.6, ease: EASE }}
-                className="absolute inset-0"
+            {/* All portraits stay mounted and cross-fade by opacity. Swapping a
+                keyed child through AnimatePresence let rapid hovers strand a
+                stale entry on screen. */}
+            {data.items.map((dept, i) => (
+              <div
+                key={dept.name}
+                className={`absolute inset-0 transition-opacity duration-500 ${
+                  i === active ? "opacity-100" : "opacity-0"
+                }`}
               >
                 <PortraitFrame
-                  photo={current.photo}
-                  name={current.name}
-                  initials={current.initials}
+                  photo={dept.photo}
+                  name={dept.name}
+                  initials={dept.initials}
                 />
-              </motion.div>
-            </AnimatePresence>
+              </div>
+            ))}
 
             <span className="absolute left-6 top-6 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm">
               {CurrentIcon && <CurrentIcon size={20} weight="bold" aria-hidden="true" />}
@@ -97,20 +98,19 @@ export default function Departments({ data }: { data: DepartmentsData }) {
             </span>
           </div>
 
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={current.name}
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.35, ease: EASE }}
-              className="mt-6"
-            >
-              <LeadLine lead={current.lead} />
-              <p className="mt-2 text-3xl font-medium text-brand-900">{current.name}</p>
-              <p className="mt-4 leading-relaxed text-brand-900/70">{current.text}</p>
-            </motion.div>
-          </AnimatePresence>
+          {/* Keyed remount, no presence queue - the copy can never lag behind
+              the portrait it belongs to. */}
+          <motion.div
+            key={current.name}
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, ease: EASE }}
+            className="mt-6"
+          >
+            <LeadLine lead={current.lead} />
+            <p className="mt-2 text-3xl font-medium text-brand-900">{current.name}</p>
+            <p className="mt-4 leading-relaxed text-brand-900/70">{current.text}</p>
+          </motion.div>
         </div>
 
         <ul className="border-t border-brand-100">

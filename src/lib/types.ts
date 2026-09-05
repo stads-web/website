@@ -202,6 +202,73 @@ export interface JoinStepsData {
   steps: JoinStep[];
 }
 
+export interface DatathonHeroData {
+  eyebrow: string;
+  title: string;
+  subline: string;
+  clock: string;
+  primaryCta: CtaLink;
+  secondaryCta: CtaLink;
+  image: string;
+  imageAlt: string;
+}
+
+export interface DatathonAboutData {
+  title: string;
+  videoTitle: string;
+  videoCredit: string;
+  videoEmbed: string;
+  videoLink: string;
+  videoPoster: string;
+  videoPosterAlt: string;
+  stats: Stat[];
+}
+
+export interface HourBeat {
+  time: string;
+  title: string;
+  text: string;
+  image: string;
+  imageAlt: string;
+}
+
+export interface HoursData {
+  eyebrow: string;
+  title: string;
+  beats: HourBeat[];
+  outro: string;
+}
+
+export interface Edition {
+  period: string;
+  name: string;
+  metric: string;
+  metricLabel: string;
+  partners: string[];
+  text: string;
+}
+
+export interface HistoryData {
+  eyebrow: string;
+  title: string;
+  intro: string;
+  editions: Edition[];
+}
+
+export interface ChallengePartnersData {
+  eyebrow: string;
+  title: string;
+  names: string[];
+}
+
+export interface DatathonCtaData {
+  eyebrow: string;
+  title: string;
+  text: string;
+  ctaLabel: string;
+  ctaHref: string;
+}
+
 export interface SiteData {
   nav: CtaLink[];
   joinCta: CtaLink;

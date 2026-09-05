@@ -48,11 +48,17 @@ const config: Config = {
           "0%, 100%": { transform: "translate3d(0, 0, 0) scale(1)" },
           "50%": { transform: "translate3d(9%, -5%, 0) scale(1.1)" },
         },
+        blink: {
+          "0%, 45%": { opacity: "1" },
+          "50%, 95%": { opacity: "0.25" },
+          "100%": { opacity: "1" },
+        },
       },
       animation: {
         "drift-a": "drift-a 26s ease-in-out infinite",
         "drift-b": "drift-b 32s ease-in-out infinite",
         "drift-c": "drift-c 38s ease-in-out infinite",
+        blink: "blink 1.6s steps(1, end) infinite",
       },
     },
   },

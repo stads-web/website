@@ -18,6 +18,8 @@ joinCta:
   href: /join-us
 footer:
   pages:
+    - label: Datathon
+      href: /datathon
     - label: For Students
       href: /for-students
     - label: For Companies

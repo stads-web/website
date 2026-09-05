@@ -10,7 +10,7 @@ import {
   useTransform,
 } from "framer-motion";
 import Reveal from "./motion/Reveal";
-import SplitText from "./motion/SplitText";
+import SectionHeading from "./motion/SectionHeading";
 import Spotlight from "./motion/Spotlight";
 import type { ProgramData, ProgramItem } from "@/lib/types";
 
@@ -27,8 +27,11 @@ function ProgramCard({ item }: { item: ProgramItem }) {
   const rotateX = useSpring(rotateXRaw, spring);
   const rotateY = useSpring(rotateYRaw, spring);
 
+  const [hovered, setHovered] = useState(false);
+  const showsBack = hovered || flipped;
+
   const onMove = (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (flipped || !window.matchMedia("(hover: hover)").matches) return;
+    if (!window.matchMedia("(hover: hover)").matches) return;
     const rect = ref.current?.getBoundingClientRect();
     if (!rect) return;
     const px = (event.clientX - rect.left) / rect.width - 0.5;
@@ -37,7 +40,13 @@ function ProgramCard({ item }: { item: ProgramItem }) {
     rotateXRaw.set(-py * TILT * 2);
   };
 
+  const onEnter = () => {
+    if (!window.matchMedia("(hover: hover)").matches) return;
+    setHovered(true);
+  };
+
   const reset = () => {
+    setHovered(false);
     rotateXRaw.set(0);
     rotateYRaw.set(0);
   };
@@ -49,15 +58,16 @@ function ProgramCard({ item }: { item: ProgramItem }) {
         type="button"
         onClick={() => setFlipped((v) => !v)}
         onMouseMove={onMove}
+        onMouseEnter={onEnter}
         onMouseLeave={reset}
-        aria-pressed={flipped}
+        aria-pressed={showsBack}
         aria-label={`${item.title} - tap to flip`}
         style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
         className="group relative block h-[340px] w-full shrink-0 text-left sm:h-[380px]"
       >
         <div
           className={`relative h-full w-full rounded-[40px] shadow-[0px_5px_10px_rgba(0,0,0,0.05),0px_15px_30px_rgba(0,0,0,0.05),0px_30px_60px_rgba(0,0,0,0.1)] transition-[transform,box-shadow] duration-700 [transform-style:preserve-3d] group-hover:shadow-[0px_10px_20px_rgba(15,29,54,0.08),0px_25px_50px_rgba(15,29,54,0.10),0px_45px_90px_rgba(15,29,54,0.14)] ${
-            flipped ? "[transform:rotateY(180deg)]" : ""
+            showsBack ? "[transform:rotateY(180deg)]" : ""
           }`}
         >
           <div className="absolute inset-0 overflow-hidden rounded-[40px] border border-white/60 bg-brand-50 p-5 [backface-visibility:hidden]">
@@ -73,7 +83,7 @@ function ProgramCard({ item }: { item: ProgramItem }) {
             <div className="mt-4">
               <p className="text-lg font-medium text-brand-900">{item.title}</p>
               <span className="mt-2 inline-block text-[13px] text-brand-900/50">
-                Tap to learn more
+                Hover or tap to learn more
               </span>
             </div>
             <Spotlight />
@@ -121,14 +131,12 @@ export default function Program({ data }: { data: ProgramData }) {
   return (
     <section ref={sectionRef} className="py-16 sm:py-24">
       <div className="mx-auto max-w-content px-4 sm:px-6">
-        <h2 className="max-w-2xl text-balance text-3xl font-medium text-brand-900 sm:text-4xl md:text-[50px]">
-          <SplitText text={data.title} />{" "}
-          <SplitText
-            text={data.titleAccent}
-            delay={0.2}
-            className="text-brand-500"
-          />
-        </h2>
+        <SectionHeading
+          eyebrow="Our program"
+          title={data.title}
+          accent={data.titleAccent}
+          className="max-w-3xl"
+        />
 
         <div className="mt-16 flex flex-col gap-5 sm:flex-row sm:items-start sm:gap-[29px]">
           {columns.map((col, i) => (

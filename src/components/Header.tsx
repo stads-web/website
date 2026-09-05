@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { List, X } from "@phosphor-icons/react";
@@ -21,7 +22,22 @@ export default function Header({ site }: { site: SiteData }) {
 
   return (
     <header className="fixed inset-x-0 top-0 z-40">
-      <div className="mx-auto flex max-w-content items-center justify-center gap-[74px] px-4 py-4 sm:px-6">
+      <div className="relative mx-auto flex max-w-content items-center justify-center gap-[74px] px-4 py-4 sm:px-6">
+        <Link
+          href="/"
+          aria-label="STADS home"
+          className="absolute left-4 hidden items-center md:flex lg:left-6"
+        >
+          <Image
+            src={scrolled ? "/images/stads_logo_dark.webp" : "/images/logo_hero.webp"}
+            alt="STADS"
+            width={351}
+            height={109}
+            priority
+            className="h-auto w-[124px] transition-opacity duration-300 lg:w-[150px]"
+          />
+        </Link>
+
         <nav
           className={`hidden items-center gap-5 rounded-full px-8 py-2 backdrop-blur-[10px] transition-colors duration-300 md:flex lg:gap-[30px] lg:px-10 ${
             scrolled ? "border border-brand-100 bg-white/90 shadow-card" : "border border-white/15 bg-white/20"

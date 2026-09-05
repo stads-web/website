@@ -5,8 +5,8 @@
 :root {
   --background: #ffffff;
   --foreground: #0f1d36;
-  /* Overwritten at runtime once the footer has been measured. */
-  --footer-h: 520px;
+  /* Set at runtime once the footer has been measured; 0 until then. */
+  --footer-h: 0px;
 }
 
 html {

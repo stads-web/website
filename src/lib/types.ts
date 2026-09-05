@@ -89,6 +89,44 @@ export interface SocialLink {
   icon: "instagram-logo" | "linkedin-logo";
 }
 
+export interface IntroData {
+  title: string;
+  image: string;
+  imageAlt: string;
+  whatsappLabel: string;
+  whatsappCta: string;
+  whatsappHref: string;
+}
+
+export interface TextSection {
+  heading: string;
+  text: string;
+}
+
+export interface WhoWeAreData {
+  title: string;
+  sections: TextSection[];
+}
+
+export interface MembershipTier {
+  name: string;
+  benefits: string[];
+}
+
+export interface MembershipData {
+  title: string;
+  tiers: MembershipTier[];
+}
+
+export interface FaqItem {
+  question: string;
+  answer: string;
+}
+
+export interface FaqData {
+  items: FaqItem[];
+}
+
 export interface SiteData {
   nav: CtaLink[];
   joinCta: CtaLink;

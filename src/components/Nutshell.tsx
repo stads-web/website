@@ -55,9 +55,11 @@ export default function Nutshell({
                   key={stat.value}
                   className="mt-8 border-t border-white/10 pt-6 text-lg leading-relaxed text-white/80"
                 >
-                  {stat.value}
+                  <span className="block text-balance">{stat.value}</span>
                   {stat.label && (
-                    <span className="text-white/40"> {stat.label}</span>
+                    <span className="mt-2 block whitespace-nowrap font-mono text-[11px] uppercase tracking-[0.22em] text-white/40">
+                      {stat.label}
+                    </span>
                   )}
                 </p>
               ))}

@@ -11,11 +11,11 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 function TierHead({ tier }: { tier: MembershipTier }) {
   return (
     <div
-      className={`rounded-2xl px-4 py-4 text-center ${
+      className={`flex h-full flex-col justify-center rounded-2xl px-3 py-4 text-center ${
         tier.featured ? "bg-brand-800 text-white" : "bg-brand-50 text-brand-900"
       }`}
     >
-      <p className="text-sm font-medium capitalize">{tier.name}</p>
+      <p className="text-sm font-medium capitalize leading-snug">{tier.name}</p>
       <p
         className={`mt-1 font-mono text-[10px] uppercase tracking-[0.2em] ${
           tier.featured ? "text-white/55" : "text-brand-500"
@@ -54,7 +54,7 @@ export default function Membership({ data }: { data: MembershipData }) {
           tiers is readable instead of three lists you have to diff by eye. */}
       <div className="mt-14 hidden sm:block">
         <div
-          className="grid items-end gap-x-4"
+          className="grid items-stretch gap-x-4"
           style={{ gridTemplateColumns: `minmax(0,1fr) repeat(${columns}, minmax(0,140px))` }}
         >
           <span />
@@ -89,27 +89,51 @@ export default function Membership({ data }: { data: MembershipData }) {
 
       {/* Narrow screens get one card per tier - a 4-column table is unusable there. */}
       <div className="mt-12 flex flex-col gap-6 sm:hidden">
-        {data.tiers.map((tier, tierIndex) => (
-          <Reveal key={tier.name} delay={0.08 * tierIndex}>
-            <div
-              className={`rounded-[28px] p-6 ${
-                tier.featured
-                  ? "bg-brand-800 text-white"
-                  : "border border-brand-100 bg-white text-brand-900"
-              }`}
-            >
-              <p className="text-lg font-medium capitalize">{tier.name}</p>
-              <p
-                className={`mt-1 font-mono text-[10px] uppercase tracking-[0.2em] ${
-                  tier.featured ? "text-white/55" : "text-brand-500"
+        {data.tiers.map((tier, tierIndex) => {
+          // Only list what this tier adds on top of the one below it, so the
+          // cards read as steps instead of three near-identical lists.
+          const previous = data.tiers[tierIndex - 1];
+          const inherits =
+            previous !== undefined &&
+            data.benefits.some((b) => b.tiers[tierIndex] && b.tiers[tierIndex - 1]);
+          const listed = data.benefits.filter(
+            (benefit) =>
+              benefit.tiers[tierIndex] && !(inherits && benefit.tiers[tierIndex - 1])
+          );
+
+          return (
+            <Reveal key={tier.name} delay={0.08 * tierIndex}>
+              <div
+                className={`rounded-[28px] p-6 ${
+                  tier.featured
+                    ? "bg-brand-800 text-white"
+                    : "border border-brand-100 bg-white text-brand-900"
                 }`}
               >
-                {tier.note}
-              </p>
-              <ul className="mt-5 space-y-3">
-                {data.benefits
-                  .filter((benefit) => benefit.tiers[tierIndex])
-                  .map((benefit) => (
+                <p className="text-lg font-medium capitalize">{tier.name}</p>
+                <p
+                  className={`mt-1 font-mono text-[10px] uppercase tracking-[0.2em] ${
+                    tier.featured ? "text-white/55" : "text-brand-500"
+                  }`}
+                >
+                  {tier.note}
+                </p>
+
+                {inherits && previous && (
+                  <p
+                    className={`mt-5 rounded-2xl px-4 py-3 text-sm ${
+                      tier.featured
+                        ? "bg-white/10 text-white/80"
+                        : "bg-brand-50 text-brand-900/80"
+                    }`}
+                  >
+                    Everything in{" "}
+                    <span className="font-medium capitalize">{previous.name}</span>, plus:
+                  </p>
+                )}
+
+                <ul className="mt-5 space-y-3">
+                  {listed.map((benefit) => (
                     <li key={benefit.label} className="flex items-start gap-3">
                       <Check
                         size={16}
@@ -120,19 +144,19 @@ export default function Membership({ data }: { data: MembershipData }) {
                         }`}
                       />
                       <span
-                        className={
-                          tier.featured ? "text-white/85" : "text-brand-900/75"
-                        }
+                        className={tier.featured ? "text-white/85" : "text-brand-900/75"}
                       >
                         {benefit.label}
                       </span>
                     </li>
                   ))}
-              </ul>
-            </div>
-          </Reveal>
-        ))}
+                </ul>
+              </div>
+            </Reveal>
+          );
+        })}
       </div>
+
     </section>
   );
 }

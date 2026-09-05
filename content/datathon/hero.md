@@ -2,7 +2,13 @@
 eyebrow: "Dive into data"
 title: "Datathon"
 subline: "The hackathon for data-driven solutions"
-clock: "48:00:00"
+facts:
+  - value: "48h"
+    label: "Non-stop"
+  - value: "80+"
+    label: "Participants"
+  - value: "5"
+    label: "Editions"
 primaryCta:
   label: "What happens here"
   href: "#about"

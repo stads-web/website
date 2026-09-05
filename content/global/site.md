@@ -5,6 +5,8 @@
 nav:
   - label: Home
     href: /
+  - label: Datathon
+    href: /datathon
   - label: For Students
     href: /for-students
   - label: For Companies

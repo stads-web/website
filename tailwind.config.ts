@@ -53,12 +53,17 @@ const config: Config = {
           "65%, 95%": { opacity: "0.5" },
           "100%": { opacity: "1" },
         },
+        marquee: {
+          from: { transform: "translate3d(0, 0, 0)" },
+          to: { transform: "translate3d(-50%, 0, 0)" },
+        },
       },
       animation: {
         "drift-a": "drift-a 26s ease-in-out infinite",
         "drift-b": "drift-b 32s ease-in-out infinite",
         "drift-c": "drift-c 38s ease-in-out infinite",
         blink: "blink 1.6s steps(1, end) infinite",
+        marquee: "marquee 38s linear infinite",
       },
     },
   },

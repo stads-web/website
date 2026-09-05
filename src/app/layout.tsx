@@ -10,6 +10,7 @@ import Grain from "@/components/motion/Grain";
 import MeshBackdrop from "@/components/motion/MeshBackdrop";
 import FooterReveal from "@/components/motion/FooterReveal";
 import PageTransition from "@/components/motion/PageTransition";
+import Cursor from "@/components/motion/Cursor";
 import { readContent } from "@/lib/content";
 import type { SiteData } from "@/lib/types";
 
@@ -50,6 +51,7 @@ export default function RootLayout({
       <body className={`${libreFranklin.variable} ${inter.variable} ${playfair.variable} font-sans antialiased`}>
         <ScrollProgress />
         <Grain />
+        <Cursor />
         <SmoothScroll>
           <Header site={site} />
           <div className="relative z-10 bg-white mb-[var(--footer-h)]">

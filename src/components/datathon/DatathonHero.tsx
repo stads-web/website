@@ -95,15 +95,18 @@ export default function DatathonHero({ data }: { data: DatathonHeroData }) {
             </div>
           </div>
 
-          <div className="shrink-0 text-right">
-            <p className="text-[11px] uppercase tracking-[0.3em] text-white/50">
-              Time on the clock
-            </p>
-            <p className="mt-1 font-mono text-3xl tabular-nums tracking-tight text-white sm:text-4xl">
-              48<span className="animate-blink">:</span>00
-              <span className="animate-blink">:</span>00
-            </p>
-          </div>
+          <dl className="flex shrink-0 gap-8 sm:gap-10">
+            {data.facts.map((fact) => (
+              <div key={fact.label}>
+                <dt className="text-[10px] uppercase tracking-[0.24em] text-white/45">
+                  {fact.label}
+                </dt>
+                <dd className="mt-1 text-2xl font-medium tracking-tight text-white sm:text-3xl">
+                  {fact.value}
+                </dd>
+              </div>
+            ))}
+          </dl>
         </motion.div>
       </motion.div>
     </section>

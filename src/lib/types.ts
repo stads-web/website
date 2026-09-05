@@ -206,7 +206,7 @@ export interface DatathonHeroData {
   eyebrow: string;
   title: string;
   subline: string;
-  clock: string;
+  facts: Stat[];
   primaryCta: CtaLink;
   secondaryCta: CtaLink;
   image: string;
@@ -224,18 +224,15 @@ export interface DatathonAboutData {
   stats: Stat[];
 }
 
-export interface HourBeat {
-  time: string;
-  title: string;
+export interface WeekendBeat {
+  label: string;
   text: string;
-  image: string;
-  imageAlt: string;
 }
 
-export interface HoursData {
+export interface WeekendData {
   eyebrow: string;
   title: string;
-  beats: HourBeat[];
+  beats: WeekendBeat[];
   outro: string;
 }
 

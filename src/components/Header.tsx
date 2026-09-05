@@ -23,7 +23,7 @@ export default function Header({ site }: { site: SiteData }) {
     <header className="fixed inset-x-0 top-0 z-40">
       <div className="mx-auto flex max-w-content items-center justify-center gap-[74px] px-4 py-4 sm:px-6">
         <nav
-          className={`hidden items-center gap-[30px] rounded-full px-10 py-2 backdrop-blur-[10px] transition-colors duration-300 md:flex ${
+          className={`hidden items-center gap-5 rounded-full px-8 py-2 backdrop-blur-[10px] transition-colors duration-300 md:flex lg:gap-[30px] lg:px-10 ${
             scrolled ? "border border-brand-100 bg-white/90 shadow-card" : "border border-white/15 bg-white/20"
           }`}
         >

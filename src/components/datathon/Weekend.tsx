@@ -118,8 +118,8 @@ export default function Weekend({ data }: { data: WeekendData }) {
               progress={scrollYProgress}
               className="absolute inset-0 h-full w-full"
             />
-            {/* Keeps the type readable wherever the cloud drifts. */}
-            <div className="absolute inset-0 bg-gradient-to-r from-brand-950 via-brand-950/85 to-brand-950/20" />
+            {/* Shields the type without dimming the cloud on the open side. */}
+            <div className="absolute inset-0 bg-gradient-to-r from-brand-950 from-15% via-brand-950/70 via-50% to-transparent" />
 
             <div className="relative mx-auto flex h-full max-w-content flex-col px-4 pb-12 pt-28 sm:px-6">
               <div className="flex items-baseline justify-between">

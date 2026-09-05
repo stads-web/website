@@ -151,8 +151,15 @@ export default function DataCanvas({
       }
 
       for (const point of resolved) {
-        ctx.fillStyle = COLORS[point.cluster % COLORS.length];
-        ctx.globalAlpha = 0.75;
+        const colour = COLORS[point.cluster % COLORS.length];
+        // Halo first, then a crisp core - cheaper than a canvas shadow blur.
+        ctx.fillStyle = colour;
+        ctx.globalAlpha = 0.12;
+        ctx.beginPath();
+        ctx.arc(point.x, point.y, point.r * 3.4, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.globalAlpha = 0.95;
         ctx.beginPath();
         ctx.arc(point.x, point.y, point.r, 0, Math.PI * 2);
         ctx.fill();

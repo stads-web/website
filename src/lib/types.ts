@@ -127,6 +127,25 @@ export interface FaqData {
   items: FaqItem[];
 }
 
+export interface CompanyIntroData {
+  title: string;
+  image: string;
+  imageAlt: string;
+}
+
+export interface OfferingItem {
+  heading: string;
+  text: string;
+  image: string;
+  imageAlt: string;
+  imageSide: "left" | "right";
+}
+
+export interface OfferingsData {
+  title: string;
+  items: OfferingItem[];
+}
+
 export interface SiteData {
   nav: CtaLink[];
   joinCta: CtaLink;

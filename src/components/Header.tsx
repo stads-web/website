@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { List, X } from "@phosphor-icons/react";
@@ -8,12 +8,24 @@ import type { SiteData } from "@/lib/types";
 
 export default function Header({ site }: { site: SiteData }) {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <header className="fixed inset-x-0 top-0 z-40">
       <div className="mx-auto flex max-w-content items-center justify-center gap-[74px] px-4 py-4 sm:px-6">
-        <nav className="hidden items-center gap-[30px] rounded-full border border-white/15 bg-white/20 px-10 py-2 backdrop-blur-[10px] md:flex">
+        <nav
+          className={`hidden items-center gap-[30px] rounded-full px-10 py-2 backdrop-blur-[10px] transition-colors duration-300 md:flex ${
+            scrolled ? "border border-brand-100 bg-white/90 shadow-card" : "border border-white/15 bg-white/20"
+          }`}
+        >
           {site.nav.map((item) => {
             const active =
               item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
@@ -21,8 +33,14 @@ export default function Header({ site }: { site: SiteData }) {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`whitespace-nowrap text-[13px] font-normal text-white transition-colors hover:text-white ${
-                  active ? "[text-shadow:0px_4px_4px_rgba(0,0,0,0.25)]" : "text-white/85"
+                className={`whitespace-nowrap text-[13px] font-normal transition-colors ${
+                  scrolled
+                    ? active
+                      ? "text-brand-900"
+                      : "text-brand-900/60 hover:text-brand-900"
+                    : active
+                      ? "text-white [text-shadow:0px_4px_4px_rgba(0,0,0,0.25)]"
+                      : "text-white/85 hover:text-white"
                 }`}
               >
                 {item.label}
@@ -31,7 +49,11 @@ export default function Header({ site }: { site: SiteData }) {
           })}
         </nav>
 
-        <div className="hidden shrink-0 items-center justify-center rounded-full border border-white/15 p-1.5 md:flex">
+        <div
+          className={`hidden shrink-0 items-center justify-center rounded-full border p-1.5 transition-colors duration-300 md:flex ${
+            scrolled ? "border-brand-100" : "border-white/15"
+          }`}
+        >
           <Link
             href={site.joinCta.href}
             className="flex h-[30px] w-[109px] items-center justify-center rounded-full border border-white/15 bg-white text-center text-sm font-bold text-black shadow-[inset_0_0_6px_3px_rgba(255,255,255,0.25)] backdrop-blur-[7px] transition-colors hover:bg-brand-50"

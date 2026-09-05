@@ -5,7 +5,7 @@ import Impact from "@/components/for-students/Impact";
 import WhoWeAre from "@/components/for-students/WhoWeAre";
 import Membership from "@/components/for-students/Membership";
 import Faq from "@/components/for-students/Faq";
-import ContactCta from "@/components/for-students/ContactCta";
+import ContactCta from "@/components/ContactCta";
 import type {
   IntroData,
   WhoWeAreData,

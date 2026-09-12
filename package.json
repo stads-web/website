@@ -14,7 +14,6 @@
   "dependencies": {
     "@next/third-parties": "^15.5.25",
     "@phosphor-icons/react": "^2.1.10",
-    "@react-three/fiber": "^8.18.0",
     "@vercel/analytics": "^2.0.1",
     "framer-motion": "^11.18.2",
     "gray-matter": "^4.0.3",
@@ -22,19 +21,13 @@
     "marked": "^15.0.12",
     "next": "^15.5.25",
     "react": "^18",
-    "react-dom": "^18",
-    "three": "^0.169.0"
-  },
-  "overrides": {
-    "react-reconciler": "^0.29.2",
-    "scheduler": "^0.23.2"
+    "react-dom": "^18"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.20",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "@types/three": "^0.169.0",
     "eslint": "^9.39.5",
     "eslint-config-next": "^15.5.25",
     "postcss": "^8",

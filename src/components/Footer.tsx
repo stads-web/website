@@ -2,22 +2,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowUp } from "@phosphor-icons/react/dist/ssr";
 import CookieSettingsButton from "./CookieSettingsButton";
-import RingLogo from "./RingLogo";
-import Constellation from "./motion/Constellation";
 import { iconMap } from "@/lib/icons";
 import type { SiteData } from "@/lib/types";
 
 export default function Footer({ site }: { site: SiteData }) {
   return (
     <footer className="relative overflow-hidden bg-brand-950 text-brand-900">
-      {/* Solid white, not a translucent fade the backdrop blobs bleed through -
-          crisp, predictable contrast for the columns below. */}
+      {/* Solid white - the previous translucent fade let the page's fixed
+          background blobs bleed through and wash out the text. */}
       <div className="relative bg-white">
-        {/* Oversized ring mark bleeding off the corner - a quiet signature. */}
-        <div aria-hidden className="pointer-events-none absolute -right-16 -top-16 sm:-right-8 sm:-top-24">
-          <RingLogo className="h-[240px] w-[240px] text-brand-100 sm:h-[340px] sm:w-[340px]" />
-        </div>
-
         <div className="relative mx-auto max-w-content px-4 pb-14 pt-16 sm:px-6 sm:pb-16 sm:pt-24">
           <div className="flex flex-col items-start gap-10 sm:flex-row sm:justify-between">
             <Image
@@ -89,21 +82,22 @@ export default function Footer({ site }: { site: SiteData }) {
         </div>
       </div>
 
-      {/* A real transition into the dark bar - not a hard cut from white to navy. */}
-      <div aria-hidden className="h-14 bg-gradient-to-b from-white to-brand-950 sm:h-20" />
+      {/* A gradual climb into the dark bar - several stops rather than one
+          straight ramp, since a two-stop gradient reads as an abrupt seam. */}
+      <div
+        aria-hidden
+        className="h-28 bg-gradient-to-b from-white via-brand-200 via-40% to-brand-950 sm:h-40"
+      />
 
-      <div className="relative">
-        <Constellation />
-        <div className="relative mx-auto flex max-w-content flex-col items-center gap-4 px-4 pb-6 text-[13px] text-white/60 sm:flex-row sm:justify-between sm:px-6">
-          <p>{site.footer.copyright}</p>
-          <a
-            href="#top"
-            aria-label="Back to top"
-            className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-white transition-colors hover:bg-white hover:text-brand-900"
-          >
-            <ArrowUp size={20} aria-hidden="true" />
-          </a>
-        </div>
+      <div className="relative mx-auto flex max-w-content flex-col items-center gap-4 px-4 pb-6 text-[13px] text-white/60 sm:flex-row sm:justify-between sm:px-6">
+        <p>{site.footer.copyright}</p>
+        <a
+          href="#top"
+          aria-label="Back to top"
+          className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-white transition-colors hover:bg-white hover:text-brand-900"
+        >
+          <ArrowUp size={20} aria-hidden="true" />
+        </a>
       </div>
     </footer>
   );

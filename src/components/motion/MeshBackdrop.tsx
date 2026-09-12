@@ -3,7 +3,13 @@ const blob = (color: string) =>
 
 export default function MeshBackdrop() {
   return (
-    <div aria-hidden className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+    <div
+      aria-hidden
+      // Stop short of the footer (--footer-h, published by FooterReveal) - being
+      // `fixed`, this would otherwise keep painting on top of it forever, no
+      // matter what background the footer itself sets.
+      className="pointer-events-none fixed inset-x-0 top-0 bottom-[var(--footer-h)] z-0 overflow-hidden"
+    >
       <div
         className="animate-drift-a absolute -left-[15%] top-[8%] h-[55vw] w-[55vw] max-h-[720px] max-w-[720px]"
         style={{ backgroundImage: blob("rgba(115,136,176,0.30)") }}

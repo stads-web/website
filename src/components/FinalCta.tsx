@@ -2,13 +2,13 @@ import Link from "next/link";
 import Reveal from "./motion/Reveal";
 import Magnetic from "./motion/Magnetic";
 import SplitText from "./motion/SplitText";
-import Constellation from "./motion/Constellation";
+import Constellation3D from "./motion/Constellation3D";
 import type { FinalCtaData } from "@/lib/types";
 
 export default function FinalCta({ data }: { data: FinalCtaData }) {
   return (
     <section className="relative overflow-hidden bg-brand-950 py-20 text-center sm:py-28">
-      <Constellation />
+      <Constellation3D />
       <div className="relative mx-auto max-w-content px-4 sm:px-6">
         <Reveal>
           <p className="text-2xl text-brand-300">{data.eyebrow}</p>

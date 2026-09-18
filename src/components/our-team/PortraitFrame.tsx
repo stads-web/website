@@ -15,18 +15,23 @@ export default function PortraitFrame({
 }) {
   if (photo) {
     return (
-      <Image
-        src={photo}
-        alt={name}
-        fill
-        sizes="(min-width: 1280px) 300px, (min-width: 640px) 45vw, 90vw"
-        className="object-cover transition-transform duration-[900ms] group-hover:scale-105"
-      />
+      <div className="absolute inset-0" data-cursor="View">
+        <Image
+          src={photo}
+          alt={name}
+          fill
+          sizes="(min-width: 1280px) 300px, (min-width: 640px) 45vw, 90vw"
+          className="object-cover transition-transform duration-[900ms] group-hover:scale-105"
+        />
+      </div>
     );
   }
 
   return (
-    <div className="absolute inset-0 bg-gradient-to-br from-brand-800 to-brand-950">
+    <div
+      className="absolute inset-0 bg-gradient-to-br from-brand-800 to-brand-950"
+      data-cursor="View"
+    >
       <span
         aria-hidden
         className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-[5.5rem] font-medium tracking-tight text-white/[0.09]"

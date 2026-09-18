@@ -13,6 +13,30 @@ html {
   /* Matches the top of every page so an overscroll bounce never flashes white. */
   background-color: #0f1d36;
   overscroll-behavior: none;
+  /* Firefox: thin navy thumb (brand-800) on a transparent track. */
+  scrollbar-color: #203765 transparent;
+  scrollbar-width: thin;
+}
+
+/* Chromium/WebKit: thin navy thumb, transparent track, lighter (brand-500) on hover. */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #203765;
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #7388b0;
 }
 
 body {

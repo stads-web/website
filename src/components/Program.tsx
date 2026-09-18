@@ -52,7 +52,7 @@ function ProgramCard({ item }: { item: ProgramItem }) {
   };
 
   return (
-    <div className="[perspective:1400px]">
+    <div className="[perspective:1400px]" data-cursor="View">
       <motion.button
         ref={ref}
         type="button"

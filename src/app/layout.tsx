@@ -14,6 +14,7 @@ import MeshBackdrop from "@/components/motion/MeshBackdrop";
 import FooterReveal from "@/components/motion/FooterReveal";
 import PageTransition from "@/components/motion/PageTransition";
 import Cursor from "@/components/motion/Cursor";
+import Preloader from "@/components/motion/Preloader";
 import { readContent } from "@/lib/content";
 import type { SiteData } from "@/lib/types";
 
@@ -53,6 +54,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${libreFranklin.variable} ${inter.variable} ${playfair.variable} font-sans antialiased`}>
         <ConsentProvider>
+          <Preloader />
           <ScrollProgress />
           <Grain />
           <Cursor />

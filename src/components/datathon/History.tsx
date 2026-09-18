@@ -2,14 +2,48 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
+import CountUp from "../motion/CountUp";
 import Reveal from "../motion/Reveal";
 import SplitText from "../motion/SplitText";
 import Spotlight from "../motion/Spotlight";
 import type { Edition, HistoryData } from "@/lib/types";
 
+/**
+ * A small decorative trend line next to each edition's metric.
+ *
+ * The `metric` field across editions is a grab-bag of unrelated units
+ * (participants, challenges, teams, "per team" ranges) rather than one
+ * consistent series, so this is deliberately not a data visualization —
+ * just a modest upward-sloping flourish that draws in on scroll.
+ */
+function MetricFlourish() {
+  return (
+    <svg
+      viewBox="0 0 64 24"
+      className="h-6 w-16 shrink-0 text-brand-300"
+      fill="none"
+      aria-hidden="true"
+    >
+      <motion.path
+        d="M1 20 C 14 20, 18 6, 30 10 C 42 14, 46 4, 63 3"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        initial={{ pathLength: 0, opacity: 0 }}
+        whileInView={{ pathLength: 1, opacity: 1 }}
+        viewport={{ once: true, margin: "-40px" }}
+        transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+      />
+    </svg>
+  );
+}
+
 function EditionCard({ edition, index }: { edition: Edition; index: number }) {
   return (
-    <article className="group relative flex h-full w-[86vw] shrink-0 flex-col overflow-hidden rounded-[36px] border border-brand-100 bg-white p-8 shadow-[0px_15px_30px_rgba(15,29,54,0.05),0px_30px_60px_rgba(15,29,54,0.08)] sm:w-[520px]">
+    <article
+      data-cursor="View"
+      className="group relative flex h-full w-[86vw] shrink-0 flex-col overflow-hidden rounded-[36px] border border-brand-100 bg-white p-8 shadow-[0px_15px_30px_rgba(15,29,54,0.05),0px_30px_60px_rgba(15,29,54,0.08)] sm:w-[520px]"
+    >
       <Spotlight />
 
       <div className="relative flex items-baseline justify-between gap-4">
@@ -26,14 +60,17 @@ function EditionCard({ edition, index }: { edition: Edition; index: number }) {
       </h3>
 
       {edition.metric && (
-        <p className="relative mt-5 flex items-baseline gap-3">
-          <span className="text-5xl font-medium tracking-tight text-brand-800">
-            {edition.metric}
-          </span>
-          <span className="text-sm uppercase tracking-[0.16em] text-brand-500">
-            {edition.metricLabel}
-          </span>
-        </p>
+        <div className="relative mt-5 flex items-center justify-between gap-4">
+          <p className="flex items-baseline gap-3">
+            <span className="text-5xl font-medium tracking-tight text-brand-800">
+              <CountUp value={edition.metric} />
+            </span>
+            <span className="text-sm uppercase tracking-[0.16em] text-brand-500">
+              {edition.metricLabel}
+            </span>
+          </p>
+          <MetricFlourish />
+        </div>
       )}
 
       <p className="relative mt-5 leading-relaxed text-brand-900/70">

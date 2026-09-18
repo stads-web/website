@@ -4,8 +4,11 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 import { List, X } from "@phosphor-icons/react";
 import type { SiteData } from "@/lib/types";
+
+const EASE = [0.22, 1, 0.36, 1] as const;
 
 export default function Header({ site }: { site: SiteData }) {
   const [open, setOpen] = useState(false);
@@ -29,14 +32,38 @@ export default function Header({ site }: { site: SiteData }) {
           aria-label="STADS home"
           className="hidden shrink-0 items-center lg:flex"
         >
-          <Image
-            src={scrolled ? "/images/stads_logo_dark.webp" : "/images/logo_hero.webp"}
-            alt="STADS"
-            width={351}
-            height={109}
-            priority
-            className="h-auto w-[112px] transition-opacity duration-300 xl:w-[140px]"
-          />
+          {/* Both logo variants are stacked in the same box and cross-fade via
+              opacity instead of swapping `src` outright, which used to pop. */}
+          <span className="relative block aspect-[351/109] w-[112px] xl:w-[140px]">
+            <motion.span
+              className="absolute inset-0"
+              animate={{ opacity: scrolled ? 0 : 1 }}
+              transition={{ duration: 0.4, ease: EASE }}
+            >
+              <Image
+                src="/images/logo_hero.webp"
+                alt="STADS"
+                fill
+                priority
+                sizes="140px"
+                className="object-contain"
+              />
+            </motion.span>
+            <motion.span
+              className="absolute inset-0"
+              animate={{ opacity: scrolled ? 1 : 0 }}
+              transition={{ duration: 0.4, ease: EASE }}
+            >
+              <Image
+                src="/images/stads_logo_dark.webp"
+                alt="STADS"
+                fill
+                priority
+                sizes="140px"
+                className="object-contain"
+              />
+            </motion.span>
+          </span>
         </Link>
 
         <nav

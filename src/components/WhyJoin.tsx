@@ -1,7 +1,6 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 import Reveal from "./motion/Reveal";
 import SplitText from "./motion/SplitText";
 import { iconMap } from "@/lib/icons";
@@ -27,22 +26,43 @@ const DRAW_PATHS: Record<string, string> = {
 /**
  * Sketches the icon's outline in, then dissolves it into the solid glyph.
  *
- * The stroke and fill are two sibling `motion.path` elements. They used to
- * each carry their own `whileInView`/`viewport` trigger, but Framer Motion
- * (observed on v11.18) can drop the callback for one of two elements that
- * register an identical `viewport` config (same margin/amount) at nearly
- * the same time - the paths would then stay frozen at their `initial` state
- * forever, since `once: true` never gives them a second chance. Tracking
- * "is this icon in view" once, via a single `useInView` ref on the wrapping
- * <svg>, and driving both paths off that one boolean removes the race
- * entirely: there is exactly one observer and one source of truth.
+ * A single `whileInView` trigger lives on the wrapping `motion.svg`; both
+ * paths just declare `variants` and inherit the "visible" state from their
+ * parent. This is the same trigger mechanism already proven reliable
+ * elsewhere on this page (`Reveal.tsx`, `SpringIcon` below) - two earlier
+ * attempts that gave the stroke and fill path their own independent
+ * `viewport`/`useInView` trigger each got stuck frozen at `initial` on the
+ * live site, so this sticks to the one pattern known to actually fire.
  */
 function DrawIcon({ path, delay }: { path: string; delay: number }) {
-  const ref = useRef<SVGSVGElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const strokeVariants = {
+    hidden: { pathLength: 0, opacity: 1 },
+    visible: {
+      pathLength: 1,
+      opacity: 0,
+      transition: {
+        pathLength: { duration: 1.05, ease: EASE, delay },
+        opacity: { duration: 0.4, delay: delay + 0.85 },
+      },
+    },
+  };
+  const fillVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { duration: 0.5, ease: EASE, delay: delay + 0.75 },
+    },
+  };
 
   return (
-    <svg ref={ref} viewBox="0 0 256 256" className="h-7 w-7" aria-hidden="true">
+    <motion.svg
+      viewBox="0 0 256 256"
+      className="h-7 w-7"
+      aria-hidden="true"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-80px" }}
+    >
       <motion.path
         d={path}
         fill="none"
@@ -50,21 +70,10 @@ function DrawIcon({ path, delay }: { path: string; delay: number }) {
         strokeWidth={12}
         strokeLinecap="round"
         strokeLinejoin="round"
-        initial={{ pathLength: 0, opacity: 1 }}
-        animate={isInView ? { pathLength: 1, opacity: 0 } : undefined}
-        transition={{
-          pathLength: { duration: 1.05, ease: EASE, delay },
-          opacity: { duration: 0.4, delay: delay + 0.85 },
-        }}
+        variants={strokeVariants}
       />
-      <motion.path
-        d={path}
-        fill="currentColor"
-        initial={{ opacity: 0 }}
-        animate={isInView ? { opacity: 1 } : undefined}
-        transition={{ duration: 0.5, ease: EASE, delay: delay + 0.75 }}
-      />
-    </svg>
+      <motion.path d={path} fill="currentColor" variants={fillVariants} />
+    </motion.svg>
   );
 }
 

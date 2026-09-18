@@ -15,8 +15,14 @@ import FooterReveal from "@/components/motion/FooterReveal";
 import PageTransition from "@/components/motion/PageTransition";
 import Cursor from "@/components/motion/Cursor";
 import Preloader from "@/components/motion/Preloader";
+import MobileStickyCta from "@/components/motion/MobileStickyCta";
 import { readContent } from "@/lib/content";
 import type { SiteData } from "@/lib/types";
+
+const siteUrl = "https://website-stads1.vercel.app";
+const siteTitle = "STADS – Students' Association for Data Analytics & Statistics Mannheim";
+const siteDescription =
+  "STADS is the only student-run Data Science organization at the University of Mannheim - workshops, the STADS Datathon, guest lectures, and a community of 250+ members.";
 
 const libreFranklin = Libre_Franklin({
   subsets: ["latin"],
@@ -38,9 +44,24 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "STADS – Students' Association for Data Analytics & Statistics Mannheim",
-  description:
-    "STADS is the only student-run Data Science organization at the University of Mannheim - workshops, the STADS Datathon, guest lectures, and a community of 250+ members.",
+  metadataBase: new URL(siteUrl),
+  title: siteTitle,
+  description: siteDescription,
+  openGraph: {
+    title: siteTitle,
+    description: siteDescription,
+    url: siteUrl,
+    siteName: "STADS",
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: siteTitle }],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteTitle,
+    description: siteDescription,
+    images: ["/opengraph-image"],
+  },
 };
 
 export default function RootLayout({
@@ -71,6 +92,7 @@ export default function RootLayout({
             </FooterReveal>
           </SmoothScroll>
           <ConsentBanner />
+          <MobileStickyCta cta={site.joinCta} />
           <AnalyticsScripts />
           <Analytics />
         </ConsentProvider>

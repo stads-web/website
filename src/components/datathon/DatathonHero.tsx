@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useScroll, useTransform } from "framer-motion";
@@ -9,6 +9,27 @@ import Magnetic from "../motion/Magnetic";
 import type { DatathonHeroData } from "@/lib/types";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
+
+/**
+ * Below Tailwind's `sm` breakpoint, the eyebrow -> title -> content stagger
+ * (worsened here by image decode + hydration) reads as a load stall, so we
+ * pull its delays/durations in. The title's own per-character stagger lives
+ * inside SplitChars.tsx (out of scope here), so this only tightens what
+ * DatathonHero itself controls - still a meaningful cut to the total wait.
+ */
+function useCompactMotion() {
+  const [compact, setCompact] = useState(false);
+
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 639px)");
+    const update = () => setCompact(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+
+  return compact;
+}
 
 export default function DatathonHero({ data }: { data: DatathonHeroData }) {
   const ref = useRef<HTMLElement>(null);
@@ -19,6 +40,9 @@ export default function DatathonHero({ data }: { data: DatathonHeroData }) {
   const imageY = useTransform(scrollYProgress, [0, 1], ["0%", "22%"]);
   const contentY = useTransform(scrollYProgress, [0, 1], [0, 120]);
   const contentOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
+
+  const compact = useCompactMotion();
+  const s = compact ? 0.45 : 1;
 
   return (
     <section
@@ -53,7 +77,7 @@ export default function DatathonHero({ data }: { data: DatathonHeroData }) {
         <motion.p
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: EASE, delay: 0.15 }}
+          transition={{ duration: 0.8 * s, ease: EASE, delay: 0.15 * s }}
           className="text-xs font-medium uppercase tracking-[0.4em] text-white/70 sm:text-sm"
         >
           {data.eyebrow}
@@ -62,7 +86,7 @@ export default function DatathonHero({ data }: { data: DatathonHeroData }) {
         <h1 className="mt-3 font-medium leading-[0.86] text-white">
           <SplitChars
             text={data.title}
-            delay={0.3}
+            delay={0.3 * s}
             className="block text-[clamp(3.5rem,17vw,15rem)] tracking-[-0.03em]"
           />
         </h1>
@@ -70,7 +94,7 @@ export default function DatathonHero({ data }: { data: DatathonHeroData }) {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, ease: EASE, delay: 1.15 }}
+          transition={{ duration: 0.9 * s, ease: EASE, delay: 1.15 * s }}
           className="mt-8 flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between"
         >
           <div>
@@ -95,7 +119,7 @@ export default function DatathonHero({ data }: { data: DatathonHeroData }) {
             </div>
           </div>
 
-          <dl className="flex shrink-0 gap-8 sm:gap-10">
+          <dl className="flex shrink-0 flex-wrap gap-x-6 gap-y-3 sm:flex-nowrap sm:gap-10">
             {data.facts.map((fact) => (
               <div key={fact.label}>
                 <dt className="text-[10px] uppercase tracking-[0.24em] text-white/45">

@@ -83,22 +83,24 @@ function ReasonCard({ item, index }: { item: WhyJoinItem; index: number }) {
 
   return (
     <Reveal delay={cardDelay}>
-      <div className="group h-full rounded-[28px] border border-brand-100 bg-brand-50/60 p-7 transition-all duration-500 hover:-translate-y-1 hover:border-brand-200 hover:bg-white hover:shadow-card sm:p-8">
+      <div className="group h-full rounded-[20px] border border-brand-100 bg-brand-50/60 p-4 transition-all duration-500 hover:-translate-y-1 hover:border-brand-200 hover:bg-white hover:shadow-card sm:rounded-[28px] sm:p-8">
         <div className="flex items-start justify-between">
-          <span className="flex h-14 w-14 items-center justify-center rounded-full bg-white text-brand-800 ring-1 ring-inset ring-brand-100 transition-colors duration-500 group-hover:ring-brand-300">
+          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-brand-800 ring-1 ring-inset ring-brand-100 transition-colors duration-500 group-hover:ring-brand-300 sm:h-14 sm:w-14">
             {drawPath ? (
               <DrawIcon path={drawPath} delay={iconDelay} />
             ) : IconComponent ? (
               <SpringIcon IconComponent={IconComponent} delay={iconDelay} />
             ) : null}
           </span>
-          <span className="font-accent text-3xl italic leading-none text-brand-200">
+          <span className="font-accent text-lg italic leading-none text-brand-200 sm:text-3xl">
             {String(index + 1).padStart(2, "0")}
           </span>
         </div>
 
-        <p className="mt-6 text-lg font-medium text-brand-900">{item.heading}</p>
-        <p className="mt-2 text-base leading-relaxed text-brand-900/70">
+        <p className="mt-3 text-sm font-medium text-brand-900 sm:mt-6 sm:text-lg">
+          {item.heading}
+        </p>
+        <p className="mt-1.5 text-[13px] leading-relaxed text-brand-900/70 sm:mt-2 sm:text-base">
           {item.text}
         </p>
       </div>
@@ -118,7 +120,7 @@ export default function WhyJoin({ data }: { data: WhyJoinData }) {
         />
       </h2>
 
-      <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2">
+      <div className="mt-8 grid grid-cols-2 gap-3 sm:mt-12 sm:gap-5">
         {data.items.map((item, i) => (
           <ReasonCard key={item.heading} item={item} index={i} />
         ))}

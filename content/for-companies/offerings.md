@@ -1,5 +1,5 @@
 ---
-title: "Previous Cooperations"
+title: "Ways to Partner With Us"
 items:
   - heading: "Lecture"
     text: "Show a broad audience of quantitative STEM talents the problems you solve in your company or present exciting technologies. We will take care of the organization and ensure that everything runs smoothly. We are happy to plan a get-together after the presentation, where further discussions can be held and contacts made."

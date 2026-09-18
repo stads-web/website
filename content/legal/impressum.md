@@ -13,8 +13,8 @@ E-Mail: info@stads.de
 
 ## Vertretungsberechtigter Vorstand
 
-Merle Dehmel
-Suki Liv Becker
+Merle Dehmel<br>
+Suki Liv Becker<br>
 Fynn Graubitz
 
 ## Registereintrag

@@ -28,6 +28,24 @@ function easeOutBack(t: number) {
 }
 
 /**
+ * Ring radius, as a fraction of min(width, height). On desktop-sized
+ * viewports this is the original 0.09. Below ~900px it scales up toward
+ * 0.16 so the ring still reads as a confident focal point on phones,
+ * where min(w,h) (e.g. 375 on a 375x812 screen) would otherwise shrink it
+ * to a barely-visible mark.
+ */
+function ringRadiusScale(minDimension: number) {
+  const DESKTOP_MIN = 900;
+  const PHONE_MIN = 480;
+  const DESKTOP_SCALE = 0.09;
+  const PHONE_SCALE = 0.16;
+  if (minDimension >= DESKTOP_MIN) return DESKTOP_SCALE;
+  if (minDimension <= PHONE_MIN) return PHONE_SCALE;
+  const t = (DESKTOP_MIN - minDimension) / (DESKTOP_MIN - PHONE_MIN);
+  return DESKTOP_SCALE + t * (PHONE_SCALE - DESKTOP_SCALE);
+}
+
+/**
  * One-time, per-tab intro: a scatter of points draws itself into the STADS
  * ring mark, then the whole overlay fades to reveal the real page beneath.
  * Gated on sessionStorage so it never replays on internal navigation, and
@@ -74,7 +92,8 @@ export default function Preloader() {
 
       const cx = width / 2;
       const cy = height / 2;
-      const r = Math.min(width, height) * 0.09;
+      const minDimension = Math.min(width, height);
+      const r = minDimension * ringRadiusScale(minDimension);
       const count = 42;
 
       particles = Array.from({ length: count }, (_, i) => {

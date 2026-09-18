@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import type { MotionValue } from "framer-motion";
 
 type Point = { targets: { x: number; y: number }[]; r: number; cluster: number };
@@ -54,11 +55,11 @@ function buildPoints(): Point[] {
 }
 
 /**
- * The visual spine of the weekend: a point cloud that moves from raw noise to
- * a fitted, clustered result as the section scrolls. Replaces the photo
- * sequence - the story is the data, not a stock shot per phase.
+ * The 2D-canvas point cloud - the bulletproof default. Used directly on
+ * touch/tablet/reduced-motion/save-data, and as the fallback if the WebGL
+ * fast path (see DataCanvas below) fails for any reason.
  */
-export default function DataCanvas({
+function DataCanvas2D({
   progress,
   className,
 }: {
@@ -182,4 +183,49 @@ export default function DataCanvas({
   }, [progress]);
 
   return <canvas ref={ref} aria-hidden className={className} />;
+}
+
+const DataCanvasWebGL = dynamic(() => import("./DataCanvasWebGL"), { ssr: false });
+
+/**
+ * Checked once on mount, client-side only. The WebGL fast path is reserved
+ * for desktops with a real pointer and no stated preference against motion
+ * or data usage - everywhere else gets the plain 2D canvas.
+ */
+function canUseWebGLFastPath() {
+  if (typeof window === "undefined") return false;
+  try {
+    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return false;
+    if (!window.matchMedia("(min-width: 1024px)").matches) return false;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return false;
+
+    const nav = navigator as Navigator & { connection?: { saveData?: boolean } };
+    if (nav.connection?.saveData) return false;
+
+    const probe = document.createElement("canvas");
+    const gl = probe.getContext("webgl2") || probe.getContext("webgl");
+    return !!gl;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * The visual spine of the weekend: a point cloud that moves from raw noise to
+ * a fitted, clustered result as the section scrolls. Replaces the photo
+ * sequence - the story is the data, not a stock shot per phase.
+ *
+ * Renders the real-WebGL version (DataCanvasWebGL) on capable desktops for
+ * genuine depth/parallax, and the 2D canvas everywhere else - including as a
+ * safety net if the WebGL path errors out after mounting.
+ */
+export default function DataCanvas(props: { progress: MotionValue<number>; className?: string }) {
+  // Decided once, synchronously, on the client's first render - avoids both
+  // an SSR/client mismatch and a visible mode-swap after mount.
+  const [useWebGL, setUseWebGL] = useState(canUseWebGLFastPath);
+
+  if (useWebGL) {
+    return <DataCanvasWebGL {...props} onError={() => setUseWebGL(false)} />;
+  }
+  return <DataCanvas2D {...props} />;
 }

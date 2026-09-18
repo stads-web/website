@@ -63,15 +63,15 @@ function ProgramCard({ item }: { item: ProgramItem }) {
         aria-pressed={showsBack}
         aria-label={`${item.title} - tap to flip`}
         style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-        className="group relative block h-[340px] w-full shrink-0 text-left sm:h-[380px]"
+        className="group relative block h-[220px] w-full shrink-0 text-left sm:h-[380px]"
       >
         <div
-          className={`relative h-full w-full rounded-[40px] shadow-[0px_5px_10px_rgba(0,0,0,0.05),0px_15px_30px_rgba(0,0,0,0.05),0px_30px_60px_rgba(0,0,0,0.1)] transition-[transform,box-shadow] duration-700 [transform-style:preserve-3d] group-hover:shadow-[0px_10px_20px_rgba(15,29,54,0.08),0px_25px_50px_rgba(15,29,54,0.10),0px_45px_90px_rgba(15,29,54,0.14)] ${
+          className={`relative h-full w-full rounded-[28px] shadow-[0px_2px_6px_rgba(15,29,54,0.06)] transition-[transform,box-shadow] duration-700 [transform-style:preserve-3d] sm:rounded-[40px] sm:shadow-[0px_5px_10px_rgba(0,0,0,0.05),0px_15px_30px_rgba(0,0,0,0.05),0px_30px_60px_rgba(0,0,0,0.1)] sm:group-hover:shadow-[0px_10px_20px_rgba(15,29,54,0.08),0px_25px_50px_rgba(15,29,54,0.10),0px_45px_90px_rgba(15,29,54,0.14)] ${
             showsBack ? "[transform:rotateY(180deg)]" : ""
           }`}
         >
-          <div className="absolute inset-0 overflow-hidden rounded-[40px] border border-white/60 bg-brand-50 p-5 [backface-visibility:hidden]">
-            <div className="relative h-[60%] w-full overflow-hidden rounded-[20px] border border-white/60">
+          <div className="absolute inset-0 overflow-hidden rounded-[28px] border border-white/60 bg-brand-50 p-4 [backface-visibility:hidden] sm:rounded-[40px] sm:p-5">
+            <div className="relative h-[60%] w-full overflow-hidden rounded-[16px] border border-white/60 sm:rounded-[20px]">
               <Image
                 src={item.image}
                 alt={item.imageAlt}
@@ -80,18 +80,18 @@ function ProgramCard({ item }: { item: ProgramItem }) {
                 className="object-cover transition-transform duration-700 group-hover:scale-[1.06]"
               />
             </div>
-            <div className="mt-4">
-              <p className="text-lg font-medium text-brand-900">{item.title}</p>
-              <span className="mt-2 inline-block text-[13px] text-brand-900/50">
-                Hover or tap to learn more
+            <div className="mt-2.5 sm:mt-4">
+              <p className="text-sm font-medium text-brand-900 sm:text-lg">{item.title}</p>
+              <span className="mt-1 inline-block text-[11px] text-brand-900/50 sm:mt-2 sm:text-[13px]">
+                Tap to flip
               </span>
             </div>
             <Spotlight />
           </div>
 
-          <div className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden rounded-[40px] border border-white/60 bg-brand-800 p-8 text-center [backface-visibility:hidden] [transform:rotateY(180deg)]">
-            <p className="text-lg font-medium text-white">{item.title}</p>
-            <p className="mt-3 text-sm leading-relaxed text-white/80">
+          <div className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden rounded-[28px] border border-white/60 bg-brand-800 p-5 text-center [backface-visibility:hidden] [transform:rotateY(180deg)] sm:rounded-[40px] sm:p-8">
+            <p className="text-sm font-medium text-white sm:text-lg">{item.title}</p>
+            <p className="mt-2 text-xs leading-relaxed text-white/80 sm:mt-3 sm:text-sm">
               {item.description}
             </p>
           </div>
@@ -138,12 +138,12 @@ export default function Program({ data }: { data: ProgramData }) {
           className="max-w-3xl"
         />
 
-        <div className="mt-16 flex flex-col gap-5 sm:flex-row sm:items-start sm:gap-[29px]">
+        <div className="mt-10 flex flex-col gap-3 sm:mt-16 sm:flex-row sm:items-start sm:gap-[29px]">
           {columns.map((col, i) => (
             <motion.div
               key={i}
               style={{ y: isDesktop ? drift[i] : 0 }}
-              className={`flex flex-1 flex-col gap-5 ${COLUMN_OFFSETS[i]}`}
+              className={`flex flex-1 flex-col gap-3 sm:gap-5 ${COLUMN_OFFSETS[i]}`}
             >
               {col.map((item, j) => (
                 <Reveal key={item.title} delay={j * 0.08}>

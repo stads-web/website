@@ -6,7 +6,7 @@ import Steps from "@/components/join-us/Steps";
 import ContactCta from "@/components/ContactCta";
 import type { JoinHeroData, JoinStepsData, FinalCtaData } from "@/lib/types";
 
-export const metadata: Metadata = { title: "Join STADS" };
+export const metadata: Metadata = { title: "Join Us – STADS" };
 
 export default function JoinUsPage() {
   const hero = readContent<JoinHeroData>("join-us/hero.md");

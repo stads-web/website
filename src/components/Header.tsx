@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { List, X } from "@phosphor-icons/react";
 import type { SiteData } from "@/lib/types";
 
@@ -14,6 +14,7 @@ export default function Header({ site }: { site: SiteData }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+  const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -22,11 +23,41 @@ export default function Header({ site }: { site: SiteData }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // While the drawer is open: lock page scroll, keep Escape closing it, and
+  // take the rest of the page out of the tab/AT order so focus can't leak
+  // behind the scrim (no focus-trap existed here before this).
+  useEffect(() => {
+    if (!open) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const inertTargets = Array.from(document.querySelectorAll<HTMLElement>("main, footer"));
+    inertTargets.forEach((el) => {
+      el.setAttribute("inert", "");
+      el.setAttribute("aria-hidden", "true");
+    });
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      inertTargets.forEach((el) => {
+        el.removeAttribute("inert");
+        el.removeAttribute("aria-hidden");
+      });
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [open]);
+
   return (
     <header className="fixed inset-x-0 top-0 z-40">
       {/* Three real columns rather than a centred group with an absolutely
           placed logo - that version collided once the viewport narrowed. */}
-      <div className="mx-auto flex max-w-content items-center justify-between gap-6 px-4 py-4 sm:px-6">
+      <div className="relative z-20 mx-auto flex max-w-content items-center justify-between gap-6 px-4 py-4 sm:px-6">
         <Link
           href="/"
           aria-label="STADS home"
@@ -133,35 +164,54 @@ export default function Header({ site }: { site: SiteData }) {
         </div>
       </div>
 
-      {open && (
-        <nav
-          id="mobile-nav"
-          className="mx-4 mt-1 rounded-2xl bg-brand-950/95 px-4 py-4 backdrop-blur-md sm:mx-6 lg:hidden"
-        >
-          <ul className="flex flex-col gap-1">
-            {site.nav.map((item) => (
-              <li key={item.href}>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            key="mobile-nav-scrim"
+            aria-hidden="true"
+            onClick={() => setOpen(false)}
+            className="fixed inset-0 z-10 bg-brand-950/60 lg:hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: prefersReducedMotion ? 0 : 0.25, ease: EASE }}
+          />
+        )}
+        {open && (
+          <motion.nav
+            key="mobile-nav"
+            id="mobile-nav"
+            className="relative z-20 mx-4 mt-1 rounded-2xl bg-brand-950/95 px-4 py-4 backdrop-blur-md sm:mx-6 lg:hidden"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: prefersReducedMotion ? 0 : 0.3, ease: EASE }}
+          >
+            <ul className="flex flex-col gap-1">
+              {site.nav.map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className="block rounded-lg px-3 py-3 text-base font-medium text-white/90 hover:bg-white/5"
+                    onClick={() => setOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+              <li className="pt-2">
                 <Link
-                  href={item.href}
-                  className="block rounded-lg px-3 py-3 text-base font-medium text-white/90 hover:bg-white/5"
+                  href={site.joinCta.href}
+                  className="block rounded-full bg-white px-4 py-3 text-center text-base font-semibold text-brand-900"
                   onClick={() => setOpen(false)}
                 >
-                  {item.label}
+                  {site.joinCta.label}
                 </Link>
               </li>
-            ))}
-            <li className="pt-2">
-              <Link
-                href={site.joinCta.href}
-                className="block rounded-full bg-white px-4 py-3 text-center text-base font-semibold text-brand-900"
-                onClick={() => setOpen(false)}
-              >
-                {site.joinCta.label}
-              </Link>
-            </li>
-          </ul>
-        </nav>
-      )}
+            </ul>
+          </motion.nav>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

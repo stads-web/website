@@ -19,7 +19,7 @@ export default function Nutshell({
   const statements = data.stats.filter((stat) => !hasNumber(stat));
 
   return (
-    <section className="mx-auto max-w-content px-4 py-16 sm:px-6 sm:py-24">
+    <section className="mx-auto max-w-content scroll-mt-28 px-4 pb-16 pt-28 sm:scroll-mt-24 sm:px-6 sm:py-24">
       <div className="grid gap-10 md:grid-cols-[1.3fr_1fr] md:items-start md:gap-16">
         <SectionHeading eyebrow="Who we are" title={data.title} intro={paragraph} />
 

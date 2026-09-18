@@ -361,6 +361,14 @@ export default function DataCanvasWebGL({
         transparent: true,
         depthTest: false,
       });
+      // GL_LINES are 1px wide on virtually every desktop GPU/driver combo
+      // (gl.lineWidth beyond 1 is silently ignored outside Firefox), so a
+      // normal src-over blend at modest alpha reads as almost nothing
+      // against the near-black brand-950 background. Additive blending
+      // (src * alpha, dst kept in full) makes the same thin line actually
+      // glow instead of just faintly tinting the background - this is what
+      // makes the edge network and the phase-4 convergence legible at all.
+      edgeProgram.setBlendFunc(gl.SRC_ALPHA, gl.ONE);
       const edgeMesh = new Mesh(gl, { geometry: edgeGeometry, program: edgeProgram, mode: gl.LINES });
 
       // Edges first, points on top, so the bright dots never get buried
@@ -408,7 +416,10 @@ export default function DataCanvasWebGL({
           colorData[pitchIndex * 3] = pitchBaseColour[0] + (HIGHLIGHT_COLOR[0] - pitchBaseColour[0]) * w3;
           colorData[pitchIndex * 3 + 1] = pitchBaseColour[1] + (HIGHLIGHT_COLOR[1] - pitchBaseColour[1]) * w3;
           colorData[pitchIndex * 3 + 2] = pitchBaseColour[2] + (HIGHLIGHT_COLOR[2] - pitchBaseColour[2]) * w3;
-          sizeData[pitchIndex] = pitchBaseSize * (1 + w3 * 0.9);
+          // 1.9x read as barely-bigger noise against ~110 randomly-sized
+          // points (base sizes already span 3.2-7.6). Grow it further so it
+          // reads as a deliberate focal point rather than a slightly large dot.
+          sizeData[pitchIndex] = pitchBaseSize * (1 + w3 * 2.6);
 
           geometry.attributes.position.needsUpdate = true;
           geometry.attributes.color.needsUpdate = true;
@@ -426,8 +437,11 @@ export default function DataCanvasWebGL({
           // Phase 3: intra-cluster edges densify/brighten; bridges stay dim.
           // Phase 4: most edges fade out except the bridges into the pitch
           // node, which pop to sell the "it converges" beat.
-          const intraAlpha = w1 * 0.18 + w2 * 0.35 + w3 * 0.06;
-          const bridgeAlpha = w1 * 0.1 + w2 * 0.15 + w3 * 0.42;
+          // Additive blending (see edgeProgram above) means these alphas
+          // are glow intensity, not a background tint - pushed well above
+          // the old 0.06-0.42 range, which was invisible at 1px line width.
+          const intraAlpha = w1 * 0.35 + w2 * 0.65 + w3 * 0.16;
+          const bridgeAlpha = w1 * 0.22 + w2 * 0.34 + w3 * 0.85;
 
           for (let e = 0; e < edgeCount; e++) {
             const edge = edges[e];

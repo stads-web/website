@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useInView } from "framer-motion";
 import Reveal from "./motion/Reveal";
 import SplitText from "./motion/SplitText";
 import { iconMap } from "@/lib/icons";
@@ -23,10 +24,25 @@ const DRAW_PATHS: Record<string, string> = {
     "M228,208a4,4,0,0,1-4,4H32a4,4,0,0,1-4-4V48a4,4,0,0,1,8,0V166.34l57.17-57.17a4,4,0,0,1,5.66,0L128,138.34,190.34,76H160a4,4,0,0,1,0-8h40a4,4,0,0,1,4,4v40a4,4,0,0,1-8,0V81.66l-65.17,65.17a4,4,0,0,1-5.66,0L96,117.66l-60,60V204H224A4,4,0,0,1,228,208Z",
 };
 
-/** Sketches the icon's outline in, then dissolves it into the solid glyph. */
+/**
+ * Sketches the icon's outline in, then dissolves it into the solid glyph.
+ *
+ * The stroke and fill are two sibling `motion.path` elements. They used to
+ * each carry their own `whileInView`/`viewport` trigger, but Framer Motion
+ * (observed on v11.18) can drop the callback for one of two elements that
+ * register an identical `viewport` config (same margin/amount) at nearly
+ * the same time - the paths would then stay frozen at their `initial` state
+ * forever, since `once: true` never gives them a second chance. Tracking
+ * "is this icon in view" once, via a single `useInView` ref on the wrapping
+ * <svg>, and driving both paths off that one boolean removes the race
+ * entirely: there is exactly one observer and one source of truth.
+ */
 function DrawIcon({ path, delay }: { path: string; delay: number }) {
+  const ref = useRef<SVGSVGElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-80px" });
+
   return (
-    <svg viewBox="0 0 256 256" className="h-7 w-7" aria-hidden="true">
+    <svg ref={ref} viewBox="0 0 256 256" className="h-7 w-7" aria-hidden="true">
       <motion.path
         d={path}
         fill="none"
@@ -35,8 +51,7 @@ function DrawIcon({ path, delay }: { path: string; delay: number }) {
         strokeLinecap="round"
         strokeLinejoin="round"
         initial={{ pathLength: 0, opacity: 1 }}
-        whileInView={{ pathLength: 1, opacity: 0 }}
-        viewport={{ once: true, margin: "-80px" }}
+        animate={isInView ? { pathLength: 1, opacity: 0 } : undefined}
         transition={{
           pathLength: { duration: 1.05, ease: EASE, delay },
           opacity: { duration: 0.4, delay: delay + 0.85 },
@@ -46,8 +61,7 @@ function DrawIcon({ path, delay }: { path: string; delay: number }) {
         d={path}
         fill="currentColor"
         initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true, margin: "-80px" }}
+        animate={isInView ? { opacity: 1 } : undefined}
         transition={{ duration: 0.5, ease: EASE, delay: delay + 0.75 }}
       />
     </svg>

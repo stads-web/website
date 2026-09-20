@@ -6,7 +6,16 @@ import Steps from "@/components/join-us/Steps";
 import ContactCta from "@/components/ContactCta";
 import type { JoinHeroData, JoinStepsData, FinalCtaData } from "@/lib/types";
 
-export const metadata: Metadata = { title: "Join Us – STADS" };
+const title = "Join Us – STADS";
+const description =
+  "Ready to join STADS? Three simple steps: join the WhatsApp group, drop by a Monday Session, and become an active member of the team.";
+
+export const metadata: Metadata = {
+  title,
+  description,
+  openGraph: { title, description },
+  twitter: { title, description },
+};
 
 export default function JoinUsPage() {
   const hero = readContent<JoinHeroData>("join-us/hero.md");

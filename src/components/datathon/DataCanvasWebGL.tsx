@@ -236,6 +236,32 @@ const EDGE_FRAGMENT = /* glsl */ `
   }
 `;
 
+// The single signature trend line from the pre-knowledge-graph version of
+// this canvas (see git history a34afee~1) - kept alongside the edge network
+// rather than folded into it, since it's a distinct beat (one line "writing
+// itself in" during the correlation phase) rather than part of the graph
+// story, and uses normal alpha blending (ogl's default for `transparent`
+// programs) rather than the edges' additive blend.
+const LINE_VERTEX = /* glsl */ `
+  attribute vec3 position;
+  uniform mat4 modelViewMatrix;
+  uniform mat4 projectionMatrix;
+
+  void main() {
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }
+`;
+
+const LINE_FRAGMENT = /* glsl */ `
+  precision highp float;
+  uniform vec3 uColor;
+  uniform float uAlpha;
+
+  void main() {
+    gl_FragColor = vec4(uColor, uAlpha);
+  }
+`;
+
 /**
  * Real-WebGL twin of DataCanvas: the same four-phase story (noise -> a
  * correlation emerges -> clusters form -> it converges), but the points live
@@ -371,10 +397,26 @@ export default function DataCanvasWebGL({
       edgeProgram.setBlendFunc(gl.SRC_ALPHA, gl.ONE);
       const edgeMesh = new Mesh(gl, { geometry: edgeGeometry, program: edgeProgram, mode: gl.LINES });
 
+      // The single trend line - a 2-vertex segment that draws itself in
+      // during the correlation phase, independent of the edge network above.
+      const linePositionData = new Float32Array(2 * 3);
+      const lineGeometry = new Geometry(gl, {
+        position: { size: 3, data: linePositionData, usage: gl.DYNAMIC_DRAW },
+      });
+      const lineProgram = new Program(gl, {
+        vertex: LINE_VERTEX,
+        fragment: LINE_FRAGMENT,
+        transparent: true,
+        depthTest: false,
+        uniforms: { uColor: { value: [1, 1, 1] }, uAlpha: { value: 0 } },
+      });
+      const lineMesh = new Mesh(gl, { geometry: lineGeometry, program: lineProgram, mode: gl.LINES });
+
       // Edges first, points on top, so the bright dots never get buried
-      // under their own connecting lines.
+      // under their own connecting lines. The trend line sits above both.
       edgeMesh.setParent(scene);
       mesh.setParent(scene);
+      lineMesh.setParent(scene);
 
       let frame = 0;
 
@@ -461,6 +503,26 @@ export default function DataCanvasWebGL({
           edgeGeometry.attributes.position.needsUpdate = true;
           edgeGeometry.attributes.alpha.needsUpdate = true;
 
+          // The trend line writes itself in while the correlation phase
+          // holds, then fades - same timing as the 2D-canvas fallback's
+          // equivalent line in DataCanvas.tsx.
+          const lineIn = Math.min(1, Math.max(0, (p - 0.22) / 0.16));
+          const lineOut = Math.min(1, Math.max(0, (p - 0.52) / 0.18));
+          const lineAlpha = lineIn * (1 - lineOut) * 0.55;
+
+          const x1 = -1.0;
+          const y1 = -0.92;
+          const x2 = 1.0;
+          const y2 = 0.86;
+          linePositionData[0] = x1;
+          linePositionData[1] = y1;
+          linePositionData[2] = 0;
+          linePositionData[3] = x1 + (x2 - x1) * lineIn;
+          linePositionData[4] = y1 + (y2 - y1) * lineIn;
+          linePositionData[5] = 0;
+          lineGeometry.attributes.position.needsUpdate = true;
+          lineProgram.uniforms.uAlpha.value = lineAlpha;
+
           renderer.render({ scene, camera });
           frame = requestAnimationFrame(draw);
         } catch {
@@ -483,8 +545,10 @@ export default function DataCanvasWebGL({
         observer.disconnect();
         geometry.remove();
         edgeGeometry.remove();
+        lineGeometry.remove();
         program.remove();
         edgeProgram.remove();
+        lineProgram.remove();
         loseContext();
       };
     } catch {

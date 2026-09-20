@@ -99,7 +99,6 @@ export default function Testimonials({ data }: { data: TestimonialsData }) {
       <Reveal delay={0.2} className="mt-12">
         <div
           ref={containerRef}
-          data-cursor="Drag"
           className="-mx-4 overflow-hidden px-4 sm:-mx-6 sm:px-6"
         >
           <motion.div

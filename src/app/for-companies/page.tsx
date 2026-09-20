@@ -6,7 +6,16 @@ import Offerings from "@/components/for-companies/Offerings";
 import ContactCta from "@/components/ContactCta";
 import type { CompanyIntroData, OfferingsData, FinalCtaData } from "@/lib/types";
 
-export const metadata: Metadata = { title: "For Companies – STADS" };
+const title = "For Companies – STADS";
+const description =
+  "Partner with STADS, the University of Mannheim's student Data Science association, through guest lectures, workshops, the Datathon, or sponsorship.";
+
+export const metadata: Metadata = {
+  title,
+  description,
+  openGraph: { title, description },
+  twitter: { title, description },
+};
 
 export default function ForCompaniesPage() {
   const intro = readContent<CompanyIntroData>("for-companies/intro.md");

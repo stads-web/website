@@ -41,7 +41,6 @@ function MetricFlourish() {
 function EditionCard({ edition, index }: { edition: Edition; index: number }) {
   return (
     <article
-      data-cursor="View"
       className="group relative flex h-full w-[86vw] shrink-0 flex-col overflow-hidden rounded-[36px] border border-brand-100 bg-white p-8 shadow-[0px_15px_30px_rgba(15,29,54,0.05),0px_30px_60px_rgba(15,29,54,0.08)] sm:w-[520px]"
     >
       <Spotlight />

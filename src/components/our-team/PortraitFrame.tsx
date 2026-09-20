@@ -75,7 +75,7 @@ export default function PortraitFrame({
   };
 
   const content = photo ? (
-    <div className="absolute inset-0" data-cursor="View">
+    <div className="absolute inset-0">
       <Image
         src={photo}
         alt={name}
@@ -85,10 +85,7 @@ export default function PortraitFrame({
       />
     </div>
   ) : (
-    <div
-      className="absolute inset-0 bg-gradient-to-br from-brand-800 to-brand-950"
-      data-cursor="View"
-    >
+    <div className="absolute inset-0 bg-gradient-to-br from-brand-800 to-brand-950">
       <span
         aria-hidden
         className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-[5.5rem] font-medium tracking-tight text-white/[0.09]"

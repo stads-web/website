@@ -13,7 +13,6 @@ import Grain from "@/components/motion/Grain";
 import MeshBackdrop from "@/components/motion/MeshBackdrop";
 import FooterReveal from "@/components/motion/FooterReveal";
 import PageTransition from "@/components/motion/PageTransition";
-import Cursor from "@/components/motion/Cursor";
 import Preloader from "@/components/motion/Preloader";
 import { readContent } from "@/lib/content";
 import type { SiteData } from "@/lib/types";
@@ -70,14 +69,29 @@ export default function RootLayout({
 }>) {
   const { data: site } = readContent<SiteData>("global/site.md");
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "STADS – Students' Association for Data Analytics & Statistics Mannheim e.V.",
+    alternateName: "STADS",
+    url: siteUrl,
+    logo: `${siteUrl}/images/stads_logo_dark.webp`,
+    description: siteDescription,
+    email: site.contact.email,
+    sameAs: site.footer.social.map((link) => link.href),
+  };
+
   return (
     <html lang="en">
       <body className={`${libreFranklin.variable} ${inter.variable} ${playfair.variable} font-sans antialiased`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <ConsentProvider>
           <Preloader />
           <ScrollProgress />
           <Grain />
-          <Cursor />
           <SmoothScroll>
             <Header site={site} />
             <div className="relative z-10 bg-white mb-[var(--footer-h)]">

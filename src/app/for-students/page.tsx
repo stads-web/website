@@ -14,7 +14,16 @@ import type {
   FinalCtaData,
 } from "@/lib/types";
 
-export const metadata: Metadata = { title: "For Students – STADS" };
+const title = "For Students – STADS";
+const description =
+  "Discover how STADS helps University of Mannheim students learn Data Science through workshops, Monday Sessions, real projects, and membership tiers.";
+
+export const metadata: Metadata = {
+  title,
+  description,
+  openGraph: { title, description },
+  twitter: { title, description },
+};
 
 export default function ForStudentsPage() {
   const intro = readContent<IntroData>("for-students/intro.md");

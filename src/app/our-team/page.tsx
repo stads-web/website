@@ -6,7 +6,16 @@ import Departments from "@/components/our-team/Departments";
 import ContactCta from "@/components/ContactCta";
 import type { LeadershipData, DepartmentsData, FinalCtaData } from "@/lib/types";
 
-export const metadata: Metadata = { title: "Our Team – STADS" };
+const title = "Our Team – STADS";
+const description =
+  "Meet the STADS board and the seven student-run departments behind IT, Cooperation, Marketing, Education, Finance, Teambuilding, and the Datathon.";
+
+export const metadata: Metadata = {
+  title,
+  description,
+  openGraph: { title, description },
+  twitter: { title, description },
+};
 
 const cta: FinalCtaData = {
   eyebrow: "Want to be part of it?",

@@ -15,7 +15,7 @@ export default function PartneringIntro({
 
   return (
     <section className="mx-auto max-w-content px-4 pb-16 pt-8 sm:px-6 sm:pb-20 sm:pt-10">
-      <SectionHeading eyebrow="For companies" title={data.title} align="center" />
+      <SectionHeading eyebrow="Why STADS" title={data.title} align="center" />
 
       <div className="mt-12 grid gap-10 md:grid-cols-[1.2fr_1fr] md:items-start md:gap-16">
         <Reveal delay={0.1}>

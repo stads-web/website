@@ -5,14 +5,14 @@ import type { OfferingsData } from "@/lib/types";
 
 export default function Offerings({ data }: { data: OfferingsData }) {
   return (
-    <section className="mx-auto max-w-content px-4 pb-16 pt-4 sm:px-6 sm:pb-24 sm:pt-6">
+    <section id="offerings" className="mx-auto max-w-content px-4 pb-16 pt-4 sm:px-6 sm:pb-24 sm:pt-6">
       <SectionHeading eyebrow="What we can do together" title={data.title} />
 
-      <div className="mt-12 flex flex-col gap-16 sm:gap-20">
-        {data.items.map((item) => (
+      <div className="mt-12 flex flex-col sm:gap-4">
+        {data.items.map((item, i) => (
           <Reveal
             key={item.heading}
-            className={`grid gap-8 md:grid-cols-2 md:items-center md:gap-16 ${
+            className={`grid gap-8 border-t border-brand-100 py-16 first:border-t-0 first:pt-0 sm:gap-16 sm:py-20 sm:first:pt-0 md:grid-cols-2 md:items-center ${
               item.imageSide === "left" ? "" : "md:[&>*:first-child]:order-2"
             }`}
           >
@@ -26,7 +26,12 @@ export default function Offerings({ data }: { data: OfferingsData }) {
               />
             </div>
             <div>
-              <p className="text-xl font-medium text-brand-900">{item.heading}</p>
+              <span className="font-mono text-xs text-brand-300">
+                {String(i + 1).padStart(2, "0")} / {String(data.items.length).padStart(2, "0")}
+              </span>
+              <p className="mt-3 text-2xl font-medium tracking-tight text-brand-900 sm:text-3xl">
+                {item.heading}
+              </p>
               <p className="mt-3 leading-relaxed text-brand-900/70">{item.text}</p>
             </div>
           </Reveal>

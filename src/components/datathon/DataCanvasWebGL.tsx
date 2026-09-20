@@ -397,9 +397,16 @@ export default function DataCanvasWebGL({
       edgeProgram.setBlendFunc(gl.SRC_ALPHA, gl.ONE);
       const edgeMesh = new Mesh(gl, { geometry: edgeGeometry, program: edgeProgram, mode: gl.LINES });
 
-      // The single trend line - a 2-vertex segment that draws itself in
-      // during the correlation phase, independent of the edge network above.
-      const linePositionData = new Float32Array(2 * 3);
+      // The single trend line - drawn as an actual triangle ribbon (not a
+      // `gl.LINES` hairline) that draws itself in during the correlation
+      // phase, independent of the edge network above. A real 1-unit-wide
+      // `gl.LINES` segment renders at a hard 1 physical pixel on virtually
+      // every desktop GPU/driver (gl.lineWidth beyond 1 is silently ignored
+      // outside Firefox) - even with additive blending that reads as "very
+      // faint", because there's just too little lit area. A ribbon gives it
+      // real, controllable on-screen width instead of relying on line width.
+      const LINE_HALF_WIDTH = 0.028;
+      const linePositionData = new Float32Array(6 * 3);
       const lineGeometry = new Geometry(gl, {
         position: { size: 3, data: linePositionData, usage: gl.DYNAMIC_DRAW },
       });
@@ -408,9 +415,19 @@ export default function DataCanvasWebGL({
         fragment: LINE_FRAGMENT,
         transparent: true,
         depthTest: false,
+        // ogl's Program defaults to back-face culling, which is meant for
+        // closed 3D meshes (the point/edge programs above don't care since
+        // POINTS/LINES aren't culled) - this ribbon is a flat, one-sided
+        // quad whose winding isn't worth tracking through the perspective
+        // projection, so just disable culling for it.
+        cullFace: false,
         uniforms: { uColor: { value: [1, 1, 1] }, uAlpha: { value: 0 } },
       });
-      const lineMesh = new Mesh(gl, { geometry: lineGeometry, program: lineProgram, mode: gl.LINES });
+      // Additive blending (see edgeProgram above for the same reasoning) so
+      // the ribbon glows against the near-black backdrop instead of just
+      // faintly tinting it.
+      lineProgram.setBlendFunc(gl.SRC_ALPHA, gl.ONE);
+      const lineMesh = new Mesh(gl, { geometry: lineGeometry, program: lineProgram, mode: gl.TRIANGLES });
 
       // Edges first, points on top, so the bright dots never get buried
       // under their own connecting lines. The trend line sits above both.
@@ -505,21 +522,38 @@ export default function DataCanvasWebGL({
 
           // The trend line writes itself in while the correlation phase
           // holds, then fades - same timing as the 2D-canvas fallback's
-          // equivalent line in DataCanvas.tsx.
+          // equivalent line in DataCanvas.tsx. Alpha is glow intensity here
+          // (additive blend), not opacity, so it's pushed well past 1 at
+          // its peak - same reasoning as the edges' bridgeAlpha above.
           const lineIn = Math.min(1, Math.max(0, (p - 0.22) / 0.16));
           const lineOut = Math.min(1, Math.max(0, (p - 0.52) / 0.18));
-          const lineAlpha = lineIn * (1 - lineOut) * 0.55;
+          const lineAlpha = lineIn * (1 - lineOut) * 1.6;
 
           const x1 = -1.0;
           const y1 = -0.92;
           const x2 = 1.0;
           const y2 = 0.86;
-          linePositionData[0] = x1;
-          linePositionData[1] = y1;
-          linePositionData[2] = 0;
-          linePositionData[3] = x1 + (x2 - x1) * lineIn;
-          linePositionData[4] = y1 + (y2 - y1) * lineIn;
-          linePositionData[5] = 0;
+          const endX = x1 + (x2 - x1) * lineIn;
+          const endY = y1 + (y2 - y1) * lineIn;
+
+          // Perpendicular to the segment direction, scaled to a fixed
+          // half-width, so the ribbon has real on-screen area regardless of
+          // how the line is trimmed by `lineIn`.
+          const dx = endX - x1;
+          const dy = endY - y1;
+          const len = Math.max(1e-4, Math.hypot(dx, dy));
+          const px = (-dy / len) * LINE_HALF_WIDTH;
+          const py = (dx / len) * LINE_HALF_WIDTH;
+
+          const v = [
+            x1 + px, y1 + py, 0,
+            x1 - px, y1 - py, 0,
+            endX + px, endY + py, 0,
+            endX - px, endY - py, 0,
+            endX + px, endY + py, 0,
+            x1 - px, y1 - py, 0,
+          ];
+          linePositionData.set(v);
           lineGeometry.attributes.position.needsUpdate = true;
           lineProgram.uniforms.uAlpha.value = lineAlpha;
 

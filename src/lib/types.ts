@@ -141,6 +141,48 @@ export interface CompanyIntroData {
   imageAlt: string;
 }
 
+export interface CompaniesHeroData {
+  eyebrow: string;
+  title: string;
+  subline: string;
+  stats: Stat[];
+  primaryCta: CtaLink;
+  secondaryCta: CtaLink;
+  image: string;
+  imageAlt: string;
+}
+
+export interface TrustWallData {
+  eyebrow: string;
+  title: string;
+  names: string[];
+}
+
+export interface ContactTrack {
+  label: string;
+  text: string;
+  mailSubject: string;
+}
+
+export interface ContactPerson {
+  name: string;
+  role: string;
+  initials: string;
+  photo?: string;
+  email: string;
+  note: string;
+}
+
+export interface CompanyContactData {
+  eyebrow: string;
+  title: string;
+  intro: string;
+  tracks: ContactTrack[];
+  calBookingUrl: string;
+  tallyFormUrl: string;
+  contact: ContactPerson;
+}
+
 export interface OfferingItem {
   heading: string;
   text: string;

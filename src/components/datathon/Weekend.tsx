@@ -1,11 +1,20 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
+import {
+  motion,
+  useMotionValue,
+  useScroll,
+  useSpring,
+  useTransform,
+  type MotionValue,
+} from "framer-motion";
 import Reveal from "../motion/Reveal";
 import SplitText from "../motion/SplitText";
 import DataCanvas from "./DataCanvas";
 import type { WeekendBeat, WeekendData } from "@/lib/types";
+
+const EASE = [0.22, 1, 0.36, 1] as const;
 
 function Beat({
   beat,
@@ -50,22 +59,100 @@ function Beat({
   );
 }
 
+/**
+ * Non-pinned layout's beat card: a one-time whileInView fade/slide (same
+ * language as `Reveal`) plus an `onViewportEnter` step trigger that drives
+ * the companion canvas and the rail below - discrete per-step activation
+ * instead of scrubbing continuously with raw scroll position, which is what
+ * fights momentum scrolling on touch.
+ */
+function MobileBeat({
+  beat,
+  index,
+  total,
+  active,
+  onActive,
+}: {
+  beat: WeekendBeat;
+  index: number;
+  total: number;
+  active: boolean;
+  onActive: (index: number) => void;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 28 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-80px" }}
+      onViewportEnter={() => onActive(index)}
+      transition={{ duration: 0.7, delay: 0.05 * index, ease: EASE }}
+      className="relative pl-9"
+    >
+      <span
+        aria-hidden
+        className={`absolute left-0 top-1.5 h-2 w-2 rounded-full transition-all duration-500 ${
+          active ? "scale-125 bg-white shadow-[0_0_12px_2px_rgba(255,255,255,0.5)]" : "bg-white/25"
+        }`}
+      />
+      <p className="font-mono text-xs tracking-[0.35em] text-brand-300">
+        {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+      </p>
+      <p
+        className={`mt-3 text-3xl font-medium transition-colors duration-500 ${
+          active ? "text-white" : "text-white/70"
+        }`}
+      >
+        {beat.label}
+      </p>
+      <p className="mt-3 leading-relaxed text-white/65">{beat.text}</p>
+    </motion.div>
+  );
+}
+
 export default function Weekend({ data }: { data: WeekendData }) {
   const ref = useRef<HTMLDivElement>(null);
   const [pinned, setPinned] = useState(false);
+  const [activeBeat, setActiveBeat] = useState(0);
 
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end end"],
   });
 
+  // Drives the mobile canvas + rail: a spring toward the active beat's
+  // fraction, so the visual settles into each step instead of tracking raw
+  // scroll position (which is what read as "stuck" on touch/momentum scroll).
+  const activeBeatTarget = useMotionValue(0);
+  const mobileProgress = useSpring(
+    useTransform(activeBeatTarget, (v) => v / Math.max(1, data.beats.length - 1)),
+    { stiffness: 90, damping: 22, mass: 0.6 }
+  );
+
   useEffect(() => {
-    const query = window.matchMedia("(min-width: 1024px)");
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setPinned(query.matches && !reduced.matches);
+    activeBeatTarget.set(activeBeat);
+  }, [activeBeat, activeBeatTarget]);
+
+  useEffect(() => {
+    // The pinned scrollytelling only makes sense with a real pointer: touch
+    // scrolling's momentum and dynamic viewport (Safari's collapsing address
+    // bar) fight `position: sticky`, which reads as the section "getting
+    // stuck" rather than the intended pin. Gate on the same capability check
+    // DataCanvas already uses for its WebGL fast path, not just width alone -
+    // a touch tablet at a desktop-class width must not get pinned either.
+    const widthQuery = window.matchMedia("(min-width: 1024px)");
+    const pointerQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () =>
+      setPinned(widthQuery.matches && pointerQuery.matches && !reducedQuery.matches);
     update();
-    query.addEventListener("change", update);
-    return () => query.removeEventListener("change", update);
+    widthQuery.addEventListener("change", update);
+    pointerQuery.addEventListener("change", update);
+    reducedQuery.addEventListener("change", update);
+    return () => {
+      widthQuery.removeEventListener("change", update);
+      pointerQuery.removeEventListener("change", update);
+      reducedQuery.removeEventListener("change", update);
+    };
   }, []);
 
   useEffect(() => {
@@ -91,21 +178,35 @@ export default function Weekend({ data }: { data: WeekendData }) {
               </h2>
             </Reveal>
 
-            <div className="relative mt-10 h-64 overflow-hidden rounded-[28px] border border-white/10">
-              <DataCanvas progress={scrollYProgress} className="h-full w-full" />
+            <div className="relative mt-10">
+              <div
+                aria-hidden
+                className="absolute -inset-6 -z-10 rounded-[40px] bg-brand-500/10 blur-2xl"
+              />
+              <div className="relative h-64 overflow-hidden rounded-[28px] border border-white/10">
+                <DataCanvas progress={mobileProgress} className="h-full w-full" />
+              </div>
             </div>
 
-            <div className="mt-12 flex flex-col gap-12">
-              {data.beats.map((beat, i) => (
-                <Reveal key={beat.label} delay={0.05 * i}>
-                  <p className="font-mono text-xs tracking-[0.35em] text-brand-300">
-                    {String(i + 1).padStart(2, "0")} /{" "}
-                    {String(data.beats.length).padStart(2, "0")}
-                  </p>
-                  <p className="mt-3 text-3xl font-medium text-white">{beat.label}</p>
-                  <p className="mt-3 leading-relaxed text-white/65">{beat.text}</p>
-                </Reveal>
-              ))}
+            <div className="relative mt-12">
+              <div aria-hidden className="absolute left-1 top-2 bottom-2 w-px bg-white/10" />
+              <motion.div
+                aria-hidden
+                style={{ scaleY: mobileProgress }}
+                className="absolute left-1 top-2 w-px origin-top bg-gradient-to-b from-brand-300 to-white"
+              />
+              <div className="flex flex-col gap-12">
+                {data.beats.map((beat, i) => (
+                  <MobileBeat
+                    key={beat.label}
+                    beat={beat}
+                    index={i}
+                    total={data.beats.length}
+                    active={i === activeBeat}
+                    onActive={setActiveBeat}
+                  />
+                ))}
+              </div>
             </div>
 
             <p className="mt-16 text-xl text-white/50">{data.outro}</p>

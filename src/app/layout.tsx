@@ -15,7 +15,6 @@ import FooterReveal from "@/components/motion/FooterReveal";
 import PageTransition from "@/components/motion/PageTransition";
 import Cursor from "@/components/motion/Cursor";
 import Preloader from "@/components/motion/Preloader";
-import MobileStickyCta from "@/components/motion/MobileStickyCta";
 import { readContent } from "@/lib/content";
 import type { SiteData } from "@/lib/types";
 
@@ -92,7 +91,6 @@ export default function RootLayout({
             </FooterReveal>
           </SmoothScroll>
           <ConsentBanner />
-          <MobileStickyCta cta={site.joinCta} />
           <AnalyticsScripts />
           <Analytics />
         </ConsentProvider>

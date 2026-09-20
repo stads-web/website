@@ -37,7 +37,13 @@ function usePointerFollow(amount: number) {
   return { x: springX, y: springY };
 }
 
-export default function MeshBackdrop() {
+/**
+ * `contained` swaps the viewport-pinned `fixed` positioning for `absolute`,
+ * filling a positioned ancestor instead - used to drop the same drifting
+ * blobs into a fullscreen overlay (e.g. the mobile nav) without the
+ * footer-height exclusion, which only makes sense for the page-wide instance.
+ */
+export default function MeshBackdrop({ contained = false }: { contained?: boolean }) {
   const followA = usePointerFollow(14);
   const followB = usePointerFollow(10);
   const followC = usePointerFollow(18);
@@ -48,7 +54,9 @@ export default function MeshBackdrop() {
       // Stop short of the footer (--footer-h, published by FooterReveal) - being
       // `fixed`, this would otherwise keep painting on top of it forever, no
       // matter what background the footer itself sets.
-      className="pointer-events-none fixed inset-x-0 top-0 bottom-[var(--footer-h)] z-0 overflow-hidden"
+      className={`pointer-events-none z-0 overflow-hidden ${
+        contained ? "absolute inset-0" : "fixed inset-x-0 top-0 bottom-[var(--footer-h)]"
+      }`}
     >
       <motion.div
         style={{ x: followA.x, y: followA.y }}

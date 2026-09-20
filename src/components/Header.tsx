@@ -4,11 +4,53 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { List, X } from "@phosphor-icons/react";
+import { AnimatePresence, motion, useReducedMotion, type Variants } from "framer-motion";
 import type { SiteData } from "@/lib/types";
+import MeshBackdrop from "@/components/motion/MeshBackdrop";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
+
+// Circle-wipe origin sits roughly on the toggle button, so the overlay reads
+// as if it unfurls from the button itself rather than an unrelated corner.
+const overlayVariants: Variants = {
+  closed: { clipPath: "circle(0% at calc(100% - 2.75rem) 2.75rem)" },
+  open: { clipPath: "circle(150% at calc(100% - 2.75rem) 2.75rem)" },
+};
+
+const listVariants: Variants = {
+  closed: {},
+  open: { transition: { staggerChildren: 0.05, delayChildren: 0.2 } },
+};
+
+const itemVariants: Variants = {
+  closed: { opacity: 0, y: 28 },
+  open: { opacity: 1, y: 0 },
+};
+
+/** Hamburger that morphs into an X by rotating/fading its own three bars, rather than swapping icon components. */
+function MenuToggleIcon({ open }: { open: boolean }) {
+  const bar = "absolute inset-x-0 h-[1.5px] rounded-full bg-white";
+  return (
+    <span className="relative block h-5 w-5" aria-hidden>
+      <motion.span
+        className={bar}
+        animate={{ top: open ? 9 : 4, rotate: open ? 45 : 0 }}
+        transition={{ duration: 0.32, ease: EASE }}
+      />
+      <motion.span
+        className={bar}
+        style={{ top: 9 }}
+        animate={{ opacity: open ? 0 : 1, scale: open ? 0.4 : 1 }}
+        transition={{ duration: 0.2, ease: EASE }}
+      />
+      <motion.span
+        className={bar}
+        animate={{ top: open ? 9 : 14, rotate: open ? -45 : 0 }}
+        transition={{ duration: 0.32, ease: EASE }}
+      />
+    </span>
+  );
+}
 
 export default function Header({ site }: { site: SiteData }) {
   const [open, setOpen] = useState(false);
@@ -153,13 +195,13 @@ export default function Header({ site }: { site: SiteData }) {
           </Link>
           <button
             type="button"
-            className="flex h-8 w-8 items-center justify-center rounded-full text-white cursor-pointer"
+            className="flex h-11 w-11 items-center justify-center rounded-full text-white cursor-pointer"
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
             aria-controls="mobile-nav"
             onClick={() => setOpen((v) => !v)}
           >
-            {open ? <X size={20} /> : <List size={20} />}
+            <MenuToggleIcon open={open} />
           </button>
         </div>
       </div>
@@ -167,49 +209,73 @@ export default function Header({ site }: { site: SiteData }) {
       <AnimatePresence>
         {open && (
           <motion.div
-            key="mobile-nav-scrim"
-            aria-hidden="true"
-            onClick={() => setOpen(false)}
-            className="fixed inset-0 z-10 bg-brand-950/60 lg:hidden"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: prefersReducedMotion ? 0 : 0.25, ease: EASE }}
-          />
-        )}
-        {open && (
-          <motion.nav
             key="mobile-nav"
             id="mobile-nav"
-            className="relative z-20 mx-4 mt-1 rounded-2xl bg-brand-950/95 px-4 py-4 backdrop-blur-md sm:mx-6 lg:hidden"
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: prefersReducedMotion ? 0 : 0.3, ease: EASE }}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Mobile navigation"
+            className="fixed inset-0 z-10 flex flex-col overflow-hidden bg-brand-950 lg:hidden"
+            style={{ height: "100dvh" }}
+            variants={prefersReducedMotion ? undefined : overlayVariants}
+            initial={prefersReducedMotion ? { opacity: 0 } : "closed"}
+            animate={prefersReducedMotion ? { opacity: 1 } : "open"}
+            exit={prefersReducedMotion ? { opacity: 0 } : "closed"}
+            transition={{ duration: prefersReducedMotion ? 0 : 0.6, ease: EASE }}
           >
-            <ul className="flex flex-col gap-1">
-              {site.nav.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className="block rounded-lg px-3 py-3 text-base font-medium text-white/90 hover:bg-white/5"
-                    onClick={() => setOpen(false)}
+            <MeshBackdrop contained />
+
+            <motion.ul
+              className="relative z-10 flex flex-1 flex-col justify-center gap-1 px-8"
+              variants={prefersReducedMotion ? undefined : listVariants}
+              initial={prefersReducedMotion ? false : "closed"}
+              animate={prefersReducedMotion ? undefined : "open"}
+              exit={prefersReducedMotion ? undefined : "closed"}
+            >
+              {site.nav.map((item, index) => {
+                const active =
+                  item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+                return (
+                  <motion.li
+                    key={item.href}
+                    variants={prefersReducedMotion ? undefined : itemVariants}
+                    transition={{ duration: 0.5, ease: EASE }}
+                    className="overflow-hidden"
                   >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-              <li className="pt-2">
-                <Link
-                  href={site.joinCta.href}
-                  className="block rounded-full bg-white px-4 py-3 text-center text-base font-semibold text-brand-900"
-                  onClick={() => setOpen(false)}
-                >
-                  {site.joinCta.label}
-                </Link>
-              </li>
-            </ul>
-          </motion.nav>
+                    <Link
+                      href={item.href}
+                      onClick={() => setOpen(false)}
+                      className="group flex items-baseline gap-4 py-2.5"
+                    >
+                      <span className="font-sans text-xs tabular-nums text-white/40">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <span
+                        className={`font-accent text-4xl italic transition-colors sm:text-5xl ${
+                          active ? "text-white" : "text-white/85 group-hover:text-white"
+                        }`}
+                      >
+                        {item.label}
+                      </span>
+                    </Link>
+                  </motion.li>
+                );
+              })}
+            </motion.ul>
+
+            <motion.div
+              className="relative z-10 px-8 pb-[max(2rem,env(safe-area-inset-bottom))]"
+              variants={prefersReducedMotion ? undefined : itemVariants}
+              transition={{ duration: 0.5, ease: EASE }}
+            >
+              <Link
+                href={site.joinCta.href}
+                onClick={() => setOpen(false)}
+                className="block rounded-full bg-white px-4 py-3.5 text-center text-base font-semibold text-brand-900 shadow-card"
+              >
+                {site.joinCta.label}
+              </Link>
+            </motion.div>
+          </motion.div>
         )}
       </AnimatePresence>
     </header>

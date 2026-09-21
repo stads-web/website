@@ -148,14 +148,23 @@ export interface CompaniesHeroData {
   stats: Stat[];
   primaryCta: CtaLink;
   secondaryCta: CtaLink;
-  image: string;
-  imageAlt: string;
 }
 
 export interface TrustWallData {
   eyebrow: string;
   title: string;
   names: string[];
+}
+
+export interface ProcessStep {
+  title: string;
+  text: string;
+}
+
+export interface HowItWorksData {
+  eyebrow: string;
+  title: string;
+  steps: ProcessStep[];
 }
 
 export interface ContactTrack {

@@ -3,12 +3,14 @@ import { readContent } from "@/lib/content";
 import CompaniesHero from "@/components/for-companies/CompaniesHero";
 import PartneringIntro from "@/components/for-companies/PartneringIntro";
 import Offerings from "@/components/for-companies/Offerings";
+import HowItWorks from "@/components/for-companies/HowItWorks";
 import TrustWall from "@/components/for-companies/TrustWall";
 import CompanyContact from "@/components/for-companies/CompanyContact";
 import type {
   CompaniesHeroData,
   CompanyIntroData,
   OfferingsData,
+  HowItWorksData,
   TrustWallData,
   CompanyContactData,
   PartnersData,
@@ -29,6 +31,7 @@ export default function ForCompaniesPage() {
   const hero = readContent<CompaniesHeroData>("for-companies/hero.md");
   const intro = readContent<CompanyIntroData>("for-companies/intro.md");
   const offerings = readContent<OfferingsData>("for-companies/offerings.md");
+  const howItWorks = readContent<HowItWorksData>("for-companies/how-it-works.md");
   const trust = readContent<TrustWallData>("for-companies/trust.md");
   const contact = readContent<CompanyContactData>("for-companies/contact.md");
   const brands = readContent<PartnersData>("home/partners.md");
@@ -39,6 +42,7 @@ export default function ForCompaniesPage() {
       <CompaniesHero data={hero.data} />
       <PartneringIntro data={intro.data} body={intro.content} />
       <Offerings data={offerings.data} />
+      <HowItWorks data={howItWorks.data} />
       <TrustWall data={trust.data} logos={logos} />
       <CompanyContact data={contact.data} />
     </main>

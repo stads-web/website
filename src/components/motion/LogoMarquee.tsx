@@ -1,13 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
 import type { Partner } from "@/lib/types";
 
 /**
- * Endless band of partner logos. Drifts on its own and gets nudged further
- * along by scroll, so the strip never reads as a static row.
+ * Endless band of partner logos. Drifts on its own at a constant speed,
+ * independent of page scroll.
  */
 export default function LogoMarquee({
   logos,
@@ -16,18 +14,11 @@ export default function LogoMarquee({
   logos: Partner[];
   className?: string;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-  const x = useTransform(scrollYProgress, [0, 1], ["2%", "-10%"]);
-
   const run = [...logos, ...logos, ...logos];
 
   return (
-    <div ref={ref} className={`overflow-hidden ${className}`}>
-      <motion.div style={{ x }} className="flex w-max">
+    <div className={`overflow-hidden ${className}`}>
+      <div className="flex w-max">
         <div className="animate-marquee flex w-max items-center">
           {run.concat(run).map((logo, i) => (
             <span
@@ -49,7 +40,7 @@ export default function LogoMarquee({
             </span>
           ))}
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }

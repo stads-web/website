@@ -153,7 +153,6 @@ export interface CompaniesHeroData {
 export interface TrustWallData {
   eyebrow: string;
   title: string;
-  names: string[];
 }
 
 export interface ProcessStep {

@@ -201,26 +201,6 @@ export default function Hero({
             }
             className="relative inline-block"
           >
-            <motion.div
-              aria-hidden
-              initial={{ opacity: 0, scale: 0.6, rotate: -25 }}
-              animate={{ opacity: 1, scale: 1, rotate: 0 }}
-              transition={{ duration: 1.1 * s, ease: EASE, delay: 0.55 * s }}
-              className="absolute -left-16 bottom-2 hidden lg:block"
-            >
-              <motion.div
-                animate={{ y: [0, -6, 0] }}
-                transition={{ duration: 6, ease: "easeInOut", repeat: Infinity }}
-              >
-                <Image
-                  src="/images/stads_mark.webp"
-                  alt=""
-                  width={76}
-                  height={76}
-                  className="h-12 w-12 xl:h-14 xl:w-14"
-                />
-              </motion.div>
-            </motion.div>
             <h1 className="text-balance text-4xl leading-tight sm:text-5xl md:text-6xl lg:text-7xl xl:text-[88px]">
               <LineReveal
                 delay={0.15 * s}

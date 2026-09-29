@@ -30,7 +30,7 @@ export default function OurTeamPage() {
 
   return (
     <main>
-      <PageTopFade />
+      <PageTopFade image="/images/team/team.webp" />
       <Leadership data={leadership.data} />
       <Departments data={departments.data} />
       <ContactCta data={cta} />

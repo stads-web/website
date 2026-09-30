@@ -63,7 +63,7 @@ const config: Config = {
         "drift-b": "drift-b 32s ease-in-out infinite",
         "drift-c": "drift-c 38s ease-in-out infinite",
         blink: "blink 1.6s steps(1, end) infinite",
-        marquee: "marquee 38s linear infinite",
+        marquee: "marquee 60s linear infinite",
         "spin-slow": "spin 9s linear infinite",
       },
     },

@@ -1,13 +1,14 @@
 "use client";
 
-import { Quotes } from "@phosphor-icons/react/dist/ssr";
+import { CaretLeft, CaretRight, Quotes } from "@phosphor-icons/react/dist/ssr";
 import {
+  animate,
   motion,
   useMotionValue,
   useMotionValueEvent,
   useReducedMotion,
 } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import Reveal from "./motion/Reveal";
 import SplitText from "./motion/SplitText";
 import Spotlight from "./motion/Spotlight";
@@ -57,7 +58,11 @@ export default function Testimonials({ data }: { data: TestimonialsData }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const [maxDrag, setMaxDrag] = useState(0);
+  const [step, setStep] = useState(0);
+  const [measured, setMeasured] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [atStart, setAtStart] = useState(true);
+  const [atEnd, setAtEnd] = useState(false);
   const prefersReducedMotion = useReducedMotion();
   const x = useMotionValue(0);
 
@@ -67,6 +72,13 @@ export default function Testimonials({ data }: { data: TestimonialsData }) {
       const track = trackRef.current;
       if (!container || !track) return;
       setMaxDrag(Math.max(0, track.scrollWidth - container.clientWidth));
+      // Card width + gap, measured from the first two cards.
+      const [a, b] = [track.children[0], track.children[1]] as (
+        | HTMLElement
+        | undefined
+      )[];
+      setMeasured(true);
+      setStep(a && b ? b.offsetLeft - a.offsetLeft : 0);
     };
     measure();
     window.addEventListener("resize", measure);
@@ -76,16 +88,45 @@ export default function Testimonials({ data }: { data: TestimonialsData }) {
   const canDrag = maxDrag > 0;
   const lastIndex = Math.max(0, data.items.length - 1);
 
-  // Derives the nearest card index from the live drag position so the dot
-  // indicator below the rail tracks drag/scroll progress in real time.
+  // Derives the active card from the live x position so dots track
+  // drag, click and arrow movement alike.
   useMotionValueEvent(x, "change", (latest) => {
-    if (maxDrag <= 0 || lastIndex === 0) {
+    const start = latest > -1;
+    const end = maxDrag > 0 && latest <= -maxDrag + 1;
+    setAtStart(start);
+    setAtEnd(end);
+    if (maxDrag <= 0 || step <= 0) {
       setActiveIndex(0);
       return;
     }
-    const progress = Math.min(1, Math.max(0, -latest / maxDrag));
-    setActiveIndex(Math.round(progress * lastIndex));
+    setActiveIndex(
+      end ? lastIndex : Math.min(lastIndex, Math.round(-latest / step)),
+    );
   });
+
+  const moveTo = (target: number) => {
+    const clamped = Math.min(0, Math.max(-maxDrag, target));
+    if (prefersReducedMotion) x.set(clamped);
+    else animate(x, clamped, { type: "spring", stiffness: 300, damping: 34 });
+  };
+  const goToIndex = (i: number) => moveTo(-i * step);
+  // Exactly one card from wherever the row currently rests (drag may leave it between cards).
+  const prev = () => moveTo(-(Math.ceil(-x.get() / step - 0.01) - 1) * step);
+  const next = () => moveTo(-(Math.floor(-x.get() / step + 0.01) + 1) * step);
+
+  const onControlsKey = (e: KeyboardEvent) => {
+    if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      prev();
+    } else if (e.key === "ArrowRight") {
+      e.preventDefault();
+      next();
+    }
+  };
+
+  const ring =
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2";
+  const arrowCls = `flex h-10 w-10 items-center justify-center rounded-full border border-brand-800 bg-brand-500 text-white transition-colors hover:bg-brand-600 disabled:cursor-not-allowed disabled:border-brand-200 disabled:bg-brand-100 disabled:text-brand-900/30 disabled:hover:bg-brand-100 ${ring}`;
 
   return (
     <section className="mx-auto max-w-content px-4 py-16 text-center sm:px-6 sm:py-24">
@@ -122,21 +163,45 @@ export default function Testimonials({ data }: { data: TestimonialsData }) {
           </motion.div>
         </div>
 
-        {lastIndex > 0 && (
+        {lastIndex > 0 && (!measured || canDrag) && (
           <div
-            aria-hidden="true"
-            className="mt-6 flex items-center justify-center gap-2 sm:hidden"
+            onKeyDown={onControlsKey}
+            className="mt-6 flex items-center justify-center gap-4"
           >
-            {data.items.map((_, i) => (
-              <span
-                key={i}
-                className={`h-1.5 rounded-full transition-all duration-300 ${
-                  i === activeIndex
-                    ? "w-6 bg-brand-800"
-                    : "w-1.5 bg-brand-200"
-                }`}
-              />
-            ))}
+            <button
+              type="button"
+              aria-label="Previous testimonial"
+              disabled={atStart}
+              onClick={prev}
+              className={arrowCls}
+            >
+              <CaretLeft size={18} weight="bold" aria-hidden="true" />
+            </button>
+            <div className="flex items-center gap-2">
+              {data.items.map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  aria-label={`Go to testimonial ${i + 1}`}
+                  aria-current={i === activeIndex ? "true" : undefined}
+                  onClick={() => goToIndex(i)}
+                  className={`h-1.5 rounded-full transition-all duration-300 ${ring} ${
+                    i === activeIndex
+                      ? "w-6 bg-brand-800"
+                      : "w-1.5 bg-brand-200"
+                  }`}
+                />
+              ))}
+            </div>
+            <button
+              type="button"
+              aria-label="Next testimonial"
+              disabled={atEnd}
+              onClick={next}
+              className={arrowCls}
+            >
+              <CaretRight size={18} weight="bold" aria-hidden="true" />
+            </button>
           </div>
         )}
       </Reveal>

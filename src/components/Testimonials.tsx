@@ -9,6 +9,7 @@ import {
   useReducedMotion,
 } from "framer-motion";
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
+import Magnetic from "./motion/Magnetic";
 import Reveal from "./motion/Reveal";
 import SplitText from "./motion/SplitText";
 import Spotlight from "./motion/Spotlight";
@@ -169,7 +170,7 @@ export default function Testimonials({ data }: { data: TestimonialsData }) {
 
   const ring =
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2";
-  const arrowCls = `flex h-10 w-10 items-center justify-center rounded-full border border-brand-800 bg-brand-500 text-white transition-colors hover:bg-brand-600 ${ring}`;
+  const arrowCls = `flex h-10 w-10 items-center justify-center rounded-full border border-brand-300 text-brand-900 transition-colors hover:bg-brand-50 ${ring}`;
   const edgeMask =
     "linear-gradient(to right, transparent, #000 40px, #000 calc(100% - 40px), transparent)";
   const loop = count > 1;
@@ -234,14 +235,16 @@ export default function Testimonials({ data }: { data: TestimonialsData }) {
             onKeyDown={onControlsKey}
             className="flex items-center justify-center gap-4"
           >
-            <button
-              type="button"
-              aria-label="Previous testimonial"
-              onClick={prev}
-              className={arrowCls}
-            >
-              <CaretLeft size={18} weight="bold" aria-hidden="true" />
-            </button>
+            <Magnetic>
+              <button
+                type="button"
+                aria-label="Previous testimonial"
+                onClick={prev}
+                className={arrowCls}
+              >
+                <CaretLeft size={18} weight="bold" aria-hidden="true" />
+              </button>
+            </Magnetic>
             <div className="flex items-center gap-2">
               {data.items.map((_, i) => (
                 <button
@@ -258,14 +261,16 @@ export default function Testimonials({ data }: { data: TestimonialsData }) {
                 />
               ))}
             </div>
-            <button
-              type="button"
-              aria-label="Next testimonial"
-              onClick={next}
-              className={arrowCls}
-            >
-              <CaretRight size={18} weight="bold" aria-hidden="true" />
-            </button>
+            <Magnetic>
+              <button
+                type="button"
+                aria-label="Next testimonial"
+                onClick={next}
+                className={arrowCls}
+              >
+                <CaretRight size={18} weight="bold" aria-hidden="true" />
+              </button>
+            </Magnetic>
           </div>
         )}
       </Reveal>

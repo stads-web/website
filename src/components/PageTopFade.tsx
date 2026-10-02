@@ -10,7 +10,7 @@ export default function PageTopFade({ image }: { image?: string }) {
     <div className="relative h-[220px] w-full overflow-hidden bg-gradient-to-b from-brand-800 to-white sm:h-[280px]">
       {image && (
         <>
-          <Image src={image} alt="" fill priority quality={90} sizes="100vw" className="object-cover" />
+          <Image src={image} alt="" fill priority quality={95} sizes="100vw" className="object-cover" />
           <div className="absolute inset-0 bg-gradient-to-b from-brand-950/85 via-brand-950/35 to-transparent" />
         </>
       )}

@@ -35,7 +35,9 @@ export default function LogoMarquee({
                 alt={logo.name}
                 width={240}
                 height={72}
-                className="h-10 w-auto min-w-0 max-w-full object-contain sm:h-12"
+                // ponytail: no upscaling – low-res logos (Horváth, zeb, Leonteq) stay small until sharper files exist
+                unoptimized
+                className="h-auto max-h-10 w-auto min-w-0 max-w-full object-contain sm:max-h-12"
               />
             </span>
           ))}

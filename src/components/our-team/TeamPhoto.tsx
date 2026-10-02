@@ -4,7 +4,7 @@ import SectionHeading from "../motion/SectionHeading";
 
 export default function TeamPhoto() {
   return (
-    <section className="px-4 pb-16 sm:px-6 sm:pb-24">
+    <section className="px-4 pb-8 pt-8 sm:px-6 sm:pb-10 sm:pt-10">
       <SectionHeading
         eyebrow="Teams & Departments"
         title="One team, seven departments"

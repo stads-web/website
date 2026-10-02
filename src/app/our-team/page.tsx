@@ -32,8 +32,8 @@ export default function OurTeamPage() {
   return (
     <main>
       <PageTopFade />
-      <Leadership data={leadership.data} />
       <TeamPhoto />
+      <Leadership data={leadership.data} />
       <Departments data={departments.data} />
       <ContactCta data={cta} />
     </main>

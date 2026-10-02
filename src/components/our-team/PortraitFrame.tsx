@@ -80,6 +80,7 @@ export default function PortraitFrame({
         src={photo}
         alt={name}
         fill
+        quality={90}
         sizes="(min-width: 1280px) 300px, (min-width: 640px) 45vw, 90vw"
         className="object-cover transition-transform duration-[900ms] group-hover:scale-105"
       />

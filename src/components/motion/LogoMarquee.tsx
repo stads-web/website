@@ -24,7 +24,7 @@ export default function LogoMarquee({
             <span
               key={`${logo.name}-${i}`}
               // Reversed logos need the blue box; colour logos need a light one.
-              className={`mx-4 flex h-16 w-40 shrink-0 items-center justify-center rounded-2xl border-[0.5px] px-6 sm:mx-5 sm:h-[72px] sm:w-48 ${
+              className={`mx-4 flex h-20 w-48 shrink-0 items-center justify-center rounded-2xl border-[0.5px] px-4 sm:mx-6 sm:h-28 sm:w-64 sm:rounded-3xl ${
                 logo.box === "blue"
                   ? "border-white/50 bg-brand-500"
                   : "border-brand-200 bg-white"
@@ -33,9 +33,9 @@ export default function LogoMarquee({
               <Image
                 src={logo.logo}
                 alt={logo.name}
-                width={160}
-                height={48}
-                className="h-auto max-h-7 w-auto max-w-full object-contain"
+                width={240}
+                height={72}
+                className="h-10 w-auto min-w-0 max-w-full object-contain sm:h-12"
               />
             </span>
           ))}

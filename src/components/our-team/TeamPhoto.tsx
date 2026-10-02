@@ -4,11 +4,10 @@ import SectionHeading from "../motion/SectionHeading";
 
 export default function TeamPhoto() {
   return (
-    <section className="px-4 pb-8 pt-8 sm:px-6 sm:pb-10 sm:pt-10">
+    <section className="mx-auto max-w-content px-4 pb-8 pt-8 sm:px-6 sm:pb-10 sm:pt-10">
       <SectionHeading
         eyebrow="Teams & Departments"
         title="One team, seven departments"
-        align="center"
       />
       <Reveal y={16} className="mx-auto mt-10 max-w-3xl">
         <div className="overflow-hidden rounded-3xl border border-brand-100 shadow-[0px_5px_10px_rgba(0,0,0,0.05),0px_15px_30px_rgba(0,0,0,0.05),0px_30px_60px_rgba(0,0,0,0.1)]">

@@ -110,7 +110,6 @@ export default function Leadership({ data }: { data: LeadershipData }) {
         eyebrow={data.eyebrow}
         title={data.title}
         intro={data.intro}
-        align="center"
       />
 
       <div className="mx-auto mt-14 grid max-w-4xl gap-6 sm:grid-cols-3">

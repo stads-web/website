@@ -3,6 +3,7 @@ import { readContent } from "@/lib/content";
 import PageTopFade from "@/components/PageTopFade";
 import Leadership from "@/components/our-team/Leadership";
 import Departments from "@/components/our-team/Departments";
+import TeamPhoto from "@/components/our-team/TeamPhoto";
 import ContactCta from "@/components/ContactCta";
 import type { LeadershipData, DepartmentsData, FinalCtaData } from "@/lib/types";
 
@@ -30,8 +31,9 @@ export default function OurTeamPage() {
 
   return (
     <main>
-      <PageTopFade image="/images/team/team.webp" />
+      <PageTopFade />
       <Leadership data={leadership.data} />
+      <TeamPhoto />
       <Departments data={departments.data} />
       <ContactCta data={cta} />
     </main>

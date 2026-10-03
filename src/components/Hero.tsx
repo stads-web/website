@@ -96,7 +96,7 @@ function LineReveal({
   return (
     <span className="-mb-[0.14em] block overflow-hidden pb-[0.14em]">
       <motion.span
-        className={`block ${className}`}
+        className={`-mb-[0.14em] block pb-[0.14em] ${className}`}
         initial={{ y: "115%" }}
         animate={{ y: "0%" }}
         transition={{ duration, ease: EASE, delay }}

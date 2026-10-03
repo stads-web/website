@@ -72,7 +72,8 @@ export default function TeamHero() {
         <div className="absolute inset-x-0 top-0 px-6 pt-28">
           <Headline />
         </div>
-        <Buttons className="absolute inset-x-0 bottom-20 flex justify-center gap-3" />
+        {/* Bottom of the first screen, or of the photo if that is shorter than the screen. */}
+        <Buttons className="absolute inset-x-0 top-[min(calc(100svh_-_8rem),calc(100%_-_8rem))] flex justify-center gap-3" />
       </div>
 
       {/* Mobile: dark block with text, then the complete photo (no crop). */}

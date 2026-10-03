@@ -16,10 +16,7 @@ const outline =
 function Headline() {
   return (
     <div className="text-center">
-      <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-white/70">
-        Our Team
-      </p>
-      <h1 className="mx-auto mt-3 max-w-3xl text-balance text-4xl font-medium leading-[1.05] tracking-tight text-white md:text-5xl xl:text-6xl">
+      <h1 className="mx-auto max-w-3xl text-balance text-4xl font-medium leading-[1.05] tracking-tight text-white md:text-5xl xl:text-6xl">
         <SplitText text={TITLE} delay={0.1} />
       </h1>
     </div>

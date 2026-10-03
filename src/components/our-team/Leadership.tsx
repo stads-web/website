@@ -105,7 +105,7 @@ function MemberCard({ member, index }: { member: TeamMember; index: number }) {
 
 export default function Leadership({ data }: { data: LeadershipData }) {
   return (
-    <section className="mx-auto max-w-content px-4 pb-16 pt-8 sm:px-6 sm:pb-20 sm:pt-10">
+    <section id="board" className="mx-auto max-w-content scroll-mt-24 px-4 pb-16 pt-8 sm:px-6 sm:pb-20 sm:pt-10">
       <SectionHeading
         eyebrow={data.eyebrow}
         title={data.title}

@@ -64,7 +64,7 @@ export default function Departments({ data }: { data: DepartmentsData }) {
   const CurrentIcon = iconMap[current.icon];
 
   return (
-    <section className="mx-auto max-w-content px-4 pb-16 pt-4 sm:px-6 sm:pb-24 sm:pt-6">
+    <section id="departments" className="mx-auto max-w-content scroll-mt-24 px-4 pb-16 pt-4 sm:px-6 sm:pb-24 sm:pt-6">
       <SectionHeading eyebrow={data.eyebrow} title={data.title} intro={data.intro} />
 
       <StackedDepartments items={data.items} />

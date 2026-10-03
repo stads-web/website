@@ -48,9 +48,9 @@ export default function TeamHero() {
 
   return (
     <section>
-      {/* Desktop: photo as stage. Crop is intentionally top-biased (object-position y 5%):
-          bottom (bodies) is cropped first, faces sit at ~29-60% of the image height. */}
-      <div className="relative isolate hidden h-[100svh] min-h-[640px] max-h-[1000px] overflow-hidden bg-brand-950 lg:block">
+      {/* Desktop: photo as stage. The container has the photo's own aspect ratio,
+          so the whole photo is shown and the white fade sits at its very end. */}
+      <div className="relative isolate hidden aspect-[4266/3197] overflow-hidden bg-brand-950 lg:block">
         <motion.div
           className="absolute inset-0"
           initial={{ scale: 1 }}

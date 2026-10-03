@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { readContent } from "@/lib/content";
-import PageTopFade from "@/components/PageTopFade";
 import Leadership from "@/components/our-team/Leadership";
 import Departments from "@/components/our-team/Departments";
-import TeamPhoto from "@/components/our-team/TeamPhoto";
+import TeamHero from "@/components/our-team/TeamHero";
 import ContactCta from "@/components/ContactCta";
 import type { LeadershipData, DepartmentsData, FinalCtaData } from "@/lib/types";
 
@@ -31,8 +30,7 @@ export default function OurTeamPage() {
 
   return (
     <main>
-      <PageTopFade />
-      <TeamPhoto />
+      <TeamHero />
       <Leadership data={leadership.data} />
       <Departments data={departments.data} />
       <ContactCta data={cta} />

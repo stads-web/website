@@ -47,7 +47,7 @@ export default function TeamHero() {
     <section>
       {/* Desktop: photo as stage, exactly one window high; the board follows on scroll.
           Crop is top-biased (object-position y 5%) so faces (~29-60% of the image) stay in view. */}
-      <div className="relative isolate hidden h-[100svh] min-h-[720px] overflow-hidden bg-brand-950 lg:block">
+      <div className="relative isolate hidden h-[calc(100svh+8rem)] min-h-[calc(720px+8rem)] overflow-hidden bg-brand-950 lg:block">
         <motion.div
           className="absolute inset-0"
           initial={{ scale: 1 }}
@@ -65,11 +65,11 @@ export default function TeamHero() {
           />
         </motion.div>
         <div className="absolute inset-0 bg-gradient-to-b from-brand-950/80 via-brand-950/25 to-brand-950/80" />
-        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-white to-transparent" />
         <div className="absolute inset-x-0 top-0 px-6 pt-24">
           <Headline />
         </div>
-        <Buttons className="absolute inset-x-0 bottom-20 flex justify-center gap-3" />
+        <Buttons className="absolute inset-x-0 bottom-[calc(5rem+8rem)] flex justify-center gap-3" />
       </div>
 
       {/* Mobile: dark block with text, then the complete photo (no crop). */}
@@ -90,7 +90,7 @@ export default function TeamHero() {
             className="block h-auto w-full"
           />
           <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-brand-950 to-transparent" />
-          <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-white to-transparent" />
         </div>
       </div>
     </section>

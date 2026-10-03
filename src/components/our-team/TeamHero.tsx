@@ -65,7 +65,7 @@ export default function TeamHero() {
           />
         </motion.div>
         <div className="absolute inset-0 bg-gradient-to-b from-brand-950/80 via-brand-950/25 to-brand-950/80" />
-        <div className="absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-white to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white to-transparent" />
         <div className="absolute inset-x-0 top-0 px-6 pt-24">
           <Headline />
         </div>
@@ -90,7 +90,7 @@ export default function TeamHero() {
             className="block h-auto w-full"
           />
           <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-brand-950 to-transparent" />
-          <div className="absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-white to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white to-transparent" />
         </div>
       </div>
     </section>

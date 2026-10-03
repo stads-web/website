@@ -48,9 +48,9 @@ export default function TeamHero() {
 
   return (
     <section>
-      {/* Desktop: photo as stage. The container has the photo's own aspect ratio,
-          so the whole photo is shown and the white fade sits at its very end. */}
-      <div className="relative isolate hidden aspect-[4266/3197] overflow-hidden bg-brand-950 lg:block">
+      {/* Desktop: photo as stage, exactly one window high; the board follows on scroll.
+          Crop is top-biased (object-position y 5%) so faces (~29-60% of the image) stay in view. */}
+      <div className="relative isolate hidden h-[100svh] min-h-[720px] overflow-hidden bg-brand-950 lg:block">
         <motion.div
           className="absolute inset-0"
           initial={{ scale: 1 }}
@@ -64,16 +64,15 @@ export default function TeamHero() {
             priority
             quality={95}
             sizes="100vw"
-            className="object-cover object-[50%_5%]"
+            className="object-cover object-[50%_5%] [@media(min-aspect-ratio:19/10)_and_(min-height:880px)]:object-[50%_30%]"
           />
         </motion.div>
         <div className="absolute inset-0 bg-gradient-to-b from-brand-950/80 via-brand-950/25 to-brand-950/80" />
         <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white to-transparent" />
-        <div className="absolute inset-x-0 top-0 px-6 pt-28">
+        <div className="absolute inset-x-0 top-0 px-6 pt-24">
           <Headline />
         </div>
-        {/* Bottom of the first screen, or of the photo if that is shorter than the screen. */}
-        <Buttons className="absolute inset-x-0 top-[min(calc(100svh_-_8rem),calc(100%_-_8rem))] flex justify-center gap-3" />
+        <Buttons className="absolute inset-x-0 bottom-20 flex justify-center gap-3" />
       </div>
 
       {/* Mobile: dark block with text, then the complete photo (no crop). */}

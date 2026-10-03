@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import Magnetic from "../motion/Magnetic";
-import SplitText from "../motion/SplitText";
 
 const TITLE = "One Team, Seven Departments";
 
@@ -13,14 +12,9 @@ const filled =
 const outline =
   "block rounded-full border border-white/60 px-6 py-3 font-medium text-white transition-colors hover:bg-white/10";
 
+// Visible title removed on request; kept for screen readers as the page's h1.
 function Headline() {
-  return (
-    <div className="text-center">
-      <h1 className="mx-auto max-w-3xl text-balance text-4xl font-medium leading-[1.05] tracking-tight text-white md:text-5xl xl:text-6xl">
-        <SplitText text={TITLE} delay={0.1} />
-      </h1>
-    </div>
-  );
+  return <h1 className="sr-only">{TITLE}</h1>;
 }
 
 function Buttons({ className }: { className: string }) {

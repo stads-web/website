@@ -72,25 +72,53 @@ export default function TeamHero() {
         <Buttons className="absolute inset-x-0 bottom-[calc(5rem+5rem)] flex justify-center gap-3" />
       </div>
 
-      {/* Mobile: dark block with text, then the complete photo (no crop). */}
-      <div className="lg:hidden">
-        <div className="bg-brand-950 px-4 pb-8 pt-28 sm:px-6">
-          <Headline />
-          <Buttons className="mt-8 flex flex-wrap justify-center gap-3" />
+      {/* Mobile: one composed screen - headline and actions on navy, the whole
+          team photo (no crop) anchored to the bottom and melting up into it. */}
+      <div className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-brand-950 lg:hidden">
+        <div
+          aria-hidden
+          className="absolute inset-0 -z-10 bg-[radial-gradient(120%_60%_at_50%_100%,rgba(90,110,151,0.35),transparent_70%)]"
+        />
+        <div className="px-5 pt-28 text-center sm:px-6 sm:pt-32">
+          <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-brand-300">
+            Our Team
+          </p>
+          <h1 className="mx-auto mt-5 max-w-[11ch] text-balance text-[2.9rem] font-medium leading-[1.02] tracking-tight text-white sm:max-w-3xl sm:text-6xl">
+            <SplitText text={TITLE} delay={0.1} />
+          </h1>
+          <div className="mx-auto mt-8 grid max-w-sm grid-cols-2 gap-3">
+            <Magnetic>
+              <Link href="#board" className={`${filled.replace("px-6", "px-4")} text-center text-[15px]`}>
+                Meet the board
+              </Link>
+            </Magnetic>
+            <Magnetic>
+              <Link href="#departments" className={`${outline.replace("px-6", "px-4")} text-center text-[15px]`}>
+                Join a department
+              </Link>
+            </Magnetic>
+          </div>
         </div>
-        <div className="relative">
-          <Image
-            src="/images/team/team.webp"
-            alt="Das STADS-Team"
-            width={4266}
-            height={3197}
-            quality={95}
-            priority
-            sizes="100vw"
-            className="block h-auto w-full"
-          />
-          <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-brand-950 to-transparent" />
-          <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-white to-transparent" />
+
+        <div className="relative mt-auto pt-10">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <Image
+              src="/images/team/team.webp"
+              alt="Das STADS-Team"
+              width={4266}
+              height={3197}
+              quality={95}
+              priority
+              sizes="100vw"
+              className="block h-auto w-full"
+            />
+          </motion.div>
+          <div className="absolute inset-x-0 top-10 h-24 bg-gradient-to-b from-brand-950 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white to-transparent" />
         </div>
       </div>
     </section>

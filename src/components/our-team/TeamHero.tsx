@@ -5,12 +5,10 @@ import Link from "next/link";
 import { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import Magnetic from "../motion/Magnetic";
-import SplitText from "../motion/SplitText";
 
 /** Which mobile hero is live: "light" is the white poster, "dark" the navy one. */
 const MOBILE_HERO: "light" | "dark" = "light";
 
-const TITLE = "One Team, Seven Departments";
 
 const filled =
   "block rounded-full border border-white bg-white px-6 py-3 font-medium text-brand-900 transition-colors hover:bg-brand-50";
@@ -21,7 +19,13 @@ function Headline() {
   return (
     <div className="text-center">
       <h1 className="mx-auto max-w-3xl text-balance text-4xl font-medium leading-[1.05] tracking-tight text-white md:text-5xl xl:text-6xl">
-        <SplitText text={TITLE} delay={0.1} />
+        <Line delay={0.1}>
+          One Team,{" "}
+          <span className="font-accent text-[1.08em] font-normal italic tracking-[-0.02em] text-brand-300">
+            Seven
+          </span>{" "}
+          Departments
+        </Line>
       </h1>
     </div>
   );

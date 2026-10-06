@@ -17,6 +17,7 @@ partners:
     logo: "/brand/partners/oliver-wyman.svg"
     aspect: 5.229
   - name: "QuantumBlack, AI by McKinsey"
+    href: "https://www.mckinsey.com/capabilities/quantumblack/how-we-help-clients"
     logo: "/brand/partners/quantumblack.svg"
     aspect: 5.019
   - name: "Horváth"

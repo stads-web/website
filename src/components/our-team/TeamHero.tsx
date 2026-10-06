@@ -6,6 +6,13 @@ import { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import Magnetic from "../motion/Magnetic";
 import SplitText from "../motion/SplitText";
+import { iconMap } from "@/lib/icons";
+import type { Department } from "@/lib/types";
+
+/** Which mobile hero is live. "light" is the white poster with the department dock; "dark" the navy one. */
+const MOBILE_HERO: "light" | "dark" = "light";
+
+export const departmentSlug = (name: string) => `dept-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
 
 const TITLE = "One Team, Seven Departments";
 
@@ -198,7 +205,139 @@ function MobileHero({ reduce }: { reduce: boolean }) {
   );
 }
 
-export default function TeamHero() {
+/**
+ * Mobile hero, light variant: a poster. "One Team," above the photo and
+ * "Seven Departments" below it, so the picture is literally the hinge between
+ * the two ideas. The type slides apart in opposite directions as you scroll,
+ * the photo (still whole, 4:3) wipes open from the bottom, and a dock of seven
+ * department icons under it doubles as a jump menu.
+ */
+function MobileHeroLight({
+  reduce,
+  departments,
+}: {
+  reduce: boolean;
+  departments: Pick<Department, "name" | "icon">[];
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
+  const topX = useTransform(scrollYProgress, [0, 1], [0, reduce ? 0 : -48]);
+  const bottomX = useTransform(scrollYProgress, [0, 1], [0, reduce ? 0 : 48]);
+
+  return (
+    <div
+      ref={ref}
+      className="relative isolate overflow-hidden bg-white px-4 pb-10 pt-[5.5rem] sm:px-8 lg:hidden"
+    >
+      <div
+        aria-hidden
+        className="absolute inset-0 -z-20 bg-[radial-gradient(90%_45%_at_50%_0%,#E7ECF4,transparent_70%),radial-gradient(70%_35%_at_100%_75%,#F4F6FA,transparent_70%)]"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -left-[38%] top-[34%] -z-10 aspect-square w-[120%] animate-[spin_140s_linear_infinite] opacity-[0.06] will-change-transform"
+      >
+        <Image src="/brand/stads-mark-dark.svg" alt="" fill sizes="120vw" />
+      </div>
+
+      <motion.div style={{ x: topX }}>
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.7, delay: 0.1 }}
+          className="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.32em] text-brand-500"
+        >
+          <span className="h-px w-8 bg-brand-400" />
+          Our Team
+        </motion.p>
+        <h1 className="mt-3 text-[16.5vw] font-medium leading-[0.92] tracking-[-0.04em] text-brand-950 sm:text-[13vw]">
+          <Line delay={0.2}>One Team,</Line>
+        </h1>
+      </motion.div>
+
+      <motion.div
+        initial={reduce ? false : { clipPath: "inset(100% 0 0 0 round 28px)" }}
+        animate={{ clipPath: "inset(0% 0 0 0 round 28px)" }}
+        transition={{ duration: 1.3, delay: 0.45, ease: EASE }}
+        className="relative mt-4 overflow-hidden rounded-[28px] shadow-[0px_10px_20px_rgba(15,29,54,0.08),0px_30px_60px_rgba(15,29,54,0.16)]"
+      >
+        <motion.div
+          initial={reduce ? false : { scale: 1.18 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 1.8, delay: 0.45, ease: EASE }}
+        >
+          <Image
+            src="/images/team/team.webp"
+            alt="Das STADS-Team"
+            width={4266}
+            height={3197}
+            quality={95}
+            priority
+            sizes="100vw"
+            className="block h-auto w-full"
+          />
+        </motion.div>
+      </motion.div>
+
+      <motion.div style={{ x: bottomX }} className="mt-5">
+        <h2 className="text-[14.2vw] font-medium leading-[0.92] tracking-[-0.04em] text-brand-950 sm:text-[11.5vw]">
+          <Line delay={0.9} className="font-accent font-normal italic tracking-[-0.02em] text-brand-500">
+            Seven
+          </Line>
+          <Line delay={1}>Departments</Line>
+        </h2>
+      </motion.div>
+
+      <div className="mt-8">
+        <p className="mb-3 flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.3em] text-brand-400">
+          Jump to a department
+          <span className="h-px flex-1 bg-brand-100" />
+        </p>
+        <ul className="flex items-center justify-between rounded-full border border-brand-100 bg-white/80 p-1.5 shadow-card backdrop-blur-sm">
+          {departments.map((dept, i) => {
+            const Icon = iconMap[dept.icon];
+            return (
+              <motion.li
+                key={dept.name}
+                initial={reduce ? false : { opacity: 0, y: 12, scale: 0.8 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.5, delay: 1.25 + i * 0.05, ease: EASE }}
+              >
+                <Link
+                  href={`#${departmentSlug(dept.name)}`}
+                  aria-label={dept.name}
+                  className="flex h-11 w-11 items-center justify-center rounded-full text-brand-800 transition-colors active:bg-brand-800 active:text-white"
+                >
+                  {Icon && <Icon size={20} weight="regular" aria-hidden="true" />}
+                </Link>
+              </motion.li>
+            );
+          })}
+        </ul>
+        <div className="mt-4 grid grid-cols-2 gap-3">
+          <Link
+            href="#board"
+            className="block rounded-full border border-brand-900 bg-brand-900 px-4 py-3 text-center text-[15px] font-medium text-white"
+          >
+            Meet the board
+          </Link>
+          <Link
+            href="#departments"
+            className="block rounded-full border border-brand-300 px-4 py-3 text-center text-[15px] font-medium text-brand-900"
+          >
+            Join a department
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function TeamHero({
+  departments,
+}: {
+  departments: Pick<Department, "name" | "icon">[];
+}) {
   const reduce = useReducedMotion();
 
   return (
@@ -230,7 +369,11 @@ export default function TeamHero() {
         <Buttons className="absolute inset-x-0 bottom-[calc(5rem+5rem)] flex justify-center gap-3" />
       </div>
 
-      <MobileHero reduce={!!reduce} />
+      {MOBILE_HERO === "light" ? (
+        <MobileHeroLight reduce={!!reduce} departments={departments} />
+      ) : (
+        <MobileHero reduce={!!reduce} />
+      )}
     </section>
   );
 }

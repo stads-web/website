@@ -14,14 +14,26 @@ export default function Spotlight() {
     const parent = element?.parentElement;
     if (!element || !parent) return;
 
-    const onMove = (event: MouseEvent) => {
+    // One style write per frame, however many mousemove events arrive.
+    let frame = 0;
+    let last: MouseEvent | null = null;
+    const apply = () => {
+      frame = 0;
+      if (!last) return;
       const rect = parent.getBoundingClientRect();
-      element.style.setProperty("--x", `${event.clientX - rect.left}px`);
-      element.style.setProperty("--y", `${event.clientY - rect.top}px`);
+      element.style.setProperty("--x", `${last.clientX - rect.left}px`);
+      element.style.setProperty("--y", `${last.clientY - rect.top}px`);
+    };
+    const onMove = (event: MouseEvent) => {
+      last = event;
+      if (!frame) frame = requestAnimationFrame(apply);
     };
 
-    parent.addEventListener("mousemove", onMove);
-    return () => parent.removeEventListener("mousemove", onMove);
+    parent.addEventListener("mousemove", onMove, { passive: true });
+    return () => {
+      parent.removeEventListener("mousemove", onMove);
+      if (frame) cancelAnimationFrame(frame);
+    };
   }, []);
 
   return (

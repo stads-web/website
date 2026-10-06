@@ -233,7 +233,7 @@ export default function Header({ site }: { site: SiteData }) {
             onClick={() => setOpen(false)}
             className={`relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full border backdrop-blur-md transition-colors duration-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
               onDark
-                ? "border-white/15 bg-brand-950/45"
+                ? "border-white/15 bg-brand-950/80"
                 : "border-brand-100 bg-white/85 shadow-card"
             }`}
           >
@@ -260,7 +260,7 @@ export default function Header({ site }: { site: SiteData }) {
               type="button"
               className={`flex h-12 cursor-pointer items-center gap-3 rounded-full border pl-5 pr-4 backdrop-blur-md transition-colors duration-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
                 onDark
-                  ? "border-white/15 bg-brand-950/45 text-white"
+                  ? "border-white/15 bg-brand-950/80 text-white"
                   : "border-brand-100 bg-white/85 text-brand-900 shadow-card"
               }`}
               aria-label={open ? "Close menu" : "Open menu"}

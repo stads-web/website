@@ -51,6 +51,12 @@ html.lenis body {
   overflow: hidden;
 }
 
+@media (hover: hover) {
+  html.is-scrolling main {
+    pointer-events: none;
+  }
+}
+
 body {
   color: var(--foreground);
   background: var(--background);

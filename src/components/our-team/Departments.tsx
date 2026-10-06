@@ -6,6 +6,7 @@ import Reveal from "../motion/Reveal";
 import SectionHeading from "../motion/SectionHeading";
 import PortraitFrame from "./PortraitFrame";
 import NameTag from "./NameTag";
+import { departmentSlug } from "./TeamHero";
 import { iconMap } from "@/lib/icons";
 import type { Department, DepartmentsData } from "@/lib/types";
 
@@ -21,7 +22,7 @@ function StackedDepartments({ items }: { items: Department[] }) {
       {items.map((dept, i) => {
         const Icon = iconMap[dept.icon];
         return (
-          <li key={dept.name} className="py-10 first:pt-2 last:pb-2">
+          <li key={dept.name} id={departmentSlug(dept.name)} className="scroll-mt-24 py-10 first:pt-2 last:pb-2">
             <Reveal>
               <div className="mx-auto max-w-[420px] sm:grid sm:max-w-none sm:grid-cols-[minmax(0,300px)_1fr] sm:items-start sm:gap-10">
                 <div className="relative aspect-[4/5] overflow-hidden rounded-[28px] border border-brand-100 shadow-[0px_10px_20px_rgba(15,29,54,0.06),0px_30px_60px_rgba(15,29,54,0.10)]">

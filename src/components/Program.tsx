@@ -65,8 +65,14 @@ function ProgramCard({ item }: { item: ProgramItem }) {
         style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
         className="group relative block h-[220px] w-full shrink-0 text-left sm:h-[380px]"
       >
+        {/* The stronger hover shadow is a static layer that only fades in.
+            Transitioning box-shadow itself repaints a 90px blur every frame. */}
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-0 hidden rounded-[40px] opacity-0 shadow-[0px_10px_20px_rgba(15,29,54,0.08),0px_25px_50px_rgba(15,29,54,0.10),0px_45px_90px_rgba(15,29,54,0.14)] transition-opacity duration-700 [transform:translateZ(-1px)] sm:block sm:group-hover:opacity-100"
+        />
         <div
-          className={`relative h-full w-full rounded-[28px] shadow-[0px_2px_6px_rgba(15,29,54,0.06)] transition-[transform,box-shadow] duration-700 [transform-style:preserve-3d] sm:rounded-[40px] sm:shadow-[0px_5px_10px_rgba(0,0,0,0.05),0px_15px_30px_rgba(0,0,0,0.05),0px_30px_60px_rgba(0,0,0,0.1)] sm:group-hover:shadow-[0px_10px_20px_rgba(15,29,54,0.08),0px_25px_50px_rgba(15,29,54,0.10),0px_45px_90px_rgba(15,29,54,0.14)] ${
+          className={`relative h-full w-full rounded-[28px] shadow-[0px_2px_6px_rgba(15,29,54,0.06)] transition-transform duration-700 [transform-style:preserve-3d] sm:rounded-[40px] sm:shadow-[0px_5px_10px_rgba(0,0,0,0.05),0px_15px_30px_rgba(0,0,0,0.05),0px_30px_60px_rgba(0,0,0,0.1)] ${
             showsBack ? "[transform:rotateY(180deg)]" : ""
           }`}
         >

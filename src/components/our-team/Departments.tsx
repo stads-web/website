@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import Reveal from "../motion/Reveal";
 import SectionHeading from "../motion/SectionHeading";
 import PortraitFrame from "./PortraitFrame";
+import NameTag from "./NameTag";
 import { iconMap } from "@/lib/icons";
 import type { Department, DepartmentsData } from "@/lib/types";
 
@@ -36,13 +37,10 @@ function StackedDepartments({ items }: { items: Department[] }) {
                     {String(i + 1).padStart(2, "0")} / {String(items.length).padStart(2, "0")}
                   </span>
                 </div>
-                <div className="mt-7 sm:mt-1">
-                  <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-brand-300">
-                    Department lead
-                    {dept.lead && <span className="text-brand-500"> · {dept.lead}</span>}
-                  </p>
-                  <p className="mt-2 text-3xl font-medium text-brand-900">{dept.name}</p>
-                  <p className="mt-4 text-[1.02rem] leading-relaxed text-brand-900/70">
+                <div className="mt-5 sm:mt-0">
+                  {dept.lead && <NameTag name={dept.lead} role="Lead" />}
+                  <p className="mt-6 text-3xl font-medium text-brand-900">{dept.name}</p>
+                  <p className="mt-3 text-[1.02rem] leading-relaxed text-brand-900/70">
                     {dept.text}
                   </p>
                 </div>

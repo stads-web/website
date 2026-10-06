@@ -4,6 +4,7 @@ import Reveal from "../motion/Reveal";
 import SectionHeading from "../motion/SectionHeading";
 import Spotlight from "../motion/Spotlight";
 import PortraitFrame from "./PortraitFrame";
+import NameTag from "./NameTag";
 import type { LeadershipData, TeamMember } from "@/lib/types";
 
 function MemberCard({ member, index }: { member: TeamMember; index: number }) {
@@ -20,13 +21,7 @@ function MemberCard({ member, index }: { member: TeamMember; index: number }) {
         </div>
 
         {/* Caption sits under the portrait so the person is never covered. */}
-        <div className="px-1 pt-6 text-center sm:text-left">
-          <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-brand-400">
-            {member.role}
-          </p>
-          <p className="mt-2 text-2xl font-medium tracking-tight text-brand-900">{member.name}</p>
-          <span className="mx-auto mt-4 block h-px w-10 origin-left bg-brand-300 transition-transform duration-500 group-hover:scale-x-[2.4] sm:mx-0" />
-        </div>
+        <NameTag name={member.name} role={member.role} className="mt-5" />
       </div>
     </Reveal>
   );

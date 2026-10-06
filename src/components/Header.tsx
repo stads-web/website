@@ -8,7 +8,6 @@ import {
   AnimatePresence,
   motion,
   useReducedMotion,
-  useScroll,
   type Variants,
 } from "framer-motion";
 import type { SiteData } from "@/lib/types";
@@ -81,7 +80,6 @@ export default function Header({ site }: { site: SiteData }) {
   const lastY = useRef(0);
   const pathname = usePathname();
   const prefersReducedMotion = useReducedMotion();
-  const { scrollYProgress } = useScroll();
   const onDark = open || !scrolled;
 
   useEffect(() => {
@@ -229,7 +227,6 @@ export default function Header({ site }: { site: SiteData }) {
           animate={{ y: hidden && !open ? "-130%" : 0 }}
           transition={{ duration: prefersReducedMotion ? 0 : 0.45, ease: EASE }}
         >
-          {/* The circle mark doubles as a scroll-progress ring. */}
           <Link
             href="/"
             aria-label="STADS home"
@@ -240,22 +237,6 @@ export default function Header({ site }: { site: SiteData }) {
                 : "border-brand-100 bg-white/85 shadow-card"
             }`}
           >
-            <svg
-              aria-hidden
-              viewBox="0 0 48 48"
-              className="pointer-events-none absolute inset-0 -rotate-90"
-            >
-              <motion.circle
-                cx="24"
-                cy="24"
-                r="22.5"
-                fill="none"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                className={onDark ? "stroke-white/70" : "stroke-brand-800"}
-                style={{ pathLength: scrollYProgress }}
-              />
-            </svg>
             <span className="relative block h-[26px] w-[26px]">
               <motion.span
                 className="absolute inset-0"
@@ -274,29 +255,7 @@ export default function Header({ site }: { site: SiteData }) {
             </span>
           </Link>
 
-          <div className="flex items-center gap-2">
-            <AnimatePresence initial={false}>
-              {!open && (
-                <motion.div
-                  key="join"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.3, ease: EASE }}
-                  className="max-[359px]:hidden"
-                >
-                  <Link
-                    href={site.joinCta.href}
-                    className={`flex h-12 items-center rounded-full px-5 text-sm font-semibold transition-colors duration-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
-                      onDark ? "bg-white text-brand-900" : "bg-brand-900 text-white"
-                    }`}
-                  >
-                    {site.joinCta.label}
-                  </Link>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
+          <div className="flex items-center">
             <button
               type="button"
               className={`flex h-12 cursor-pointer items-center gap-3 rounded-full border pl-5 pr-4 backdrop-blur-md transition-colors duration-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${

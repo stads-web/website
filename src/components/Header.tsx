@@ -15,6 +15,10 @@ import MeshBackdrop from "@/components/motion/MeshBackdrop";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
+/** External links (the membership form) open in a new tab. */
+const linkProps = (href: string) =>
+  /^https?:\/\//.test(href) ? { target: "_blank", rel: "noopener noreferrer" } : {};
+
 // Circle-wipe origin sits roughly on the toggle button, so the overlay reads
 // as if it unfurls from the button itself rather than an unrelated corner.
 const overlayVariants: Variants = {
@@ -216,6 +220,7 @@ export default function Header({ site }: { site: SiteData }) {
           />
           <Link
             href={site.joinCta.href}
+            {...linkProps(site.joinCta.href)}
             className="relative flex h-[30px] w-[109px] items-center justify-center rounded-full border border-white/15 bg-white text-center text-sm font-bold text-black shadow-[inset_0_0_6px_3px_rgba(255,255,255,0.25)] backdrop-blur-[7px] transition-transform duration-300 hover:scale-[1.04]"
           >
             {site.joinCta.label}
@@ -338,6 +343,7 @@ export default function Header({ site }: { site: SiteData }) {
             >
               <Link
                 href={site.joinCta.href}
+                {...linkProps(site.joinCta.href)}
                 onClick={() => setOpen(false)}
                 className="block rounded-full bg-white px-4 py-3.5 text-center text-base font-semibold text-brand-900 shadow-card"
               >

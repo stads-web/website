@@ -20,6 +20,7 @@ export default function FinalCta({ data }: { data: FinalCtaData }) {
           <Magnetic className="mt-8 inline-block">
             <Link
               href={data.ctaHref}
+              {...(/^https?:\/\//.test(data.ctaHref) ? { target: "_blank", rel: "noopener noreferrer" } : {})}
               className="block rounded-full bg-white px-7 py-3 font-semibold text-brand-900 transition-colors hover:bg-brand-100"
             >
               {data.ctaLabel}

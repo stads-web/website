@@ -17,7 +17,7 @@ nav:
     href: /events
 joinCta:
   label: Join STADS
-  href: /join-us
+  href: https://forms.cloud.microsoft/e/Djr2PyE4jq
 footer:
   pages:
     - label: Datathon

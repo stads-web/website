@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import type { MotionValue } from "framer-motion";
 
@@ -167,8 +167,26 @@ function DataCanvas2D({
       }
       ctx.globalAlpha = 1;
 
-      frame = requestAnimationFrame(draw);
+      // Only keep the loop alive while the canvas is actually on screen.
+      if (running) frame = requestAnimationFrame(draw);
     };
+
+    // Run only while visible and the tab is in the foreground.
+    let inView = true;
+    let running = true;
+    const sync = () => {
+      const next = inView && !document.hidden;
+      if (next === running) return;
+      running = next;
+      cancelAnimationFrame(frame);
+      if (running) frame = requestAnimationFrame(draw);
+    };
+    const io = new IntersectionObserver(([entry]) => {
+      inView = entry.isIntersecting;
+      sync();
+    });
+    io.observe(canvas);
+    document.addEventListener("visibilitychange", sync);
 
     resize();
     frame = requestAnimationFrame(draw);
@@ -177,6 +195,8 @@ function DataCanvas2D({
     observer.observe(canvas);
 
     return () => {
+      io.disconnect();
+      document.removeEventListener("visibilitychange", sync);
       cancelAnimationFrame(frame);
       observer.disconnect();
     };
@@ -220,12 +240,21 @@ function canUseWebGLFastPath() {
  * safety net if the WebGL path errors out after mounting.
  */
 export default function DataCanvas(props: { progress: MotionValue<number>; className?: string }) {
-  // Decided once, synchronously, on the client's first render - avoids both
-  // an SSR/client mismatch and a visible mode-swap after mount.
-  const [useWebGL, setUseWebGL] = useState(canUseWebGLFastPath);
+  // The server cannot know which renderer the browser supports, so the first
+  // render (server and client alike) is an empty placeholder; the mode is
+  // chosen once after mount. This avoids a hydration mismatch, and no 2D
+  // canvas is ever mounted just to be thrown away for WebGL.
+  const [mode, setMode] = useState<"pending" | "webgl" | "2d">("pending");
 
-  if (useWebGL) {
-    return <DataCanvasWebGL {...props} onError={() => setUseWebGL(false)} />;
+  useEffect(() => {
+    setMode(canUseWebGLFastPath() ? "webgl" : "2d");
+  }, []);
+
+  const fallback = useCallback(() => setMode("2d"), []);
+
+  if (mode === "pending") return <div aria-hidden className={props.className} />;
+  if (mode === "webgl") {
+    return <DataCanvasWebGL {...props} onError={fallback} />;
   }
   return <DataCanvas2D {...props} />;
 }

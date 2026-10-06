@@ -61,6 +61,22 @@ html.is-scrolling .animate-drift-c {
   animation-play-state: paused;
 }
 
+/* Hover effects rest while the page is moving (mouse devices only). */
+@media (hover: hover) {
+  html.is-scrolling main {
+    pointer-events: none;
+  }
+}
+
+/* Touch devices: the background blobs stay still (cheaper compositing). */
+@media (hover: none) {
+  .animate-drift-a,
+  .animate-drift-b,
+  .animate-drift-c {
+    animation: none;
+  }
+}
+
 /* Compositor-driven scroll effects (no JS per frame). */
 @keyframes scroll-drift {
   to {

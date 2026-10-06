@@ -558,12 +558,30 @@ export default function DataCanvasWebGL({
           lineProgram.uniforms.uAlpha.value = lineAlpha;
 
           renderer.render({ scene, camera });
-          frame = requestAnimationFrame(draw);
+          // Only keep the loop alive while the canvas is on screen.
+          if (running) frame = requestAnimationFrame(draw);
         } catch {
           cancelled = true;
           onError?.();
         }
       };
+
+      // Run only while visible and the tab is in the foreground.
+      let inView = true;
+      let running = true;
+      const sync = () => {
+        const next = inView && !document.hidden;
+        if (next === running) return;
+        running = next;
+        cancelAnimationFrame(frame);
+        if (running && !cancelled) frame = requestAnimationFrame(draw);
+      };
+      const io = new IntersectionObserver(([entry]) => {
+        inView = entry.isIntersecting;
+        sync();
+      });
+      io.observe(parent);
+      document.addEventListener("visibilitychange", sync);
 
       resize();
       frame = requestAnimationFrame(draw);
@@ -576,6 +594,8 @@ export default function DataCanvasWebGL({
       cleanup = () => {
         cancelled = true;
         cancelAnimationFrame(frame);
+        io.disconnect();
+        document.removeEventListener("visibilitychange", sync);
         observer.disconnect();
         geometry.remove();
         edgeGeometry.remove();

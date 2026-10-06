@@ -9,7 +9,6 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SmoothScroll from "@/components/motion/SmoothScroll";
 import ScrollProgress from "@/components/motion/ScrollProgress";
-import MeshBackdrop from "@/components/motion/MeshBackdrop";
 import FooterReveal from "@/components/motion/FooterReveal";
 import PageTransition from "@/components/motion/PageTransition";
 import MotionProvider from "@/components/motion/MotionProvider";
@@ -93,7 +92,6 @@ export default function RootLayout({
           <SmoothScroll>
             <Header site={site} />
             <div className="relative z-10 bg-white mb-[var(--footer-h)]">
-              <MeshBackdrop />
               <div className="relative z-10">
                 <PageTransition>{children}</PageTransition>
               </div>

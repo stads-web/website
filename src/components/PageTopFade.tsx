@@ -7,7 +7,10 @@ import Constellation from "./motion/Constellation";
  */
 export default function PageTopFade({ image }: { image?: string }) {
   return (
-    <div className="relative h-[220px] w-full overflow-hidden bg-gradient-to-b from-brand-800 to-white sm:h-[280px]">
+    // The band fades out through a mask instead of ending in an opaque white
+    // edge: below it the page is transparent over the drifting backdrop, and an
+    // opaque white bottom showed up as a hard line against the backdrop's glow.
+    <div className="relative h-[220px] w-full overflow-hidden bg-gradient-to-b from-brand-800 to-transparent [-webkit-mask-image:linear-gradient(to_bottom,#000_55%,transparent)] [mask-image:linear-gradient(to_bottom,#000_55%,transparent)] sm:h-[280px]">
       {image && (
         <>
           <Image src={image} alt="" fill priority quality={95} sizes="100vw" className="object-cover" />
@@ -15,7 +18,6 @@ export default function PageTopFade({ image }: { image?: string }) {
         </>
       )}
       <Constellation />
-      <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-white to-transparent" />
     </div>
   );
 }

@@ -1,10 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, motion, useReducedMotion, type Variants } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+  type Variants,
+} from "framer-motion";
 import type { SiteData } from "@/lib/types";
 import MeshBackdrop from "@/components/motion/MeshBackdrop";
 
@@ -13,8 +20,8 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 // Circle-wipe origin sits roughly on the toggle button, so the overlay reads
 // as if it unfurls from the button itself rather than an unrelated corner.
 const overlayVariants: Variants = {
-  closed: { clipPath: "circle(0% at calc(100% - 2.75rem) 2.75rem)" },
-  open: { clipPath: "circle(150% at calc(100% - 2.75rem) 2.75rem)" },
+  closed: { clipPath: "circle(0% at calc(100% - 4rem) 2.25rem)" },
+  open: { clipPath: "circle(150% at calc(100% - 4rem) 2.25rem)" },
 };
 
 const listVariants: Variants = {
@@ -27,27 +34,43 @@ const itemVariants: Variants = {
   open: { opacity: 1, y: 0 },
 };
 
-/** Hamburger that morphs into an X by rotating/fading its own three bars, rather than swapping icon components. */
+/** Two bars that cross into an X by rotating their own geometry (no icon swap). */
 function MenuToggleIcon({ open }: { open: boolean }) {
-  const bar = "absolute inset-x-0 h-[1.5px] rounded-full bg-white";
+  const bar = "absolute inset-x-0 h-[1.5px] rounded-full bg-current";
   return (
-    <span className="relative block h-5 w-5" aria-hidden>
+    <span className="relative block h-[18px] w-5" aria-hidden>
       <motion.span
         className={bar}
-        animate={{ top: open ? 9 : 4, rotate: open ? 45 : 0 }}
-        transition={{ duration: 0.32, ease: EASE }}
+        initial={false}
+        animate={{ top: open ? 8 : 4, rotate: open ? 45 : 0 }}
+        transition={{ duration: 0.4, ease: EASE }}
       />
       <motion.span
         className={bar}
-        style={{ top: 9 }}
-        animate={{ opacity: open ? 0 : 1, scale: open ? 0.4 : 1 }}
-        transition={{ duration: 0.2, ease: EASE }}
+        initial={false}
+        animate={{ top: open ? 8 : 12, rotate: open ? -45 : 0 }}
+        transition={{ duration: 0.4, ease: EASE }}
       />
-      <motion.span
-        className={bar}
-        animate={{ top: open ? 9 : 14, rotate: open ? -45 : 0 }}
-        transition={{ duration: 0.32, ease: EASE }}
-      />
+    </span>
+  );
+}
+
+/** Label that rolls upward when it changes ("Menu" -> "Close"). */
+function RollingLabel({ text }: { text: string }) {
+  return (
+    <span className="relative inline-flex h-5 overflow-hidden text-sm font-medium leading-5">
+      <AnimatePresence mode="popLayout" initial={false}>
+        <motion.span
+          key={text}
+          initial={{ y: "110%" }}
+          animate={{ y: 0 }}
+          exit={{ y: "-110%" }}
+          transition={{ duration: 0.4, ease: EASE }}
+          className="block"
+        >
+          {text}
+        </motion.span>
+      </AnimatePresence>
     </span>
   );
 }
@@ -55,11 +78,25 @@ function MenuToggleIcon({ open }: { open: boolean }) {
 export default function Header({ site }: { site: SiteData }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const lastY = useRef(0);
   const pathname = usePathname();
   const prefersReducedMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll();
+  const ring = useSpring(scrollYProgress, { stiffness: 140, damping: 30, mass: 0.4 });
+  const onDark = open || !scrolled;
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    const onScroll = () => {
+      const y = window.scrollY;
+      setScrolled(y > 40);
+      // Mobile bar tucks away while reading downwards and returns on any
+      // upward flick; it never hides near the top of the page.
+      if (y < 120) setHidden(false);
+      else if (y - lastY.current > 8) setHidden(true);
+      else if (lastY.current - y > 8) setHidden(false);
+      lastY.current = y;
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -99,7 +136,7 @@ export default function Header({ site }: { site: SiteData }) {
     <header className="fixed inset-x-0 top-0 z-40">
       {/* Three real columns rather than a centred group with an absolutely
           placed logo - that version collided once the viewport narrowed. */}
-      <div className="relative z-20 mx-auto flex max-w-content items-center justify-between gap-6 px-4 py-4 sm:px-6">
+      <div className="relative z-20 mx-auto flex max-w-content items-center justify-between gap-6 px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-6 lg:py-4">
         <Link
           href="/"
           aria-label="STADS home"
@@ -107,7 +144,7 @@ export default function Header({ site }: { site: SiteData }) {
         >
           {/* Both logo variants are stacked in the same box and cross-fade via
               opacity instead of swapping `src` outright, which used to pop. */}
-          <span className="relative block aspect-[351/109] w-[112px] xl:w-[140px]">
+          <span className="relative block aspect-[351/109] w-[136px] xl:w-[172px]">
             <motion.span
               className="absolute inset-0"
               animate={{ opacity: scrolled ? 0 : 1 }}
@@ -118,7 +155,7 @@ export default function Header({ site }: { site: SiteData }) {
                 alt="STADS"
                 fill
                 priority
-                sizes="140px"
+                sizes="172px"
                 className="object-contain"
               />
             </motion.span>
@@ -132,7 +169,7 @@ export default function Header({ site }: { site: SiteData }) {
                 alt="STADS"
                 fill
                 priority
-                sizes="140px"
+                sizes="172px"
                 className="object-contain"
               />
             </motion.span>
@@ -189,21 +226,96 @@ export default function Header({ site }: { site: SiteData }) {
           </Link>
         </div>
 
-        <div className="flex w-full items-center justify-between rounded-full bg-brand-950/55 px-4 py-2.5 backdrop-blur-md lg:hidden">
-          <Link href="/" className="text-sm font-semibold text-white" onClick={() => setOpen(false)}>
-            STADS
-          </Link>
-          <button
-            type="button"
-            className="flex h-11 w-11 items-center justify-center rounded-full text-white cursor-pointer"
-            aria-label={open ? "Close menu" : "Open menu"}
-            aria-expanded={open}
-            aria-controls="mobile-nav"
-            onClick={() => setOpen((v) => !v)}
+        <motion.div
+          className="flex w-full items-center justify-between lg:hidden"
+          animate={{ y: hidden && !open ? "-130%" : 0 }}
+          transition={{ duration: prefersReducedMotion ? 0 : 0.45, ease: EASE }}
+        >
+          {/* The circle mark doubles as a scroll-progress ring. */}
+          <Link
+            href="/"
+            aria-label="STADS home"
+            onClick={() => setOpen(false)}
+            className={`relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full border backdrop-blur-md transition-colors duration-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
+              onDark
+                ? "border-white/15 bg-brand-950/45"
+                : "border-brand-100 bg-white/85 shadow-card"
+            }`}
           >
-            <MenuToggleIcon open={open} />
-          </button>
-        </div>
+            <svg
+              aria-hidden
+              viewBox="0 0 48 48"
+              className="pointer-events-none absolute inset-0 -rotate-90"
+            >
+              <motion.circle
+                cx="24"
+                cy="24"
+                r="22.5"
+                fill="none"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                className={onDark ? "stroke-white/70" : "stroke-brand-800"}
+                style={{ pathLength: ring }}
+              />
+            </svg>
+            <span className="relative block h-[26px] w-[26px]">
+              <motion.span
+                className="absolute inset-0"
+                animate={{ opacity: onDark ? 1 : 0 }}
+                transition={{ duration: 0.4, ease: EASE }}
+              >
+                <Image src="/brand/stads-mark-white.svg" alt="" fill priority sizes="26px" />
+              </motion.span>
+              <motion.span
+                className="absolute inset-0"
+                animate={{ opacity: onDark ? 0 : 1 }}
+                transition={{ duration: 0.4, ease: EASE }}
+              >
+                <Image src="/brand/stads-mark-dark.svg" alt="" fill priority sizes="26px" />
+              </motion.span>
+            </span>
+          </Link>
+
+          <div className="flex items-center gap-2">
+            <AnimatePresence initial={false}>
+              {!open && (
+                <motion.div
+                  key="join"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.3, ease: EASE }}
+                  className="max-[359px]:hidden"
+                >
+                  <Link
+                    href={site.joinCta.href}
+                    className={`flex h-12 items-center rounded-full px-5 text-sm font-semibold transition-colors duration-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
+                      onDark ? "bg-white text-brand-900" : "bg-brand-900 text-white"
+                    }`}
+                  >
+                    {site.joinCta.label}
+                  </Link>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <button
+              type="button"
+              className={`flex h-12 cursor-pointer items-center gap-3 rounded-full border pl-5 pr-4 backdrop-blur-md transition-colors duration-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
+                onDark
+                  ? "border-white/15 bg-brand-950/45 text-white"
+                  : "border-brand-100 bg-white/85 text-brand-900 shadow-card"
+              }`}
+              aria-label={open ? "Close menu" : "Open menu"}
+              aria-expanded={open}
+              aria-controls="mobile-nav"
+              onClick={() => setOpen((v) => !v)}
+            >
+              <RollingLabel text={open ? "Close" : "Menu"} />
+              <MenuToggleIcon open={open} />
+            </button>
+          </div>
+        </motion.div>
       </div>
 
       <AnimatePresence>

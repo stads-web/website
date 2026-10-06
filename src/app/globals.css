@@ -39,6 +39,18 @@ html {
   background-color: #7388b0;
 }
 
+/* Lenis: its own smoothing must not fight native smooth scrolling. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
 body {
   color: var(--foreground);
   background: var(--background);

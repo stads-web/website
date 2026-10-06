@@ -94,21 +94,19 @@ function MobileHero({ reduce }: { reduce: boolean }) {
         aria-hidden
         fill
         priority
-        quality={40}
-        sizes="100vw"
+        quality={75}
+        sizes="40vw"
         className="-z-30 scale-[1.7] object-cover object-[50%_45%] blur-3xl saturate-[1.2]"
       />
       <div className="absolute inset-0 -z-20 bg-gradient-to-b from-brand-950/90 via-brand-950/70 to-brand-950/85" />
 
       {/* The mark, enormous and faint, turning once every ~two minutes. */}
-      <motion.div
+      <div
         aria-hidden
-        className="pointer-events-none absolute -right-[42%] -top-[6%] -z-10 aspect-square w-[130%] opacity-[0.09]"
-        animate={reduce ? undefined : { rotate: 360 }}
-        transition={{ duration: 120, ease: "linear", repeat: Infinity }}
+        className="pointer-events-none absolute -right-[42%] -top-[6%] -z-10 aspect-square w-[130%] animate-[spin_120s_linear_infinite] opacity-[0.09] will-change-transform"
       >
         <Image src="/brand/stads-mark-white.svg" alt="" fill sizes="130vw" />
-      </motion.div>
+      </div>
 
       <motion.div style={{ y: headY }} className="relative">
         <motion.p

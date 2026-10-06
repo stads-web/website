@@ -5,7 +5,9 @@ export default function Grain() {
   return (
     <div
       aria-hidden
-      className="pointer-events-none fixed inset-0 z-[60] opacity-[0.035]"
+      // A full-screen fixed layer over scrolling content is the costliest thing on
+      // phones, and 3.5% noise is invisible there anyway - desktop keeps it.
+      className="pointer-events-none fixed inset-0 z-[60] opacity-[0.035] [@media(hover:none)]:hidden"
       style={{ backgroundImage: `url("${NOISE}")` }}
     />
   );

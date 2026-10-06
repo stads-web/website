@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 
 // Shallow on purpose - this is a photo tile easing back on hover, not the
@@ -25,7 +25,7 @@ const OVERSCAN = 1.1;
  * `onTilt` mirrors the raw (pre-spring) tilt target out to a parent that
  * wants a second depth layer - e.g. a caption plate - to lean in sync.
  */
-export default function PortraitFrame({
+function PortraitFrame({
   photo,
   name,
   initials,
@@ -122,3 +122,6 @@ export default function PortraitFrame({
     </div>
   );
 }
+
+// The department list re-renders on every hover; the portraits themselves never change.
+export default memo(PortraitFrame);

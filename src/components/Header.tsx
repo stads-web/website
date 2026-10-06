@@ -9,7 +9,6 @@ import {
   motion,
   useReducedMotion,
   useScroll,
-  useSpring,
   type Variants,
 } from "framer-motion";
 import type { SiteData } from "@/lib/types";
@@ -83,7 +82,6 @@ export default function Header({ site }: { site: SiteData }) {
   const pathname = usePathname();
   const prefersReducedMotion = useReducedMotion();
   const { scrollYProgress } = useScroll();
-  const ring = useSpring(scrollYProgress, { stiffness: 140, damping: 30, mass: 0.4 });
   const onDark = open || !scrolled;
 
   useEffect(() => {
@@ -255,7 +253,7 @@ export default function Header({ site }: { site: SiteData }) {
                 strokeWidth="1.5"
                 strokeLinecap="round"
                 className={onDark ? "stroke-white/70" : "stroke-brand-800"}
-                style={{ pathLength: ring }}
+                style={{ pathLength: scrollYProgress }}
               />
             </svg>
             <span className="relative block h-[26px] w-[26px]">

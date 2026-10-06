@@ -178,13 +178,17 @@ export default function Weekend({ data }: { data: WeekendData }) {
               </h2>
             </Reveal>
 
-            <div className="relative mt-10">
-              <div
-                aria-hidden
-                className="absolute -inset-6 -z-10 rounded-[40px] bg-brand-500/10 blur-2xl"
-              />
-              <div className="relative h-64 overflow-hidden rounded-[28px] border border-white/10">
-                <DataCanvas progress={mobileProgress} className="h-full w-full" />
+            {/* Sticks below the fixed header (72px) so the canvas stays in view
+                while the steps scroll past; the solid band hides them underneath. */}
+            <div className="sticky top-[72px] z-10 -mx-4 mt-6 bg-brand-950 px-4 pb-6 pt-4 sm:-mx-6 sm:px-6">
+              <div className="relative">
+                <div
+                  aria-hidden
+                  className="absolute -inset-6 -z-10 rounded-[40px] bg-brand-500/10 blur-2xl"
+                />
+                <div className="relative h-64 overflow-hidden rounded-[28px] border border-white/10">
+                  <DataCanvas progress={mobileProgress} className="h-full w-full" />
+                </div>
               </div>
             </div>
 

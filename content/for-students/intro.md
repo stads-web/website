@@ -4,7 +4,7 @@ image: /images/initiativenmarkt.webp
 imageAlt: STADS tote bags laid out at an info event
 whatsappLabel: "Join our WhatsApp Group"
 whatsappCta: "Click to join"
-whatsappHref: "#"
+whatsappHref: "https://chat.whatsapp.com/FEklw3cfIO87Tp8VsVhnI5"
 ---
 
 We're a student initiative at the University of Mannheim that brings together curious minds with a **passion for Data Science** and quantitative thinking.

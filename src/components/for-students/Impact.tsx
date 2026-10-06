@@ -25,6 +25,8 @@ export default function Impact({ data, body }: { data: IntroData; body: string }
             <Magnetic className="mt-3 inline-block">
               <Link
                 href={data.whatsappHref}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="block rounded-full bg-brand-500 px-6 py-3 font-bold text-white transition-colors hover:bg-brand-600"
               >
                 {data.whatsappCta}

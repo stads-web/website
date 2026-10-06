@@ -19,17 +19,11 @@ tracks:
 # never ships a broken embed - fill in and it upgrades automatically.
 tallyFormUrl: ""
 calBookingUrl: ""
-# TODO: placeholder contact - "Gabriel Schmiedecke" is an example name for
-# the layout only, not a confirmed real team member (checked publicly: no
-# match found for this name at STADS or Uni Mannheim). Confirm with the
-# current Kooperationen department lead before this goes live, then swap in
-# their real name, a real photo (see PortraitFrame for the photo field),
-# and their real contact address.
 contact:
   name: "Gabriel Schmiedecke"
   role: "Cooperations"
   initials: "GS"
-  photo: ""
-  email: "info@stads.de"
+  photo: "/images/team/cooperation.webp"
+  email: "gabriel.schmiedecke@stads.de"
   note: "Reach out directly and we'll route it to the right department."
 ---

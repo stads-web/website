@@ -22,6 +22,7 @@ export default function JoinHero({ data }: { data: JoinHeroData }) {
         <Magnetic className="mt-8 inline-block">
           <Link
             href={data.ctaHref}
+            {...(/^https?:\/\//.test(data.ctaHref) ? { target: "_blank", rel: "noopener noreferrer" } : {})}
             className="block rounded-full bg-brand-500 px-7 py-3 font-bold text-white transition-colors hover:bg-brand-600"
           >
             {data.ctaLabel}

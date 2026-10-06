@@ -7,7 +7,7 @@ import ConsentBanner from "@/components/ConsentBanner";
 import AnalyticsScripts from "@/components/AnalyticsScripts";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import ScrollState from "@/components/motion/ScrollState";
+import SmoothScroll from "@/components/motion/SmoothScroll";
 import ScrollProgress from "@/components/motion/ScrollProgress";
 import Grain from "@/components/motion/Grain";
 import MeshBackdrop from "@/components/motion/MeshBackdrop";
@@ -92,7 +92,7 @@ export default function RootLayout({
           <Preloader />
           <ScrollProgress />
           <Grain />
-          <ScrollState>
+          <SmoothScroll>
             <Header site={site} />
             <div className="relative z-10 bg-white mb-[var(--footer-h)]">
               <MeshBackdrop />
@@ -103,7 +103,7 @@ export default function RootLayout({
             <FooterReveal>
               <Footer site={site} />
             </FooterReveal>
-          </ScrollState>
+          </SmoothScroll>
           <ConsentBanner />
           <AnalyticsScripts />
           <Analytics />

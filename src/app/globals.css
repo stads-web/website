@@ -39,10 +39,19 @@ html {
   background-color: #7388b0;
 }
 
-/* Native scrolling; anchor jumps glide, and land clear of the fixed header. */
+/* Lenis: its own smoothing must not fight native smooth scrolling. */
 html {
-  scroll-behavior: smooth;
   scroll-padding-top: 6rem;
+}
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
 }
 
 /* Ambient motion rests while the page is moving. */

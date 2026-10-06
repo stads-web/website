@@ -4,25 +4,31 @@ subtitle: "With industry leading partners:"
 trustLine: "Trusted by the world's most innovative teams"
 featuredPartner:
   name: "d-fine"
-  logo: "/images/dfine.webp"
-  box: blue
+  logo: "/brand/partners/d-fine.svg"
+  aspect: 3.286
 partners:
   - name: "BCG X"
-    logo: "/images/bcgx.webp"
-    box: blue
+    logo: "/brand/partners/bcg-x.svg"
+    aspect: 2.457
   - name: "Oliver Wyman"
-    logo: "/images/oliverwyman.webp"
-    box: blue
+    logo: "/brand/partners/oliver-wyman.svg"
+    aspect: 5.229
   - name: "QuantumBlack, AI by McKinsey"
-    logo: "/images/quantumblack.webp"
-    box: blue
+    logo: "/brand/partners/quantumblack.svg"
+    aspect: 5.019
   - name: "Horváth"
-    logo: "/images/horvath.webp"
-    box: white
+    logo: "/brand/partners/horvath.svg"
+    aspect: 4.167
   - name: "zeb"
-    logo: "/images/zeb.webp"
-    box: white
+    logo: "/brand/partners/zeb.svg"
+    aspect: 2.346
   - name: "Leonteq"
-    logo: "/images/leonteq.webp"
-    box: white
+    logo: "/brand/partners/leonteq.svg"
+    aspect: 3.602
+  - name: "Susquehanna"
+    logo: "/brand/partners/susquehanna.svg"
+    aspect: 12.04
+  - name: "QuantCo"
+    logo: "/brand/partners/quantco.webp"
+    aspect: 0.699
 ---

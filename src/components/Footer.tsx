@@ -22,7 +22,7 @@ export default function Footer({ site }: { site: SiteData }) {
           <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:justify-between lg:gap-16">
             <div className="max-w-[280px]">
               <Image
-                src="/images/stads_logo_dark.webp"
+                src="/brand/stads-logo-dark.svg"
                 alt="STADS"
                 width={351}
                 height={109}

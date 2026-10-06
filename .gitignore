@@ -32,6 +32,10 @@ yarn-error.log*
 # original high-res photos (already converted to optimized public/images/*.webp)
 /media-originals
 
+# raw brand asset library (partner + STADS logos as received) - only the
+# optimised, trimmed set the site actually uses lives in public/brand
+/public/logo/
+
 # vercel
 .vercel
 

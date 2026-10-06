@@ -183,7 +183,7 @@ export default function Hero({
               transition={{ duration: 1 * s, ease: EASE, delay: 0.35 * s }}
             >
               <Image
-                src="/images/logo_hero.webp"
+                src="/brand/stads-logo-white.svg"
                 alt="STADS - Students' Association for Data Analytics & Statistics"
                 width={658}
                 height={205}

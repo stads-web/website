@@ -114,7 +114,7 @@ export default function Header({ site }: { site: SiteData }) {
               transition={{ duration: 0.4, ease: EASE }}
             >
               <Image
-                src="/images/logo_hero.webp"
+                src="/brand/stads-logo-white.svg"
                 alt="STADS"
                 fill
                 priority
@@ -128,7 +128,7 @@ export default function Header({ site }: { site: SiteData }) {
               transition={{ duration: 0.4, ease: EASE }}
             >
               <Image
-                src="/images/stads_logo_dark.webp"
+                src="/brand/stads-logo-dark.svg"
                 alt="STADS"
                 fill
                 priority

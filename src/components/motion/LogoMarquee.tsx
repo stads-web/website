@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import PartnerLogo from "../PartnerLogo";
 import type { Partner } from "@/lib/types";
 
 /**
@@ -23,22 +23,9 @@ export default function LogoMarquee({
           {run.concat(run).map((logo, i) => (
             <span
               key={`${logo.name}-${i}`}
-              // Reversed logos need the blue box; colour logos need a light one.
-              className={`mx-4 flex h-20 w-48 shrink-0 items-center justify-center rounded-2xl border-[0.5px] px-4 sm:mx-6 sm:h-28 sm:w-64 sm:rounded-3xl ${
-                logo.box === "blue"
-                  ? "border-white/50 bg-brand-500"
-                  : "border-brand-200 bg-white"
-              }`}
+              className="mx-3 flex h-20 w-44 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-brand-800 px-5 [--logo-u:2.3rem] sm:mx-4 sm:h-28 sm:w-60 sm:rounded-3xl sm:px-7 sm:[--logo-u:3rem]"
             >
-              <Image
-                src={logo.logo}
-                alt={logo.name}
-                width={240}
-                height={72}
-                // ponytail: no upscaling – low-res logos (Horváth, zeb, Leonteq) stay small until sharper files exist
-                unoptimized
-                className="h-auto max-h-10 w-auto min-w-0 max-w-full object-contain sm:max-h-12"
-              />
+              <PartnerLogo partner={logo} />
             </span>
           ))}
         </div>

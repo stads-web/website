@@ -28,7 +28,8 @@ export interface NutshellData {
 export interface Partner {
   name: string;
   logo: string;
-  box: "blue" | "white";
+  /** width / height of the trimmed logo file, used to size it optically */
+  aspect: number;
 }
 
 export interface PartnersData {

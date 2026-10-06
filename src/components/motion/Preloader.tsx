@@ -60,7 +60,7 @@ export default function Preloader() {
             transition={{ duration: 0.5, ease: EASE }}
           >
             <Image
-              src="/images/stads_mark.webp"
+              src="/brand/stads-mark-white.svg"
               alt=""
               width={76}
               height={76}

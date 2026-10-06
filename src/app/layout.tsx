@@ -75,7 +75,7 @@ export default function RootLayout({
     name: "STADS – Students' Association for Data Analytics & Statistics Mannheim e.V.",
     alternateName: "STADS",
     url: siteUrl,
-    logo: `${siteUrl}/images/stads_logo_dark.webp`,
+    logo: `${siteUrl}/brand/stads-logo.png`,
     description: siteDescription,
     email: site.contact.email,
     sameAs: site.footer.social.map((link) => link.href),

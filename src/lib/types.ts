@@ -30,6 +30,8 @@ export interface Partner {
   logo: string;
   /** width / height of the trimmed logo file, used to size it optically */
   aspect: number;
+  /** official homepage; the logo links there in a new tab when set */
+  href?: string;
 }
 
 export interface PartnersData {
@@ -322,7 +324,7 @@ export interface HistoryData {
 export interface ChallengePartnersData {
   eyebrow: string;
   title: string;
-  names: string[];
+  partners: { name: string; href?: string }[];
 }
 
 export interface DatathonCtaData {

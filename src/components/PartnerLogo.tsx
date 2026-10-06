@@ -25,3 +25,18 @@ export default function PartnerLogo({ partner }: { partner: Partner }) {
     />
   );
 }
+
+/** Props that turn a tile into a new-tab link to the partner homepage. `hidden` = decorative loop copy. */
+export function partnerLinkProps(partner: Partner, hidden = false) {
+  if (!partner.href) return {};
+  return {
+    href: partner.href,
+    target: "_blank",
+    rel: "noopener noreferrer",
+    "aria-label": `${partner.name} (opens in a new tab)`,
+    ...(hidden ? { tabIndex: -1 } : {}),
+  };
+}
+
+export const partnerLinkClass =
+  "transition-opacity hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white";

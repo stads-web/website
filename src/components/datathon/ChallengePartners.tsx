@@ -17,12 +17,24 @@ export default function ChallengePartners({
       </h2>
 
       <ul className="mt-14 border-t border-brand-100">
-        {data.names.map((name, i) => (
+        {data.partners.map(({ name, href }, i) => (
           <Reveal key={name} delay={0.04 * i}>
             <li className="group flex items-baseline justify-between gap-6 border-b border-brand-100 py-6 transition-colors hover:bg-brand-50/60">
-              <span className="text-2xl font-medium text-brand-900/45 transition-all duration-500 group-hover:translate-x-2 group-hover:text-brand-900 sm:text-4xl">
-                {name}
-              </span>
+              {href ? (
+                <a
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${name} (opens in a new tab)`}
+                  className="text-2xl font-medium text-brand-900/45 transition-all duration-500 group-hover:translate-x-2 group-hover:text-brand-900 focus-visible:text-brand-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500 sm:text-4xl"
+                >
+                  {name}
+                </a>
+              ) : (
+                <span className="text-2xl font-medium text-brand-900/45 transition-all duration-500 group-hover:translate-x-2 group-hover:text-brand-900 sm:text-4xl">
+                  {name}
+                </span>
+              )}
               <span className="font-mono text-xs text-brand-300">
                 {String(i + 1).padStart(2, "0")}
               </span>

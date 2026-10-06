@@ -1,15 +1,17 @@
-import PartnerLogo from "./PartnerLogo";
+import PartnerLogo, { partnerLinkProps, partnerLinkClass } from "./PartnerLogo";
 import Reveal from "./motion/Reveal";
 import SplitText from "./motion/SplitText";
 import type { Partner, PartnersData } from "@/lib/types";
 
 function LogoBox({ partner, className = "" }: { partner: Partner; className?: string }) {
+  const Tag = partner.href ? "a" : "div";
   return (
-    <div
-      className={`flex items-center justify-center rounded-[14px] border border-white/10 bg-brand-800 px-6 py-6 transition-transform duration-300 hover:-translate-y-1 ${className}`}
+    <Tag
+      {...partnerLinkProps(partner)}
+      className={`flex items-center justify-center rounded-[14px] border border-white/10 bg-brand-800 px-6 py-6 transition-transform duration-300 hover:-translate-y-1 ${partner.href ? partnerLinkClass : ""} ${className}`}
     >
       <PartnerLogo partner={partner} />
-    </div>
+    </Tag>
   );
 }
 

@@ -77,7 +77,12 @@ function DrawIcon({ path, delay }: { path: string; delay: number }) {
   );
 }
 
-/** Tasteful fallback for icons whose shape doesn't read cleanly as a single line. */
+/**
+ * Tasteful fallback for icons whose shape doesn't read cleanly as a single line.
+ * The glyph is never hidden: only its scale and tilt animate in, so if the
+ * in-view trigger is late or never fires (small element, mobile browsers) the
+ * icon is still on screen instead of missing.
+ */
 function SpringIcon({
   IconComponent,
   delay,
@@ -88,8 +93,8 @@ function SpringIcon({
   return (
     <motion.span
       className="flex"
-      initial={{ opacity: 0, scale: 0.6, rotate: -10 }}
-      whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+      initial={{ scale: 0.6, rotate: -10 }}
+      whileInView={{ scale: 1, rotate: 0 }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ type: "spring", stiffness: 220, damping: 15, delay }}
     >

@@ -37,16 +37,12 @@ function StackedDepartments({ items }: { items: Department[] }) {
                   </span>
                 </div>
                 <div className="mt-7 sm:mt-1">
-                  <p className="text-[2.2rem] font-medium leading-none text-brand-900">
-                    {dept.name}
+                  <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-brand-300">
+                    Department lead
+                    {dept.lead && <span className="text-brand-500"> · {dept.lead}</span>}
                   </p>
-                  {dept.lead && (
-                    <p className="mt-3 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.2em] text-brand-500">
-                      <span aria-hidden className="h-px w-5 bg-brand-300" />
-                      {dept.lead}
-                    </p>
-                  )}
-                  <p className="mt-5 text-[1.02rem] leading-relaxed text-brand-900/70">
+                  <p className="mt-2 text-3xl font-medium text-brand-900">{dept.name}</p>
+                  <p className="mt-4 text-[1.02rem] leading-relaxed text-brand-900/70">
                     {dept.text}
                   </p>
                 </div>
@@ -108,7 +104,10 @@ export default function Departments({ data }: { data: DepartmentsData }) {
             transition={{ duration: 0.35, ease: EASE }}
             className="mt-6"
           >
-            <p className="text-3xl font-medium text-brand-900">{current.name}</p>
+            <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-brand-300">
+              Department lead
+            </p>
+            <p className="mt-2 text-3xl font-medium text-brand-900">{current.name}</p>
             <p className="mt-4 leading-relaxed text-brand-900/70">{current.text}</p>
           </motion.div>
         </div>

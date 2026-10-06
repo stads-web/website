@@ -40,7 +40,13 @@ export default function Constellation() {
       }));
     };
 
+    const root = document.documentElement;
     const draw = () => {
+      // Hold still while the page scrolls - the main thread belongs to the scroll.
+      if (root.classList.contains("is-scrolling")) {
+        frame = requestAnimationFrame(draw);
+        return;
+      }
       context.clearRect(0, 0, width, height);
 
       for (const node of nodes) {

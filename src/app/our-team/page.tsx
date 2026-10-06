@@ -30,7 +30,7 @@ export default function OurTeamPage() {
 
   return (
     <main>
-      <TeamHero departments={departments.data.items} />
+      <TeamHero />
       <Leadership data={leadership.data} />
       <Departments data={departments.data} />
       <ContactCta data={cta} />

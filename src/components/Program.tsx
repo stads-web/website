@@ -1,14 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
-import {
-  motion,
-  useMotionValue,
-  useScroll,
-  useSpring,
-  useTransform,
-} from "framer-motion";
+import { useRef, useState } from "react";
+import { motion, useMotionValue, useSpring } from "framer-motion";
 import Reveal from "./motion/Reveal";
 import SectionHeading from "./motion/SectionHeading";
 import Spotlight from "./motion/Spotlight";
@@ -16,10 +10,14 @@ import type { ProgramData, ProgramItem } from "@/lib/types";
 
 const COLUMN_OFFSETS = ["sm:mt-[121px]", "sm:mt-0", "sm:mt-[76px]"];
 const TILT = 7;
+const DRIFT = ["-70px", "55px", "-35px"];
 
 function ProgramCard({ item }: { item: ProgramItem }) {
   const [flipped, setFlipped] = useState(false);
-  const ref = useRef<HTMLButtonElement>(null);
+  const [hovered, setHovered] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  // Hover capability is read per event: a laptop with a touchscreen can be either.
+  const canHover = () => window.matchMedia("(hover: hover)").matches;
 
   const rotateXRaw = useMotionValue(0);
   const rotateYRaw = useMotionValue(0);
@@ -27,11 +25,13 @@ function ProgramCard({ item }: { item: ProgramItem }) {
   const rotateX = useSpring(rotateXRaw, spring);
   const rotateY = useSpring(rotateYRaw, spring);
 
-  const [hovered, setHovered] = useState(false);
   const showsBack = hovered || flipped;
 
-  const onMove = (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (!window.matchMedia("(hover: hover)").matches) return;
+  // Pointer handling lives on this static wrapper, never on the rotating card:
+  // a card that flips away from under the cursor used to drop its own hover
+  // and flip straight back, which read as flicker and missed clicks.
+  const onMove = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (!canHover()) return;
     const rect = ref.current?.getBoundingClientRect();
     if (!rect) return;
     const px = (event.clientX - rect.left) / rect.width - 0.5;
@@ -41,8 +41,7 @@ function ProgramCard({ item }: { item: ProgramItem }) {
   };
 
   const onEnter = () => {
-    if (!window.matchMedia("(hover: hover)").matches) return;
-    setHovered(true);
+    if (canHover()) setHovered(true);
   };
 
   const reset = () => {
@@ -51,26 +50,34 @@ function ProgramCard({ item }: { item: ProgramItem }) {
     rotateYRaw.set(0);
   };
 
+  // Mouse: hover flips, nothing else to do. Touch and keyboard: activating toggles.
+  const onActivate = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (canHover() && event.detail !== 0) return;
+    setFlipped((v) => !v);
+  };
+
   return (
-    <div className="[perspective:1400px]">
+    <div
+      ref={ref}
+      onMouseMove={onMove}
+      onMouseEnter={onEnter}
+      onMouseLeave={reset}
+      className="group relative [perspective:1400px]"
+    >
+      {/* The stronger hover shadow is a static layer that only fades in.
+          Transitioning box-shadow itself repaints a 90px blur every frame. */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-0 hidden rounded-[40px] opacity-0 shadow-[0px_10px_20px_rgba(15,29,54,0.08),0px_25px_50px_rgba(15,29,54,0.10),0px_45px_90px_rgba(15,29,54,0.14)] transition-opacity duration-700 sm:block sm:group-hover:opacity-100"
+      />
       <motion.button
-        ref={ref}
         type="button"
-        onClick={() => setFlipped((v) => !v)}
-        onMouseMove={onMove}
-        onMouseEnter={onEnter}
-        onMouseLeave={reset}
+        onClick={onActivate}
         aria-pressed={showsBack}
-        aria-label={`${item.title} - tap to flip`}
+        aria-label={`${item.title} - flip card`}
         style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-        className="group relative block h-[220px] w-full shrink-0 text-left sm:h-[380px]"
+        className="relative block h-[220px] w-full shrink-0 text-left sm:h-[380px]"
       >
-        {/* The stronger hover shadow is a static layer that only fades in.
-            Transitioning box-shadow itself repaints a 90px blur every frame. */}
-        <span
-          aria-hidden
-          className="pointer-events-none absolute inset-0 hidden rounded-[40px] opacity-0 shadow-[0px_10px_20px_rgba(15,29,54,0.08),0px_25px_50px_rgba(15,29,54,0.10),0px_45px_90px_rgba(15,29,54,0.14)] transition-opacity duration-700 [transform:translateZ(-1px)] sm:block sm:group-hover:opacity-100"
-        />
         <div
           className={`relative h-full w-full rounded-[28px] shadow-[0px_2px_6px_rgba(15,29,54,0.06)] transition-transform duration-700 [transform-style:preserve-3d] sm:rounded-[40px] sm:shadow-[0px_5px_10px_rgba(0,0,0,0.05),0px_15px_30px_rgba(0,0,0,0.05),0px_30px_60px_rgba(0,0,0,0.1)] ${
             showsBack ? "[transform:rotateY(180deg)]" : ""
@@ -114,28 +121,8 @@ export default function Program({ data }: { data: ProgramData }) {
     data.items.slice(4, 6),
   ];
 
-  const sectionRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-  const drift = [
-    useTransform(scrollYProgress, [0, 1], [0, -70]),
-    useTransform(scrollYProgress, [0, 1], [0, 55]),
-    useTransform(scrollYProgress, [0, 1], [0, -35]),
-  ];
-
-  const [isDesktop, setIsDesktop] = useState(false);
-  useEffect(() => {
-    const query = window.matchMedia("(min-width: 640px)");
-    const update = () => setIsDesktop(query.matches);
-    update();
-    query.addEventListener("change", update);
-    return () => query.removeEventListener("change", update);
-  }, []);
-
   return (
-    <section ref={sectionRef} className="py-16 sm:py-24">
+    <section className="py-16 sm:py-24">
       <div className="mx-auto max-w-content px-4 sm:px-6">
         <SectionHeading
           eyebrow="Our program"
@@ -146,17 +133,19 @@ export default function Program({ data }: { data: ProgramData }) {
 
         <div className="mt-10 flex flex-col gap-3 sm:mt-16 sm:flex-row sm:items-start sm:gap-[29px]">
           {columns.map((col, i) => (
-            <motion.div
+            // The columns drift at different speeds as the section passes - a CSS
+            // scroll-driven animation (see .scroll-drift), so no JS runs per frame.
+            <div
               key={i}
-              style={{ y: isDesktop ? drift[i] : 0 }}
-              className={`flex flex-1 flex-col gap-3 sm:gap-5 ${COLUMN_OFFSETS[i]}`}
+              style={{ "--drift": DRIFT[i] } as React.CSSProperties}
+              className={`scroll-drift flex flex-1 flex-col gap-3 sm:gap-5 ${COLUMN_OFFSETS[i]}`}
             >
               {col.map((item, j) => (
                 <Reveal key={item.title} delay={j * 0.08}>
                   <ProgramCard item={item} />
                 </Reveal>
               ))}
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

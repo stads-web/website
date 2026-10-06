@@ -39,21 +39,49 @@ html {
   background-color: #7388b0;
 }
 
-/* Lenis: its own smoothing must not fight native smooth scrolling. */
-html.lenis,
-html.lenis body {
-  height: auto;
-}
-.lenis.lenis-smooth {
-  scroll-behavior: auto !important;
-}
-.lenis.lenis-stopped {
-  overflow: hidden;
+/* Native scrolling; anchor jumps glide, and land clear of the fixed header. */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 6rem;
 }
 
-@media (hover: hover) {
-  html.is-scrolling main {
-    pointer-events: none;
+/* Ambient motion rests while the page is moving. */
+html.is-scrolling .animate-drift-a,
+html.is-scrolling .animate-drift-b,
+html.is-scrolling .animate-drift-c {
+  animation-play-state: paused;
+}
+
+/* Compositor-driven scroll effects (no JS per frame). */
+@keyframes scroll-drift {
+  to {
+    transform: translate3d(0, var(--drift, 0px), 0);
+  }
+}
+@keyframes grow-x {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.scroll-progress {
+  transform: scaleX(0);
+}
+@supports (animation-timeline: scroll()) {
+  .scroll-progress {
+    animation: grow-x linear both;
+    animation-timeline: scroll(root);
+  }
+}
+@supports (animation-timeline: view()) {
+  @media (min-width: 640px) and (prefers-reduced-motion: no-preference) {
+    .scroll-drift {
+      animation: scroll-drift linear both;
+      animation-timeline: view();
+      will-change: transform;
+    }
   }
 }
 

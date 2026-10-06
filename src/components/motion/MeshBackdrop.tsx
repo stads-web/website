@@ -55,7 +55,7 @@ export default function MeshBackdrop({ contained = false }: { contained?: boolea
       // `fixed`, this would otherwise keep painting on top of it forever, no
       // matter what background the footer itself sets.
       className={`pointer-events-none z-0 overflow-hidden ${
-        contained ? "absolute inset-0" : "fixed inset-x-0 top-0 bottom-[var(--footer-h)]"
+        contained ? "absolute inset-0" : "fixed inset-x-0 top-0 bottom-[var(--footer-h)] [-webkit-mask-image:linear-gradient(to_bottom,#000_calc(100%-160px),transparent)] [mask-image:linear-gradient(to_bottom,#000_calc(100%-160px),transparent)]"
       }`}
     >
       <motion.div

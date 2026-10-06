@@ -140,7 +140,7 @@ export default function Header({ site }: { site: SiteData }) {
         >
           {/* Both logo variants are stacked in the same box and cross-fade via
               opacity instead of swapping `src` outright, which used to pop. */}
-          <span className="relative block aspect-[351/109] w-[136px] xl:w-[172px]">
+          <span className="relative block aspect-[2533/534] w-[115px] xl:w-[145px]">
             <motion.span
               className="absolute inset-0"
               animate={{ opacity: scrolled ? 0 : 1 }}
@@ -151,7 +151,7 @@ export default function Header({ site }: { site: SiteData }) {
                 alt="STADS"
                 fill
                 priority
-                sizes="172px"
+                sizes="145px"
                 className="object-contain"
               />
             </motion.span>
@@ -165,7 +165,7 @@ export default function Header({ site }: { site: SiteData }) {
                 alt="STADS"
                 fill
                 priority
-                sizes="172px"
+                sizes="145px"
                 className="object-contain"
               />
             </motion.span>

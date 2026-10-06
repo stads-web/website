@@ -185,10 +185,10 @@ export default function Hero({
               <Image
                 src="/brand/stads-logo-white.svg"
                 alt="STADS - Students' Association for Data Analytics & Statistics"
-                width={658}
-                height={205}
+                width={2533}
+                height={534}
                 priority
-                className="h-auto w-[220px] sm:w-[280px] md:w-[330px]"
+                className="h-auto w-[186px] sm:w-[236px] md:w-[279px]"
               />
             </motion.div>
           </motion.div>

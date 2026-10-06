@@ -24,9 +24,9 @@ export default function Footer({ site }: { site: SiteData }) {
               <Image
                 src="/brand/stads-logo-dark.svg"
                 alt="STADS"
-                width={351}
-                height={109}
-                className="h-auto w-40 sm:w-48"
+                width={2533}
+                height={534}
+                className="h-auto w-[8.45rem] sm:w-[10.1rem]"
               />
               <p className="mt-5 text-balance font-accent text-xl italic leading-snug text-brand-800/80 sm:text-2xl">
                 {hero.taglineAccent}{" "}

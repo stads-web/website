@@ -19,6 +19,7 @@ export default function JoinHero({ data }: { data: JoinHeroData }) {
         <p className="mx-auto mt-6 max-w-xl text-balance leading-relaxed text-brand-900/70">
           {data.intro}
         </p>
+        {data.ctaHref && data.ctaHref !== "#" && (
         <Magnetic className="mt-8 inline-block">
           <Link
             href={data.ctaHref}
@@ -28,6 +29,7 @@ export default function JoinHero({ data }: { data: JoinHeroData }) {
             {data.ctaLabel}
           </Link>
         </Magnetic>
+        )}
       </Reveal>
     </section>
   );

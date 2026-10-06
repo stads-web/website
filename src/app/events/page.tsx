@@ -6,14 +6,14 @@ import Timeline from "@/components/events/Timeline";
 import FinalCta from "@/components/FinalCta";
 import type { EventsData } from "@/lib/types";
 
-const title = "Upcoming Events – STADS";
+const title = "Events – STADS";
 const description =
   "See what's on the STADS calendar: weekly Monday Sessions, workshops, guest lectures, the Datathon, the Data Bootcamp, and the Python course.";
 
 export const metadata: Metadata = {
   title,
   description,
-  openGraph: { title, description },
+  openGraph: { title, description, images: [{ url: "/opengraph-image", width: 1200, height: 630 }] },
   twitter: { title, description },
 };
 

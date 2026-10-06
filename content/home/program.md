@@ -18,7 +18,7 @@ items:
     description: "Hands-on sessions with our industry partners - learn tools and techniques straight from the pros."
     image: /images/leontech_workshop.webp
     imageAlt: Students taking part in an exclusive industry workshop
-  - title: STADS Python Kurs
+  - title: STADS Python Course
     description: "A beginner-friendly course teaching the Python fundamentals every data scientist needs."
     image: /images/python_course.webp
     imageAlt: A STADS member teaching a Python course

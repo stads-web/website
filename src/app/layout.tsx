@@ -14,6 +14,7 @@ import MeshBackdrop from "@/components/motion/MeshBackdrop";
 import FooterReveal from "@/components/motion/FooterReveal";
 import PageTransition from "@/components/motion/PageTransition";
 import Preloader from "@/components/motion/Preloader";
+import MotionProvider from "@/components/motion/MotionProvider";
 import { readContent } from "@/lib/content";
 import type { SiteData } from "@/lib/types";
 
@@ -88,6 +89,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        <MotionProvider>
         <ConsentProvider>
           <Preloader />
           <ScrollProgress />
@@ -108,6 +110,7 @@ export default function RootLayout({
           <AnalyticsScripts />
           <Analytics />
         </ConsentProvider>
+        </MotionProvider>
       </body>
     </html>
   );

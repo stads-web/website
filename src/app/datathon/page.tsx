@@ -17,10 +17,20 @@ import type {
   PartnersData,
 } from "@/lib/types";
 
+const title = "Datathon – STADS";
+const description =
+  "The STADS Datathon: 48 hours, real company datasets, and teams of students building data-driven solutions for an expert jury.";
+
 export const metadata: Metadata = {
-  title: "Datathon – STADS",
-  description:
-    "The STADS Datathon: 48 hours, real company datasets, and teams of students building data-driven solutions for an expert jury.",
+  title,
+  description,
+  openGraph: {
+    title,
+    description,
+    url: "/datathon",
+    images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
+  },
+  twitter: { title, description },
 };
 
 export default function DatathonPage() {

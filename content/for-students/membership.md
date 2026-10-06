@@ -2,15 +2,15 @@
 title: "Be Part of STADS - Our Memberships"
 intro: "Everything below is open to you as soon as you show up. How far you go is up to you."
 tiers:
-  - name: "non members"
+  - name: "Non-members"
     note: "Just curious"
-  - name: "passive member"
+  - name: "Passive member"
     note: "Officially in"
-  - name: "active member"
+  - name: "Active member"
     note: "Shaping STADS"
     featured: true
 benefits:
-  - label: "Participate at News Nights"
+  - label: "Participate in News Nights"
     tiers: [true, true, true]
   - label: "Listen to our presentations"
     tiers: [true, true, true]

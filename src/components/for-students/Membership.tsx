@@ -15,7 +15,7 @@ function TierHead({ tier }: { tier: MembershipTier }) {
         tier.featured ? "bg-brand-800 text-white" : "bg-brand-50 text-brand-900"
       }`}
     >
-      <p className="text-sm font-medium capitalize leading-snug">{tier.name}</p>
+      <p className="text-sm font-medium leading-snug">{tier.name}</p>
       <p
         className={`mt-1 font-mono text-[10px] uppercase tracking-[0.2em] ${
           tier.featured ? "text-white/55" : "text-brand-500"
@@ -110,7 +110,7 @@ export default function Membership({ data }: { data: MembershipData }) {
                     : "border border-brand-100 bg-white text-brand-900"
                 }`}
               >
-                <p className="text-lg font-medium capitalize">{tier.name}</p>
+                <p className="text-lg font-medium">{tier.name}</p>
                 <p
                   className={`mt-1 font-mono text-[10px] uppercase tracking-[0.2em] ${
                     tier.featured ? "text-white/55" : "text-brand-500"
@@ -128,7 +128,7 @@ export default function Membership({ data }: { data: MembershipData }) {
                     }`}
                   >
                     Everything in{" "}
-                    <span className="font-medium capitalize">{previous.name}</span>, plus:
+                    <span className="font-medium">{previous.name}</span>, plus:
                   </p>
                 )}
 

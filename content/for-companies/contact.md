@@ -27,7 +27,7 @@ calBookingUrl: ""
 # and their real contact address.
 contact:
   name: "Gabriel Schmiedecke"
-  role: "Kooperationen"
+  role: "Cooperations"
   initials: "GS"
   photo: ""
   email: "info@stads.de"

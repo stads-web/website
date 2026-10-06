@@ -13,7 +13,7 @@ nav:
     href: /for-companies
   - label: Our Team
     href: /our-team
-  - label: Upcoming events
+  - label: Events
     href: /events
 joinCta:
   label: Join STADS
@@ -28,7 +28,7 @@ footer:
       href: /for-companies
     - label: Our Team
       href: /our-team
-    - label: Upcoming Events
+    - label: Events
       href: /events
   extras:
     - label: Impressum

@@ -19,6 +19,7 @@ export default function Impact({ data, body }: { data: IntroData; body: string }
             className="max-w-2xl text-lg leading-relaxed text-brand-500 [&_p+p]:mt-5 [&_strong]:font-bold [&_strong]:text-brand-900"
             dangerouslySetInnerHTML={{ __html: html }}
           />
+          {data.whatsappHref && data.whatsappHref !== "#" && (
           <div className="mt-10">
             <p className="text-lg font-medium text-brand-900">{data.whatsappLabel}</p>
             <Magnetic className="mt-3 inline-block">
@@ -30,6 +31,7 @@ export default function Impact({ data, body }: { data: IntroData; body: string }
               </Link>
             </Magnetic>
           </div>
+          )}
         </Reveal>
 
         <Reveal delay={0.2}>

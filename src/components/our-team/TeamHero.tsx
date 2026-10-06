@@ -7,6 +7,7 @@ import Magnetic from "../motion/Magnetic";
 import SplitText from "../motion/SplitText";
 
 const TITLE = "One Team, Seven Departments";
+const DEPARTMENTS = ["IT", "Cooperation", "Marketing", "Education", "Finance", "Teambuilding", "Datathon"];
 
 const filled =
   "block rounded-full border border-white bg-white px-6 py-3 font-medium text-brand-900 transition-colors hover:bg-brand-50";
@@ -72,21 +73,29 @@ export default function TeamHero() {
         <Buttons className="absolute inset-x-0 bottom-[calc(5rem+5rem)] flex justify-center gap-3" />
       </div>
 
-      {/* Mobile: one composed screen - headline and actions on navy, the whole
-          team photo (no crop) anchored to the bottom and melting up into it. */}
+      {/* Mobile: the photo is the whole screen. The sharp, uncropped team photo
+          sits at the bottom; the same photo, blurred and darkened, fills the
+          space above it, so the headline lands on real colour from the picture
+          instead of a flat block. A ribbon of department names runs across the
+          wall above the heads. */}
       <div className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-brand-950 lg:hidden">
-        <div
+        <Image
+          src="/images/team/team.webp"
+          alt=""
           aria-hidden
-          className="absolute inset-0 -z-10 bg-[radial-gradient(120%_60%_at_50%_100%,rgba(90,110,151,0.35),transparent_70%)]"
+          fill
+          priority
+          quality={40}
+          sizes="100vw"
+          className="-z-20 scale-[1.6] object-cover object-[50%_40%] blur-2xl saturate-[1.15]"
         />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-brand-950/85 via-brand-950/55 to-brand-950/30" />
+
         <div className="px-5 pt-28 text-center sm:px-6 sm:pt-32">
-          <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-brand-300">
-            Our Team
-          </p>
-          <h1 className="mx-auto mt-5 max-w-[11ch] text-balance text-[2.9rem] font-medium leading-[1.02] tracking-tight text-white sm:max-w-3xl sm:text-6xl">
+          <h1 className="mx-auto max-w-[10ch] text-balance text-[3.4rem] font-medium leading-[0.98] tracking-tight text-white sm:max-w-3xl sm:text-7xl">
             <SplitText text={TITLE} delay={0.1} />
           </h1>
-          <div className="mx-auto mt-8 grid max-w-sm grid-cols-2 gap-3">
+          <div className="mx-auto mt-7 grid max-w-sm grid-cols-2 gap-3">
             <Magnetic>
               <Link href="#board" className={`${filled.replace("px-6", "px-4")} text-center text-[15px]`}>
                 Meet the board
@@ -100,11 +109,12 @@ export default function TeamHero() {
           </div>
         </div>
 
-        <div className="relative mt-auto pt-10">
+        <div className="relative mt-auto pt-8">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="[mask-image:linear-gradient(to_bottom,transparent_0%,black_16%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_16%)]"
           >
             <Image
               src="/images/team/team.webp"
@@ -117,7 +127,27 @@ export default function TeamHero() {
               className="block h-auto w-full"
             />
           </motion.div>
-          <div className="absolute inset-x-0 top-10 h-24 bg-gradient-to-b from-brand-950 to-transparent" />
+
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 top-10 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_18%,black_82%,transparent)] [-webkit-mask-image:linear-gradient(to_right,transparent,black_18%,black_82%,transparent)]"
+          >
+            <div className="flex w-max animate-[marquee_50s_linear_infinite]">
+              {[0, 1].map((copy) => (
+                <div key={copy} className="flex shrink-0 items-center">
+                  {DEPARTMENTS.map((name) => (
+                    <span key={`${copy}-${name}`} className="flex items-center">
+                      <span className="whitespace-nowrap px-4 text-[2.6rem] font-medium leading-none tracking-tight text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.7)]">
+                        {name}
+                      </span>
+                      <span className="h-1.5 w-1.5 rounded-full bg-white/60" />
+                    </span>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+
           <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white to-transparent" />
         </div>
       </div>

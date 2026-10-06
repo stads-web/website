@@ -10,28 +10,16 @@ import type { Department, DepartmentsData } from "@/lib/types";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
-function initialsOf(name: string) {
-  const parts = name.trim().split(/\s+/);
-  return (parts[0][0] + (parts.length > 1 ? parts[parts.length - 1][0] : "")).toUpperCase();
-}
-
-/** Who leads the department - set below the portrait, never over the person. */
+/** Editorial credit line: label, hairline leader, name. Under the portrait, never over it. */
 function LeadTag({ lead }: { lead?: string }) {
   if (!lead) return null;
   return (
-    <div className="mt-4 flex items-center gap-3">
-      <span
-        aria-hidden
-        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-800 font-mono text-[11px] tracking-wider text-white"
-      >
-        {initialsOf(lead)}
+    <div className="mt-6 flex items-baseline gap-4 border-t border-brand-100 pt-4">
+      <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-brand-400">
+        Lead
       </span>
-      <div>
-        <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-brand-400">
-          Department lead
-        </p>
-        <p className="mt-0.5 text-lg font-medium leading-tight text-brand-900">{lead}</p>
-      </div>
+      <span aria-hidden className="h-px flex-1 translate-y-[-3px] bg-gradient-to-r from-brand-200 to-transparent" />
+      <span className="text-lg font-medium tracking-tight text-brand-900">{lead}</span>
     </div>
   );
 }
@@ -63,14 +51,11 @@ function StackedDepartments({ items }: { items: Department[] }) {
                   </span>
                 </div>
                 <div className="mt-7 sm:mt-1">
-                  <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-brand-300">
-                    Department
-                  </p>
-                  <p className="mt-2 text-[2rem] font-medium leading-none tracking-tight text-brand-900">
+                  <p className="text-[2.6rem] font-medium leading-none tracking-tight text-brand-900">
                     {dept.name}
                   </p>
                   <LeadTag lead={dept.lead} />
-                  <p className="mt-5 text-[1.02rem] leading-relaxed text-brand-900/70">
+                  <p className="mt-4 text-[1.02rem] leading-relaxed text-brand-900/70">
                     {dept.text}
                   </p>
                 </div>
@@ -132,10 +117,7 @@ export default function Departments({ data }: { data: DepartmentsData }) {
             transition={{ duration: 0.35, ease: EASE }}
             className="mt-6"
           >
-            <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-brand-300">
-              Department
-            </p>
-            <p className="mt-2 text-3xl font-medium text-brand-900">{current.name}</p>
+            <p className="text-4xl font-medium tracking-tight text-brand-900">{current.name}</p>
             <LeadTag lead={current.lead} />
             <p className="mt-4 leading-relaxed text-brand-900/70">{current.text}</p>
           </motion.div>

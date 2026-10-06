@@ -7,7 +7,6 @@ import Magnetic from "../motion/Magnetic";
 import SplitText from "../motion/SplitText";
 
 const TITLE = "One Team, Seven Departments";
-const DEPARTMENTS = ["IT", "Cooperation", "Marketing", "Education", "Finance", "Teambuilding", "Datathon"];
 
 const filled =
   "block rounded-full border border-white bg-white px-6 py-3 font-medium text-brand-900 transition-colors hover:bg-brand-50";
@@ -73,12 +72,12 @@ export default function TeamHero() {
         <Buttons className="absolute inset-x-0 bottom-[calc(5rem+5rem)] flex justify-center gap-3" />
       </div>
 
-      {/* Mobile: the photo is the whole screen. The sharp, uncropped team photo
-          sits at the bottom; the same photo, blurred and darkened, fills the
-          space above it, so the headline lands on real colour from the picture
-          instead of a flat block. A ribbon of department names runs across the
-          wall above the heads. */}
-      <div className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-brand-950 lg:hidden">
+      {/* Mobile: the team photo is the hero. It sits high and central, uncropped,
+          with the headline set on the wall above the heads exactly like on
+          desktop. The same photo, blurred and darkened, fills the space around
+          it so there is no flat colour block, and the buttons sit right under
+          the picture. */}
+      <div className="relative isolate overflow-hidden bg-brand-950 pb-16 pt-[5.5rem] sm:pt-24 lg:hidden">
         <Image
           src="/images/team/team.webp"
           alt=""
@@ -89,32 +88,13 @@ export default function TeamHero() {
           sizes="100vw"
           className="-z-20 scale-[1.6] object-cover object-[50%_40%] blur-2xl saturate-[1.15]"
         />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-brand-950/85 via-brand-950/55 to-brand-950/30" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-brand-950/80 via-brand-950/50 to-brand-950/40" />
 
-        <div className="px-5 pt-28 text-center sm:px-6 sm:pt-32">
-          <h1 className="mx-auto max-w-[10ch] text-balance text-[3.4rem] font-medium leading-[0.98] tracking-tight text-white sm:max-w-3xl sm:text-7xl">
-            <SplitText text={TITLE} delay={0.1} />
-          </h1>
-          <div className="mx-auto mt-7 grid max-w-sm grid-cols-2 gap-3">
-            <Magnetic>
-              <Link href="#board" className={`${filled.replace("px-6", "px-4")} text-center text-[15px]`}>
-                Meet the board
-              </Link>
-            </Magnetic>
-            <Magnetic>
-              <Link href="#departments" className={`${outline.replace("px-6", "px-4")} text-center text-[15px]`}>
-                Join a department
-              </Link>
-            </Magnetic>
-          </div>
-        </div>
-
-        <div className="relative mt-auto pt-8">
+        <div className="relative">
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="[mask-image:linear-gradient(to_bottom,transparent_0%,black_16%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_16%)]"
+            initial={{ opacity: 0, scale: 1.04 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
           >
             <Image
               src="/images/team/team.webp"
@@ -127,29 +107,26 @@ export default function TeamHero() {
               className="block h-auto w-full"
             />
           </motion.div>
-
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-10 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_18%,black_82%,transparent)] [-webkit-mask-image:linear-gradient(to_right,transparent,black_18%,black_82%,transparent)]"
-          >
-            <div className="flex w-max animate-[marquee_50s_linear_infinite]">
-              {[0, 1].map((copy) => (
-                <div key={copy} className="flex shrink-0 items-center">
-                  {DEPARTMENTS.map((name) => (
-                    <span key={`${copy}-${name}`} className="flex items-center">
-                      <span className="whitespace-nowrap px-4 text-[2.6rem] font-medium leading-none tracking-tight text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.7)]">
-                        {name}
-                      </span>
-                      <span className="h-1.5 w-1.5 rounded-full bg-white/60" />
-                    </span>
-                  ))}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-[46%] bg-gradient-to-b from-brand-950/85 via-brand-950/40 to-transparent" />
+          <h1 className="absolute inset-x-0 top-0 px-5 pt-[3.5vw] text-center text-[8.6vw] font-medium leading-[1.02] tracking-tight text-white [text-shadow:0_2px_24px_rgba(8,15,32,0.45)]">
+            <SplitText text={TITLE} delay={0.1} />
+          </h1>
         </div>
+
+        <div className="mx-auto mt-7 grid max-w-sm grid-cols-2 gap-3 px-5">
+          <Magnetic>
+            <Link href="#board" className={`${filled.replace("px-6", "px-4")} text-center text-[15px]`}>
+              Meet the board
+            </Link>
+          </Magnetic>
+          <Magnetic>
+            <Link href="#departments" className={`${outline.replace("px-6", "px-4")} text-center text-[15px]`}>
+              Join a department
+            </Link>
+          </Magnetic>
+        </div>
+
+        <div className="absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-white to-transparent" />
       </div>
     </section>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 
 const blob = (color: string) =>
@@ -47,13 +47,43 @@ export default function MeshBackdrop({ contained = false }: { contained?: boolea
   const followA = usePointerFollow(14);
   const followB = usePointerFollow(10);
   const followC = usePointerFollow(18);
+  const ref = useRef<HTMLDivElement>(null);
+
+  // The page-wide glow is `fixed`, so it would keep painting over the footer.
+  // Its bottom edge therefore follows the end of the page content (its parent):
+  // the 160px mask fade then always lands exactly where the content ends, on
+  // desktop (footer reveal) and on phones (plain footer, --footer-h is 0) alike.
+  useEffect(() => {
+    if (contained) return;
+    const el = ref.current;
+    const page = el?.parentElement;
+    if (!el || !page) return;
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const cut = Math.max(0, window.innerHeight - page.getBoundingClientRect().bottom);
+      el.style.bottom = `${Math.round(cut)}px`;
+    };
+    const schedule = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    const observer = new ResizeObserver(schedule);
+    observer.observe(page);
+    return () => {
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      observer.disconnect();
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [contained]);
 
   return (
     <div
+      ref={ref}
       aria-hidden
-      // Stop short of the footer (--footer-h, published by FooterReveal) - being
-      // `fixed`, this would otherwise keep painting on top of it forever, no
-      // matter what background the footer itself sets.
       className={`pointer-events-none z-0 overflow-hidden ${
         contained ? "absolute inset-0" : "fixed inset-x-0 top-0 bottom-[var(--footer-h)] [-webkit-mask-image:linear-gradient(to_bottom,#000_calc(100%-160px),transparent)] [mask-image:linear-gradient(to_bottom,#000_calc(100%-160px),transparent)]"
       }`}

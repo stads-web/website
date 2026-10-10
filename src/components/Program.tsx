@@ -102,10 +102,13 @@ function ProgramCard({ item }: { item: ProgramItem }) {
             <Spotlight />
           </div>
 
-          <div className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden rounded-[28px] border border-white/60 bg-brand-800 p-5 text-center [backface-visibility:hidden] [transform:rotateY(180deg)] sm:rounded-[40px] sm:p-8">
+          <div className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden rounded-[28px] border border-white/60 bg-brand-800 p-5 text-center [backface-visibility:hidden] [transform:rotateY(180deg)] sm:rounded-[40px] lg:p-8">
             <p className="text-sm font-medium text-white sm:text-lg">{item.title}</p>
-            <p className="mt-2 text-xs leading-relaxed text-white/80 sm:mt-3 sm:text-sm">
+            <p className="mt-2 hidden text-xs leading-relaxed text-white/80 sm:mt-3 sm:block md:text-sm">
               {item.description}
+            </p>
+            <p className="mt-2 text-xs leading-relaxed text-white/80 sm:hidden">
+              {item.descriptionShort}
             </p>
           </div>
         </div>

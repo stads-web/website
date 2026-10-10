@@ -45,6 +45,7 @@ export interface PartnersData {
 export interface ProgramItem {
   title: string;
   description: string;
+  descriptionShort: string;
   image: string;
   imageAlt: string;
 }

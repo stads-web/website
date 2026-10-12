@@ -217,6 +217,8 @@ function MobileHeroLight({ reduce }: { reduce: boolean }) {
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const topX = useTransform(scrollYProgress, [0, 1], [0, reduce ? 0 : -48]);
   const bottomX = useTransform(scrollYProgress, [0, 1], [0, reduce ? 0 : 48]);
+  // Photo parallax, same values as Hero.tsx (0 -> 16%, inner layer 116% tall).
+  const photoY = useTransform(scrollYProgress, [0, 1], ["0%", reduce ? "0%" : "16%"]);
 
   return (
     <div
@@ -253,23 +255,25 @@ function MobileHeroLight({ reduce }: { reduce: boolean }) {
         initial={reduce ? false : { clipPath: "inset(100% 0 0 0 round 28px)" }}
         animate={{ clipPath: "inset(0% 0 0 0 round 28px)" }}
         transition={{ duration: 1.3, delay: 0.45, ease: EASE }}
-        className="relative mt-4 overflow-hidden rounded-[28px] shadow-[0px_10px_20px_rgba(15,29,54,0.08),0px_30px_60px_rgba(15,29,54,0.16)]"
+        className="relative mt-4 aspect-[4266/2756] overflow-hidden rounded-[28px] shadow-[0px_10px_20px_rgba(15,29,54,0.08),0px_30px_60px_rgba(15,29,54,0.16)]"
       >
-        <motion.div
-          initial={reduce ? false : { scale: 1.18 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 1.8, delay: 0.45, ease: EASE }}
-        >
-          <Image
-            src="/images/team/team.webp"
-            alt="Das STADS-Team"
-            width={4266}
-            height={3197}
-            quality={95}
-            priority
-            sizes="100vw"
-            className="block h-auto w-full"
-          />
+        <motion.div style={{ y: photoY }} className="absolute inset-0">
+          <motion.div
+            initial={reduce ? false : { scale: 1.18 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 1.8, delay: 0.45, ease: EASE }}
+            className="relative h-[116%] w-full"
+          >
+            <Image
+              src="/images/team/team.webp"
+              alt="Das STADS-Team"
+              fill
+              quality={95}
+              priority
+              sizes="100vw"
+              className="object-cover"
+            />
+          </motion.div>
         </motion.div>
       </motion.div>
 
@@ -307,27 +311,33 @@ function MobileHeroLight({ reduce }: { reduce: boolean }) {
 
 export default function TeamHero() {
   const reduce = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
+  // Photo parallax, reuses Hero.tsx values (0 -> 16%, inner layer 116% tall).
+  const imageY = useTransform(scrollYProgress, [0, 1], ["0%", reduce ? "0%" : "16%"]);
 
   return (
     <section>
       {/* Desktop: photo as stage, exactly one window high; the board follows on scroll.
           Crop is top-biased (object-position y 5%) so faces (~29-60% of the image) stay in view. */}
-      <div className="relative isolate hidden h-[calc(100svh+5rem)] min-h-[calc(720px+5rem)] overflow-hidden bg-brand-950 lg:block">
-        <motion.div
-          className="absolute inset-0"
-          initial={{ scale: 1 }}
-          animate={{ scale: reduce ? 1 : 1.05 }}
-          transition={{ duration: 12, ease: "linear" }}
-        >
-          <Image
-            src="/images/team/team.webp"
-            alt="Das STADS-Team"
-            fill
-            priority
-            quality={95}
-            sizes="100vw"
-            className="object-cover object-[50%_5%] [@media(min-aspect-ratio:19/10)_and_(min-height:880px)]:object-[50%_30%]"
-          />
+      <div ref={ref} className="relative isolate hidden h-[calc(100svh+5rem)] min-h-[calc(720px+5rem)] overflow-hidden bg-brand-950 lg:block">
+        <motion.div style={{ y: imageY }} className="absolute inset-0">
+          <motion.div
+            className="relative h-[116%] w-full"
+            initial={{ scale: 1 }}
+            animate={{ scale: reduce ? 1 : 1.05 }}
+            transition={{ duration: 12, ease: "linear" }}
+          >
+            <Image
+              src="/images/team/team.webp"
+              alt="Das STADS-Team"
+              fill
+              priority
+              quality={95}
+              sizes="100vw"
+              className="object-cover object-[50%_5%] [@media(min-aspect-ratio:19/10)_and_(min-height:880px)]:object-[50%_30%]"
+            />
+          </motion.div>
         </motion.div>
         <div className="absolute inset-0 bg-gradient-to-b from-brand-950/80 via-brand-950/25 to-brand-950/80" />
         <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-white to-transparent" />

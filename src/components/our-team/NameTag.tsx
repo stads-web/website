@@ -1,3 +1,5 @@
+import LinkedInLink from "../LinkedInLink";
+
 /**
  * Caption under a portrait: the person's name on the left, their role as a
  * small outlined tag on the right, over a hairline that spans the photo's
@@ -7,10 +9,12 @@
 export default function NameTag({
   name,
   role,
+  linkedin,
   className = "",
 }: {
   name: string;
   role: string;
+  linkedin?: string;
   className?: string;
 }) {
   return (
@@ -20,9 +24,12 @@ export default function NameTag({
       <p className="min-w-0 text-xl font-medium leading-tight tracking-tight text-brand-900">
         {name}
       </p>
-      <span className="shrink-0 rounded-full border border-brand-200 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.22em] text-brand-600">
-        {role}
-      </span>
+      <div className="flex shrink-0 items-center gap-2">
+        <span className="rounded-full border border-brand-200 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.22em] text-brand-600">
+          {role}
+        </span>
+        {linkedin && <LinkedInLink href={linkedin} name={name} className="-my-2" />}
+      </div>
     </div>
   );
 }

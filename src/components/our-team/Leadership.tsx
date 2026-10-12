@@ -21,7 +21,7 @@ function MemberCard({ member, index }: { member: TeamMember; index: number }) {
         </div>
 
         {/* Caption sits under the portrait so the person is never covered. */}
-        <NameTag name={member.name} role={member.role} className="mt-5" />
+        <NameTag name={member.name} role={member.role} linkedin={member.linkedin} className="mt-5" />
       </div>
     </Reveal>
   );

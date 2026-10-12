@@ -2,6 +2,7 @@ import { ChalkboardTeacher, Trophy, UsersThree } from "@phosphor-icons/react/dis
 import Reveal from "../motion/Reveal";
 import SectionHeading from "../motion/SectionHeading";
 import PortraitFrame from "../our-team/PortraitFrame";
+import LinkedInLink from "../LinkedInLink";
 import ContactForm from "./ContactForm";
 import type { CompanyContactData } from "@/lib/types";
 
@@ -38,12 +39,15 @@ export default function CompanyContact({ data }: { data: CompanyContactData }) {
                 <p className="text-sm text-brand-900/60">Your contact</p>
                 <p className="mt-0.5 text-lg font-medium text-brand-900">{contact.name}</p>
                 <p className="text-sm text-brand-900/60">{contact.role}</p>
-                <a
-                  href={`mailto:${contact.email}`}
-                  className="mt-2 inline-block break-all text-sm text-brand-500 hover:text-brand-600 hover:underline"
-                >
-                  {contact.email}
-                </a>
+                <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
+                  <a
+                    href={`mailto:${contact.email}`}
+                    className="break-all text-sm text-brand-500 hover:text-brand-600 hover:underline"
+                  >
+                    {contact.email}
+                  </a>
+                  {contact.linkedin && <LinkedInLink href={contact.linkedin} name={contact.name} />}
+                </div>
               </div>
             </div>
           </Reveal>

@@ -182,6 +182,7 @@ export interface ContactPerson {
   initials: string;
   photo?: string;
   email: string;
+  linkedin?: string;
   note: string;
 }
 
@@ -210,6 +211,7 @@ export interface TeamMember {
   name: string;
   initials: string;
   role: string;
+  linkedin?: string;
   photo?: string;
 }
 
@@ -225,6 +227,8 @@ export interface Department {
   icon: string;
   initials: string;
   lead?: string;
+  /** Optional LinkedIn profile of the lead; the button only shows when set. */
+  linkedin?: string;
   photo?: string;
   text: string;
 }

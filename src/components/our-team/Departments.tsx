@@ -6,6 +6,7 @@ import Reveal from "../motion/Reveal";
 import SectionHeading from "../motion/SectionHeading";
 import PortraitFrame from "./PortraitFrame";
 import NameTag from "./NameTag";
+import LinkedInLink from "../LinkedInLink";
 import { iconMap } from "@/lib/icons";
 import type { Department, DepartmentsData } from "@/lib/types";
 
@@ -38,7 +39,7 @@ function StackedDepartments({ items }: { items: Department[] }) {
                   </span>
                 </div>
                 <div className="mt-5 sm:mt-0">
-                  {dept.lead && <NameTag name={dept.lead} role="Lead" />}
+                  {dept.lead && <NameTag name={dept.lead} role="Lead" linkedin={dept.linkedin} />}
                   <p className="mt-6 text-3xl font-medium text-brand-900">{dept.name}</p>
                   <p className="mt-3 text-[1.02rem] leading-relaxed text-brand-900/70">
                     {dept.text}
@@ -91,6 +92,19 @@ export default function Departments({ data }: { data: DepartmentsData }) {
             <span className="absolute right-6 top-6 font-mono text-xs text-white/40">
               {String(active + 1).padStart(2, "0")} / {String(data.items.length).padStart(2, "0")}
             </span>
+
+            {/* Keyed so the button follows the portrait it belongs to. */}
+            {current.linkedin && current.lead && (
+              <motion.div
+                key={current.name}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, ease: EASE, delay: 0.1 }}
+                className="absolute bottom-6 left-6"
+              >
+                <LinkedInLink href={current.linkedin} name={current.lead} tone="glass" />
+              </motion.div>
+            )}
           </div>
 
           {/* Keyed remount, no presence queue - the copy can never lag behind

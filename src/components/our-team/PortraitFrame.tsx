@@ -30,11 +30,14 @@ function PortraitFrame({
   name,
   initials,
   onTilt,
+  sizes = "(min-width: 1280px) 300px, (min-width: 640px) 45vw, 90vw",
 }: {
   photo?: string;
   name: string;
   initials: string;
   onTilt?: (rotateX: number, rotateY: number) => void;
+  /** Override when the frame is rendered larger (or smaller) than a team card. */
+  sizes?: string;
 }) {
   const [canTilt, setCanTilt] = useState(false);
 
@@ -81,7 +84,7 @@ function PortraitFrame({
         alt={name}
         fill
         quality={95}
-        sizes="(min-width: 1280px) 300px, (min-width: 640px) 45vw, 90vw"
+        sizes={sizes}
         className="object-cover transition-transform duration-[900ms] group-hover:scale-105"
       />
     </div>

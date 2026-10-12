@@ -21,6 +21,8 @@ export default function Constellation() {
     let nodes: Node[] = [];
     let frame = 0;
     let visible = true;
+    // Setting canvas.width in resize() wipes the bitmap; track whether a frame is on it.
+    let drawn = false;
 
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
@@ -30,6 +32,7 @@ export default function Constellation() {
       canvas.width = width * dpr;
       canvas.height = height * dpr;
       context.setTransform(dpr, 0, 0, dpr, 0, 0);
+      drawn = false;
 
       const count = Math.round(Math.min(70, Math.max(24, width / 22)));
       nodes = Array.from({ length: count }, () => ({
@@ -43,7 +46,8 @@ export default function Constellation() {
     const root = document.documentElement;
     const draw = () => {
       // Hold still while the page scrolls - the main thread belongs to the scroll.
-      if (root.classList.contains("is-scrolling")) {
+      // But only once a frame is on the canvas, otherwise it stays blank until scrolling ends.
+      if (drawn && root.classList.contains("is-scrolling")) {
         frame = requestAnimationFrame(draw);
         return;
       }
@@ -77,6 +81,7 @@ export default function Constellation() {
         context.arc(node.x, node.y, 1.6, 0, Math.PI * 2);
         context.fill();
       }
+      drawn = true;
 
       frame = requestAnimationFrame(draw);
     };
@@ -96,7 +101,7 @@ export default function Constellation() {
         visible = false;
         cancelAnimationFrame(frame);
       }
-    });
+    }, { rootMargin: "200px 0px" });
     intersectionObserver.observe(canvas);
 
     return () => {

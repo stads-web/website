@@ -18,6 +18,18 @@ function limited(ip: string) {
   return recent.length > 5;
 }
 
+// The page content is the single source for the contact address. On Vercel the
+// function may run without the content/ folder, so a read failure must never
+// take the form down: fall back to the same address.
+const FALLBACK_TO = "gabriel.schmiedecke@stads.de";
+function recipient() {
+  try {
+    return readContent<CompanyContactData>("for-companies/contact.md").data.contact.email || FALLBACK_TO;
+  } catch {
+    return FALLBACK_TO;
+  }
+}
+
 const clean = (v: unknown, max: number) =>
   typeof v === "string" ? v.replace(/\u0000/g, "").trim().slice(0, max) : "";
 
@@ -49,9 +61,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: "Please check your details." }, { status: 422 });
   }
 
-  const to =
-    process.env.CONTACT_TO ??
-    readContent<CompanyContactData>("for-companies/contact.md").data.contact.email;
+  const to = process.env.CONTACT_TO ?? recipient();
   const subject = `[Partnership] ${track} - ${company || name}`;
   const text = [
     `Track: ${track}`,

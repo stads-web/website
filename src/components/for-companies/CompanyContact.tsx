@@ -93,8 +93,11 @@ export default function CompanyContact({ data }: { data: CompanyContactData }) {
           </Reveal>
 
           <Reveal delay={0.2} className="flex items-center gap-5 rounded-3xl border border-brand-100 p-5">
-            <div className="relative aspect-[4/5] w-20 shrink-0 overflow-hidden rounded-2xl border border-brand-100 sm:w-24">
-              <PortraitFrame photo={contact.photo} name={contact.name} initials={contact.initials} />
+            {/* Zoomed in on the face so the full-length portrait reads as a headshot. */}
+            <div className="relative aspect-[4/5] w-24 shrink-0 overflow-hidden rounded-2xl border border-brand-100 sm:w-28">
+              <div className="absolute inset-0 origin-[50%_27%] scale-[2.1]">
+                <PortraitFrame photo={contact.photo} name={contact.name} initials={contact.initials} />
+              </div>
             </div>
             <div className="min-w-0">
               <p className="font-medium text-brand-900">{contact.name}</p>

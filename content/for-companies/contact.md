@@ -18,5 +18,5 @@ contact:
   initials: "GS"
   photo: "/images/team/cooperation.webp"
   email: "gabriel.schmiedecke@stads.de"
-  note: "Reach out directly and we'll route it to the right department."
+  note: "Tell us what you're planning - we'll make sure it lands with the right people."
 ---

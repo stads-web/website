@@ -61,7 +61,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: "Please check your details." }, { status: 422 });
   }
 
-  const to = process.env.CONTACT_TO ?? recipient();
+  // CONTACT_TO may list several addresses (comma separated), e.g. the real
+  // inbox plus a fallback elsewhere. Without it the content file decides.
+  const recipients = (process.env.CONTACT_TO ?? recipient())
+    .split(",")
+    .map((r) => r.trim())
+    .filter(Boolean);
   const subject = `[Partnership] ${track} - ${company || name}`;
   const text = [
     `Track: ${track}`,
@@ -74,60 +79,69 @@ export async function POST(request: Request) {
     "-- Sent via the For Companies form on the STADS website. Reply to this mail to answer directly.",
   ].join("\n");
 
+  const viaResend = async (to: string) => {
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: process.env.CONTACT_FROM ?? "STADS Website <onboarding@resend.dev>",
+        to: [to],
+        reply_to: email,
+        subject,
+        text,
+      }),
+    });
+    if (!res.ok) console.error("[contact] Resend:", to, res.status, await res.text().catch(() => ""));
+    return res.ok;
+  };
+
+  // Keyless relay used only when Resend is not configured or rejected everything.
+  // FormSubmit refuses requests without Origin/Referer, so present the site's own.
+  const viaFormSubmit = async (to: string) => {
+    const origin = process.env.SITE_URL ?? new URL(request.url).origin;
+    const res = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(to)}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Origin: origin,
+        Referer: `${origin}/for-companies`,
+      },
+      body: JSON.stringify({
+        _subject: subject,
+        _replyto: email,
+        _captcha: "false",
+        _template: "box",
+        Track: track,
+        Name: name,
+        Company: company || "-",
+        Email: email,
+        Message: message,
+      }),
+    });
+    const json = (await res.json().catch(() => ({}))) as { success?: string | boolean; message?: string };
+    const ok = res.ok && (json.success === true || json.success === "true");
+    // Visible in the Vercel function logs, e.g. "This form needs Activation".
+    if (!ok) console.error("[contact] FormSubmit:", to, res.status, json.message);
+    return ok;
+  };
+
   try {
     let ok = false;
+    // Each recipient on its own: Resend's sandbox sender only accepts the
+    // account owner's address and would otherwise reject the whole message.
     if (process.env.RESEND_API_KEY) {
-      const res = await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          from: process.env.CONTACT_FROM ?? "STADS Website <onboarding@resend.dev>",
-          to: [to],
-          reply_to: email,
-          subject,
-          text,
-        }),
-      });
-      ok = res.ok;
-      if (!ok) console.error("[contact] Resend:", res.status, await res.text().catch(() => ""));
-    } else {
-      // No mail provider configured yet: relay through FormSubmit, which needs
-      // no key (the first message asks the recipient to confirm once).
-      // FormSubmit refuses requests that carry no Origin/Referer ("open this
-      // page through a web server"), so present the site's own origin.
-      const origin = process.env.SITE_URL ?? new URL(request.url).origin;
-      const res = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(to)}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Origin: origin,
-          Referer: `${origin}/for-companies`,
-        },
-        body: JSON.stringify({
-          _subject: subject,
-          _replyto: email,
-          _captcha: "false",
-          _template: "box",
-          Track: track,
-          Name: name,
-          Company: company || "-",
-          Email: email,
-          Message: message,
-        }),
-      });
-      const json = (await res.json().catch(() => ({}))) as {
-        success?: string | boolean;
-        message?: string;
-      };
-      ok = res.ok && (json.success === true || json.success === "true");
-      // Visible in the Vercel function logs, e.g. "This form needs Activation".
-      if (!ok) console.error("[contact] FormSubmit:", res.status, json.message);
+      const results = await Promise.all(recipients.map((to) => viaResend(to).catch(() => false)));
+      ok = results.some(Boolean);
     }
-    if (!ok) throw new Error("mail provider rejected the message");
+    if (!ok) {
+      const results = await Promise.all(recipients.map((to) => viaFormSubmit(to).catch(() => false)));
+      ok = results.some(Boolean);
+    }
+    if (!ok) throw new Error("no mail provider accepted the message");
     return NextResponse.json({ ok: true });
   } catch {
     return NextResponse.json(

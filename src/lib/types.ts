@@ -314,6 +314,9 @@ export interface Edition {
   metric: string;
   metricLabel: string;
   partners: string[];
+  /** Optional recap article; shown as a link at the foot of the card. */
+  link?: string;
+  linkLabel?: string;
   text: string;
 }
 

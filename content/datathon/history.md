@@ -17,10 +17,12 @@ editions:
     text: "Over 70 highly motivated students spent two days of intensive data-driven problem solving at the Mafinex Technology Center in Mannheim. Working in teams, participants tackled four real-world challenges provided by leading companies — from deploying a machine learning model to building a recommendation engine and handling inconsistent master data."
   - period: "Spring 2023"
     name: "Datathon #2"
-    metric: "60+"
-    metricLabel: "participants"
-    partners: []
-    text: "Over 60 participants tackled healthcare challenges using real-world datasets."
+    metric: "16"
+    metricLabel: "teams, 4 challenges"
+    partners: ["RSM Ebner Stolz", "EY", "BearingPoint", "PHOENIX group"]
+    link: "https://www.linkedin.com/pulse/datathon-recap-stadsmannheim?trk=public_post"
+    linkLabel: "Read the recap"
+    text: "Two days of intensive, data-driven problem solving: at this year's Datathon, teams took on real-world challenges from leading companies. They worked on identifying duplicate payments in a comprehensive dataset and detecting anomalies in anonymized data. The teams developed a ChatGPT-based symptom checker and explored ways to further automate cost prediction for water damage. An inspiring keynote on anomalies kicked off the event and gave participants valuable input for their own challenges, making the event suitable for all, no matter the experience."
   - period: "Fall 2023"
     name: "Datathon #3"
     metric: "4"

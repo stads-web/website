@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
+import { ArrowUpRight } from "@phosphor-icons/react";
 import CountUp from "../motion/CountUp";
 import Reveal from "../motion/Reveal";
 import SplitText from "../motion/SplitText";
@@ -75,6 +76,18 @@ function EditionCard({ edition, index }: { edition: Edition; index: number }) {
       <p className="relative mt-5 leading-relaxed text-brand-900/70">
         {edition.text}
       </p>
+
+      {edition.link && (
+        <a
+          href={edition.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="relative mt-5 inline-flex w-fit items-center gap-1.5 text-sm font-medium text-brand-600 underline-offset-4 transition-colors hover:text-brand-900 hover:underline"
+        >
+          {edition.linkLabel ?? "Read more"}
+          <ArrowUpRight size={15} weight="bold" aria-hidden />
+        </a>
+      )}
 
       {edition.partners.length > 0 && (
         <div className="relative mt-auto flex flex-wrap gap-2 border-t border-brand-100 pt-6">

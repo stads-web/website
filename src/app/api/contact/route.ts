@@ -129,14 +129,73 @@ export async function POST(request: Request) {
     return ok;
   };
 
+  // Teams ping: a Workflows (Power Automate) webhook posts an Adaptive Card into
+  // a channel or chat. No mail involved, so no spam filter can swallow it.
+  // TEAMS_MENTION_EMAIL optionally @-mentions one person so they get a personal alert.
+  const viaTeams = async () => {
+    const mention = process.env.TEAMS_MENTION_EMAIL;
+    const mentionName = process.env.TEAMS_MENTION_NAME ?? "Cooperations";
+    const replyTo = `mailto:${email}?subject=${encodeURIComponent(`Re: ${subject}`)}`;
+    const card = {
+      type: "AdaptiveCard",
+      $schema: "http://adaptivecards.io/schemas/adaptive-card.json",
+      version: "1.4",
+      ...(mention
+        ? {
+            msteams: {
+              entities: [
+                {
+                  type: "mention",
+                  text: `<at>${mentionName}</at>`,
+                  mentioned: { id: mention, name: mentionName },
+                },
+              ],
+            },
+          }
+        : {}),
+      body: [
+        ...(mention ? [{ type: "TextBlock", text: `<at>${mentionName}</at>`, wrap: true }] : []),
+        { type: "TextBlock", text: "New partnership inquiry", weight: "Bolder", size: "Large", wrap: true },
+        {
+          type: "FactSet",
+          facts: [
+            { title: "Topic", value: track },
+            { title: "Name", value: name },
+            { title: "Company", value: company || "-" },
+            { title: "Email", value: email },
+          ],
+        },
+        { type: "TextBlock", text: message, wrap: true, spacing: "Medium" },
+      ],
+      actions: [{ type: "Action.OpenUrl", title: "Reply by email", url: replyTo }],
+    };
+    const res = await fetch(process.env.TEAMS_WEBHOOK_URL as string, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        type: "message",
+        attachments: [{ contentType: "application/vnd.microsoft.card.adaptive", content: card }],
+      }),
+    });
+    if (!res.ok) console.error("[contact] Teams:", res.status, await res.text().catch(() => ""));
+    return res.ok;
+  };
+
   try {
     let ok = false;
+    if (process.env.TEAMS_WEBHOOK_URL) {
+      ok = await viaTeams().catch((err) => {
+        console.error("[contact] Teams request failed:", err);
+        return false;
+      });
+    }
     // Each recipient on its own: Resend's sandbox sender only accepts the
     // account owner's address and would otherwise reject the whole message.
     if (process.env.RESEND_API_KEY) {
       const results = await Promise.all(recipients.map((to) => viaResend(to).catch(() => false)));
-      ok = results.some(Boolean);
+      ok = ok || results.some(Boolean);
     }
+    // The keyless relay only runs when nothing else is configured or worked.
     if (!ok) {
       const results = await Promise.all(recipients.map((to) => viaFormSubmit(to).catch(() => false)));
       ok = results.some(Boolean);

@@ -82,12 +82,21 @@ export async function POST(request: Request) {
         }),
       });
       ok = res.ok;
+      if (!ok) console.error("[contact] Resend:", res.status, await res.text().catch(() => ""));
     } else {
       // No mail provider configured yet: relay through FormSubmit, which needs
       // no key (the first message asks the recipient to confirm once).
+      // FormSubmit refuses requests that carry no Origin/Referer ("open this
+      // page through a web server"), so present the site's own origin.
+      const origin = process.env.SITE_URL ?? new URL(request.url).origin;
       const res = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(to)}`, {
         method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Origin: origin,
+          Referer: `${origin}/for-companies`,
+        },
         body: JSON.stringify({
           _subject: subject,
           _replyto: email,
@@ -100,8 +109,13 @@ export async function POST(request: Request) {
           Message: message,
         }),
       });
-      const json = (await res.json().catch(() => ({}))) as { success?: string | boolean };
+      const json = (await res.json().catch(() => ({}))) as {
+        success?: string | boolean;
+        message?: string;
+      };
       ok = res.ok && (json.success === true || json.success === "true");
+      // Visible in the Vercel function logs, e.g. "This form needs Activation".
+      if (!ok) console.error("[contact] FormSubmit:", res.status, json.message);
     }
     if (!ok) throw new Error("mail provider rejected the message");
     return NextResponse.json({ ok: true });

@@ -171,6 +171,13 @@ export default function ContactForm({
   const set = (key: keyof Values) => (value: string) => setValues((v) => ({ ...v, [key]: value }));
   const touch = (key: keyof Values) => () => setTouched((t) => ({ ...t, [key]: true }));
 
+  // If sending fails, nothing the visitor typed is lost: it opens as a ready mail.
+  const fallbackMailto = `mailto:${email}?subject=${encodeURIComponent(
+    `[Partnership] ${track ?? "Inquiry"}${values.company ? ` - ${values.company}` : ""}`,
+  )}&body=${encodeURIComponent(
+    `${values.message}\n\n${values.name}${values.company ? `, ${values.company}` : ""}\n${values.email}`,
+  )}`;
+
   const options = [...tracks.map((t) => t.label), OTHER];
   const selectedTrack = tracks.find((t) => t.label === track);
 
@@ -396,11 +403,11 @@ export default function ContactForm({
               <div id="cf-status" role="status" aria-live="polite">
                 {status === "error" && (
                   <p className="mt-4 text-sm text-[#B42318]">
-                    {serverError} You can also write to{" "}
-                    <a href={`mailto:${email}`} className="font-medium underline underline-offset-4">
-                      {email}
-                    </a>
-                    .
+                    {serverError}{" "}
+                    <a href={fallbackMailto} className="font-medium underline underline-offset-4">
+                      Open it in your email app instead
+                    </a>{" "}
+                    - your text is already in there.
                   </p>
                 )}
               </div>

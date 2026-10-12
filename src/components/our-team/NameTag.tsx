@@ -28,7 +28,7 @@ export default function NameTag({
         <span className="rounded-full border border-brand-200 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.22em] text-brand-600">
           {role}
         </span>
-        {linkedin && <LinkedInLink href={linkedin} name={name} className="-my-2" />}
+        {linkedin && <LinkedInLink href={linkedin} name={name} expand={false} className="-my-2" />}
       </div>
     </div>
   );

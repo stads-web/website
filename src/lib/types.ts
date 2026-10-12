@@ -190,8 +190,6 @@ export interface CompanyContactData {
   title: string;
   intro: string;
   tracks: ContactTrack[];
-  calBookingUrl: string;
-  tallyFormUrl: string;
   contact: ContactPerson;
 }
 

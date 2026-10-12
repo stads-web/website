@@ -219,6 +219,12 @@ export default function ContactForm({
               );
             })}
           </div>
+          {/* Small screens only: the offer cards are hidden there, so say what the choice means. */}
+          {tracks.find((t) => t.label === track) && (
+            <p className="mt-3 text-[13px] leading-relaxed text-brand-900/65 lg:hidden">
+              {tracks.find((t) => t.label === track)?.text}
+            </p>
+          )}
         </fieldset>
 
         <div className="sm:col-span-2">

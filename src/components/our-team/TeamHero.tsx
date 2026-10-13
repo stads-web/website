@@ -18,7 +18,7 @@ const outline =
 function Headline() {
   return (
     <div className="text-center">
-      <h1 className="mx-auto max-w-3xl text-balance text-4xl font-medium leading-[1.05] tracking-tight text-white md:text-5xl xl:text-6xl">
+      <p aria-hidden="true" className="mx-auto max-w-3xl text-balance text-4xl font-medium leading-[1.05] tracking-tight text-white md:text-5xl xl:text-6xl">
         <Line delay={0.1}>
           One Team,{" "}
           <span className="font-accent text-[1.08em] font-normal italic tracking-[-0.02em] text-brand-300">
@@ -26,7 +26,7 @@ function Headline() {
           </span>{" "}
           Departments
         </Line>
-      </h1>
+      </p>
     </div>
   );
 }
@@ -126,7 +126,7 @@ function MobileHero({ reduce }: { reduce: boolean }) {
           Our Team
         </motion.p>
 
-        <h1 className="mt-5 text-[13.4vw] font-medium leading-[0.94] tracking-[-0.035em] text-white sm:text-[11vw]">
+        <div aria-hidden="true" className="mt-5 text-[13.4vw] font-medium leading-[0.94] tracking-[-0.035em] text-white sm:text-[11vw]">
           <Line delay={0.25}>One Team,</Line>
           <Line delay={0.35} className="font-accent font-normal italic tracking-[-0.02em] text-brand-300">
             Seven
@@ -144,7 +144,7 @@ function MobileHero({ reduce }: { reduce: boolean }) {
               </motion.sup>
             </span>
           </Line>
-        </h1>
+        </div>
       </motion.div>
 
       <div className="mt-auto pt-10">
@@ -246,9 +246,9 @@ function MobileHeroLight({ reduce }: { reduce: boolean }) {
           <span className="h-px w-8 bg-brand-400" />
           Our Team
         </motion.p>
-        <h1 className="mt-3 text-[min(16.5vw,8.6svh)] font-medium leading-[0.92] tracking-[-0.04em] text-brand-950 sm:text-[13vw]">
+        <div aria-hidden="true" className="mt-3 text-[min(16.5vw,8.6svh)] font-medium leading-[0.92] tracking-[-0.04em] text-brand-950 sm:text-[13vw]">
           <Line delay={0.2}>One Team,</Line>
-        </h1>
+        </div>
       </motion.div>
 
       <motion.div
@@ -318,6 +318,7 @@ export default function TeamHero() {
 
   return (
     <section>
+      <h1 className="sr-only">One Team, Seven Departments</h1>
       {/* Desktop: photo as stage, exactly one window high; the board follows on scroll.
           Crop is top-biased (object-position y 5%) so faces (~29-60% of the image) stay in view. */}
       <div ref={ref} className="relative isolate hidden h-[calc(100svh+5rem)] min-h-[calc(720px+5rem)] overflow-hidden bg-brand-950 lg:block">

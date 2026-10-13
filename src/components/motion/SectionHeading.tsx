@@ -17,6 +17,7 @@ export default function SectionHeading({
   align = "left",
   tone = "dark",
   className = "",
+  as: Tag = "h2",
 }: {
   eyebrow?: string;
   title: string;
@@ -25,6 +26,7 @@ export default function SectionHeading({
   align?: "left" | "center";
   tone?: "dark" | "light";
   className?: string;
+  as?: "h1" | "h2";
 }) {
   const centered = align === "center";
   const onLight = tone === "dark";
@@ -58,7 +60,7 @@ export default function SectionHeading({
         </div>
       )}
 
-      <h2
+      <Tag
         className={`${eyebrow ? "mt-5" : ""} text-balance text-4xl font-medium tracking-[-0.03em] leading-[1.12] sm:text-5xl sm:leading-[1.12] md:text-6xl md:leading-[1.12] lg:text-[72px] lg:leading-[1.12] ${
           onLight ? "text-brand-900" : "text-white"
         }`}
@@ -74,7 +76,7 @@ export default function SectionHeading({
             />
           </>
         )}
-      </h2>
+      </Tag>
 
       {intro && (
         <motion.p

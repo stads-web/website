@@ -9,6 +9,7 @@ export default function EventsIntro({ data }: { data: EventsData }) {
         title={data.title}
         intro={data.intro}
         align="center"
+        as="h1"
       />
     </section>
   );

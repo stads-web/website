@@ -48,6 +48,10 @@ Unsere Website enthält Links zu externen Seiten Dritter. Auf deren Inhalte habe
 
 Die Inhalte und Werke auf dieser Website unterliegen dem deutschen Urheberrecht. Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechts bedürfen unserer vorherigen Zustimmung. Sollten Sie dennoch auf eine Urheberrechtsverletzung aufmerksam werden, bitten wir um einen Hinweis; wir entfernen die betroffenen Inhalte dann umgehend.
 
+## Bildnachweise
+
+Alle Fotos auf dieser Website stammen von STADS. Logos von Partnerunternehmen sind Eigentum der jeweiligen Unternehmen und werden mit deren Einverständnis verwendet.
+
 ## Datenschutz
 
 Informationen zur Verarbeitung personenbezogener Daten finden Sie in unserer [Datenschutzerklärung](/datenschutz).

@@ -10,7 +10,7 @@ export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 export default async function OpengraphImage() {
-  const markPath = join(process.cwd(), "src", "app", "icon.png");
+  const markPath = join(process.cwd(), "src", "assets", "og-mark.png");
   const markSrc = `data:image/png;base64,${readFileSync(markPath).toString("base64")}`;
 
   return new ImageResponse(

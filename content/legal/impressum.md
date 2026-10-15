@@ -6,8 +6,9 @@ title: Impressum
 
 Students' Association for Data Analytics & Statistics Mannheim (STADS) e.V.
 
-Schloss
-68131 Mannheim
+Schloss<br>
+68131 Mannheim<br>
+Deutschland
 
 E-Mail: info@stads.de
 

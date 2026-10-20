@@ -4,7 +4,6 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import SplitText from "../motion/SplitText";
 import Magnetic from "../motion/Magnetic";
-import CountUp from "../motion/CountUp";
 import PartnershipField from "./PartnershipField";
 import type { CompaniesHeroData } from "@/lib/types";
 
@@ -88,9 +87,7 @@ export default function CompaniesHero({ data }: { data: CompaniesHeroData }) {
               {stat.label || " "}
             </dt>
             <dd className="mt-1 text-xl font-medium tracking-tight text-white sm:text-2xl">
-              {/* Stats are in view on mount but the ledger only fades in at
-                  1.3s; start counting once it is visible. */}
-              <CountUp value={stat.value} delay={1.5} />
+              {stat.value}
             </dd>
           </div>
         ))}

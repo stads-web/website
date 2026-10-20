@@ -1,7 +1,6 @@
 import type { MetadataRoute } from "next";
 
-// Keep in sync with the `siteUrl` constant in src/app/layout.tsx.
-const siteUrl = "https://website-stads1.vercel.app";
+import { siteUrl } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();

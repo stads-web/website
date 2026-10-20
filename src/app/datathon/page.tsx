@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ogBase, twitterBase } from "@/lib/site";
 import { readContent } from "@/lib/content";
 import DatathonHero from "@/components/datathon/DatathonHero";
 import DatathonAbout from "@/components/datathon/DatathonAbout";
@@ -26,13 +27,15 @@ const description =
 export const metadata: Metadata = {
   title,
   description,
+  alternates: { canonical: "/datathon" },
   openGraph: {
+    ...ogBase,
     title,
     description,
     url: "/datathon",
     images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
   },
-  twitter: { title, description },
+  twitter: { ...twitterBase, title, description },
 };
 
 export default function DatathonPage() {

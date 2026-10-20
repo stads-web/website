@@ -15,8 +15,8 @@ import PageTransition from "@/components/motion/PageTransition";
 import MotionProvider from "@/components/motion/MotionProvider";
 import { readContent } from "@/lib/content";
 import type { SiteData } from "@/lib/types";
+import { siteUrl, ogBase, twitterBase } from "@/lib/site";
 
-const siteUrl = "https://website-stads1.vercel.app";
 const siteTitle = "STADS – Students' Association for Data Analytics & Statistics Mannheim";
 const siteDescription =
   "STADS is the only student-run Data Science organization at the University of Mannheim - workshops, the STADS Datathon, guest lectures, and a community of 250+ members.";
@@ -44,17 +44,16 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: siteTitle,
   description: siteDescription,
+  alternates: { canonical: "/" },
   openGraph: {
+    ...ogBase,
     title: siteTitle,
     description: siteDescription,
     url: siteUrl,
-    siteName: "STADS",
     images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: siteTitle }],
-    locale: "en_US",
-    type: "website",
   },
   twitter: {
-    card: "summary_large_image",
+    ...twitterBase,
     title: siteTitle,
     description: siteDescription,
     images: ["/opengraph-image"],

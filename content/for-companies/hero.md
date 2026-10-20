@@ -14,5 +14,5 @@ primaryCta:
   href: "#contact"
 secondaryCta:
   label: "See how it works"
-  href: "#offerings"
+  href: "#how-it-works"
 ---

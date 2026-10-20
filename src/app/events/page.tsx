@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ogBase, twitterBase } from "@/lib/site";
 import { readContent } from "@/lib/content";
 import PageTopFade from "@/components/PageTopFade";
 import EventsIntro from "@/components/events/EventsIntro";
@@ -13,8 +14,15 @@ const description =
 export const metadata: Metadata = {
   title,
   description,
-  openGraph: { title, description, images: [{ url: "/opengraph-image", width: 1200, height: 630 }] },
-  twitter: { title, description },
+  alternates: { canonical: "/events" },
+  openGraph: {
+    ...ogBase,
+    title,
+    description,
+    url: "/events",
+    images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
+  },
+  twitter: { ...twitterBase, title, description },
 };
 
 export default function EventsPage() {

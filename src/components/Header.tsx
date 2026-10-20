@@ -98,6 +98,18 @@ export default function Header({ site }: { site: SiteData }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Close the drawer on route change and when the viewport grows to desktop
+  // (the overlay is lg:hidden, so an open state would otherwise stay stuck).
+  useEffect(() => setOpen(false), [pathname]);
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const onChange = (e: MediaQueryListEvent) => {
+      if (e.matches) setOpen(false);
+    };
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
   // While the drawer is open: lock page scroll, keep Escape closing it, and
   // take the rest of the page out of the tab/AT order so focus can't leak
   // behind the scrim (no focus-trap existed here before this).
@@ -107,7 +119,7 @@ export default function Header({ site }: { site: SiteData }) {
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
-    const inertTargets = Array.from(document.querySelectorAll<HTMLElement>("main, footer"));
+    const inertTargets = Array.from(document.querySelectorAll<HTMLElement>("main, footer, [data-consent-banner]"));
     inertTargets.forEach((el) => {
       el.setAttribute("inert", "");
       el.setAttribute("aria-hidden", "true");
@@ -129,7 +141,7 @@ export default function Header({ site }: { site: SiteData }) {
   }, [open]);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-40">
+    <header className="fixed inset-x-0 top-0 z-[60]">
       {/* Three real columns rather than a centred group with an absolutely
           placed logo - that version collided once the viewport narrowed. */}
       <div className="relative z-20 mx-auto flex max-w-content items-center justify-between gap-6 px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-6 lg:py-4">
@@ -283,6 +295,7 @@ export default function Header({ site }: { site: SiteData }) {
             role="dialog"
             aria-modal="true"
             aria-label="Mobile navigation"
+            data-lenis-prevent
             className="fixed inset-0 z-10 flex flex-col overflow-hidden bg-brand-950 lg:hidden"
             style={{ height: "100dvh" }}
             variants={prefersReducedMotion ? undefined : overlayVariants}

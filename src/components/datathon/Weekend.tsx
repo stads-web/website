@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import {
   motion,
   useMotionValue,
+  useInView,
   useScroll,
   useSpring,
   useTransform,
@@ -79,12 +80,19 @@ function MobileBeat({
   active: boolean;
   onActive: (index: number) => void;
 }) {
+  // Separate from the once-only reveal: a thin band around the viewport centre
+  // so exactly one beat is active and it follows scrolling both ways.
+  const ref = useRef<HTMLDivElement>(null);
+  const inBand = useInView(ref, { margin: "-45% 0px -45% 0px" });
+  useEffect(() => {
+    if (inBand) onActive(index);
+  }, [inBand, index, onActive]);
   return (
     <motion.div
+      ref={ref}
       initial={{ opacity: 0, y: 28 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
-      onViewportEnter={() => onActive(index)}
       transition={{ duration: 0.7, delay: 0.05 * index, ease: EASE }}
       className="relative pl-9"
     >

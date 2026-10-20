@@ -4,7 +4,7 @@ import type { HowItWorksData } from "@/lib/types";
 
 export default function HowItWorks({ data }: { data: HowItWorksData }) {
   return (
-    <section className="mx-auto max-w-content px-4 py-20 sm:px-6 sm:py-28">
+    <section id="how-it-works" className="mx-auto max-w-content px-4 py-20 sm:px-6 sm:py-28">
       <SectionHeading eyebrow={data.eyebrow} title={data.title} />
 
       <div className="mt-14 border-t border-brand-100">

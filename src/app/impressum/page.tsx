@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ogBase, twitterBase } from "@/lib/site";
 import { readContent } from "@/lib/content";
 import LegalPage from "@/components/LegalPage";
 
@@ -9,8 +10,15 @@ const description =
 export const metadata: Metadata = {
   title,
   description,
-  openGraph: { title, description, images: [{ url: "/opengraph-image", width: 1200, height: 630 }] },
-  twitter: { title, description },
+  alternates: { canonical: "/impressum" },
+  openGraph: {
+    ...ogBase,
+    title,
+    description,
+    url: "/impressum",
+    images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
+  },
+  twitter: { ...twitterBase, title, description },
 };
 
 export default function ImpressumPage() {

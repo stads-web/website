@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ogBase, twitterBase } from "@/lib/site";
 import { readContent } from "@/lib/content";
 import Leadership from "@/components/our-team/Leadership";
 import Departments from "@/components/our-team/Departments";
@@ -13,8 +14,15 @@ const description =
 export const metadata: Metadata = {
   title,
   description,
-  openGraph: { title, description, images: [{ url: "/opengraph-image", width: 1200, height: 630 }] },
-  twitter: { title, description },
+  alternates: { canonical: "/our-team" },
+  openGraph: {
+    ...ogBase,
+    title,
+    description,
+    url: "/our-team",
+    images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
+  },
+  twitter: { ...twitterBase, title, description },
 };
 
 const cta: FinalCtaData = {

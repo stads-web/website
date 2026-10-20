@@ -20,6 +20,19 @@ interface ConsentState {
 
 const STORAGE_KEY = "stads-cookie-consent";
 
+function clearAnalyticsCookies() {
+  const host = window.location.hostname;
+  const names = document.cookie
+    .split(";")
+    .map((c) => c.split("=")[0].trim())
+    .filter((n) => /^(_ga|_ga_.*|_gid|_clck|_clsk)$/.test(n));
+  for (const n of names) {
+    for (const domain of [null, host, "." + host]) {
+      document.cookie = `${n}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/${domain ? `; domain=${domain}` : ""}`;
+    }
+  }
+}
+
 const ConsentContext = createContext<ConsentState | null>(null);
 
 export function ConsentProvider({ children }: { children: React.ReactNode }) {
@@ -42,12 +55,23 @@ export function ConsentProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const persist = useCallback((next: ConsentChoice) => {
+    // Revoking a previous "accepted": GA4/Clarity are already running, so
+    // drop their cookies and reload to stop the scripts.
+    let revoked = false;
+    try {
+      revoked =
+        next === "rejected" && window.localStorage.getItem(STORAGE_KEY) === "accepted";
+    } catch {}
     setChoice(next);
     setBannerOpen(false);
     try {
       window.localStorage.setItem(STORAGE_KEY, next);
     } catch {
       // localStorage unavailable (private mode etc.) - consent still applies for this session
+    }
+    if (revoked) {
+      clearAnalyticsCookies();
+      window.location.reload();
     }
   }, []);
 

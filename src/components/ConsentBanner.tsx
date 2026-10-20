@@ -10,6 +10,7 @@ export default function ConsentBanner() {
 
   return (
     <div
+      data-consent-banner
       role="dialog"
       aria-modal="false"
       aria-labelledby="cookie-consent-heading"

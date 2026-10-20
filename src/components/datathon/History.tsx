@@ -120,10 +120,11 @@ export default function History({ data }: { data: HistoryData }) {
 
   useEffect(() => {
     const query = window.matchMedia("(min-width: 1024px)");
+    const pointer = window.matchMedia("(hover: hover) and (pointer: fine)");
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
 
     const measure = () => {
-      const active = query.matches && !reduced.matches;
+      const active = query.matches && pointer.matches && !reduced.matches;
       setPinned(active);
       const track = trackRef.current;
       if (!active || !track) {
@@ -135,9 +136,11 @@ export default function History({ data }: { data: HistoryData }) {
 
     measure();
     query.addEventListener("change", measure);
+    pointer.addEventListener("change", measure);
     window.addEventListener("resize", measure);
     return () => {
       query.removeEventListener("change", measure);
+      pointer.removeEventListener("change", measure);
       window.removeEventListener("resize", measure);
     };
   }, []);

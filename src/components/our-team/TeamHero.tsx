@@ -157,7 +157,7 @@ function MobileHero({ reduce }: { reduce: boolean }) {
           >
             <Image
               src="/images/team/team.webp"
-              alt="Das STADS-Team"
+              alt="The STADS team"
               width={4266}
               height={3197}
               quality={95}
@@ -266,7 +266,7 @@ function MobileHeroLight({ reduce }: { reduce: boolean }) {
           >
             <Image
               src="/images/team/team.webp"
-              alt="Das STADS-Team"
+              alt="The STADS team"
               fill
               quality={95}
               priority
@@ -331,7 +331,7 @@ export default function TeamHero() {
           >
             <Image
               src="/images/team/team.webp"
-              alt="Das STADS-Team"
+              alt="The STADS team"
               fill
               priority
               quality={95}

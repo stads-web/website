@@ -6,6 +6,8 @@ videoEmbed: "https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:737327918
 videoLink: "https://www.linkedin.com/posts/sofatalk_was-ist-ein-datathon-beim-stads-datathon-ugcPost-7373279186687328256-iwe8"
 videoPoster: /images/datathon-ruecken.webp
 videoPosterAlt: A STADS Datathon participant during the event
+image: /images/marketing/datathon-applaus.webp
+imageAlt: Audience applauding at the STADS Datathon
 stats:
   - value: "48h"
     label: "Intensive work"

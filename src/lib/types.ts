@@ -294,6 +294,8 @@ export interface DatathonAboutData {
   videoLink: string;
   videoPoster: string;
   videoPosterAlt: string;
+  image?: string;
+  imageAlt?: string;
   stats: Stat[];
 }
 

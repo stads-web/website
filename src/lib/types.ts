@@ -48,6 +48,7 @@ export interface ProgramItem {
   descriptionShort: string;
   image: string;
   imageAlt: string;
+  imagePosition?: string;
 }
 
 export interface ProgramData {

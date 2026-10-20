@@ -15,6 +15,6 @@ primaryCta:
 secondaryCta:
   label: "Every edition"
   href: "#history"
-image: /images/kickoff_raum.webp
-imageAlt: Students working through the STADS Datathon in a lecture hall
+image: /images/marketing/datathon-raum.webp
+imageAlt: Student teams working on laptops in a room with a STADS banner during the Datathon
 ---

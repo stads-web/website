@@ -91,6 +91,7 @@ function ProgramCard({ item }: { item: ProgramItem }) {
                 fill
                 sizes="(min-width: 640px) 340px, 90vw"
                 className="object-cover transition-transform duration-700 group-hover:scale-[1.06]"
+                style={item.imagePosition ? { objectPosition: item.imagePosition } : undefined}
               />
             </div>
             <div className="mt-2.5 sm:mt-4">

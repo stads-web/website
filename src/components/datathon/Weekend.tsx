@@ -62,7 +62,7 @@ function Beat({
 /**
  * Non-pinned layout's beat card: a one-time whileInView fade/slide (same
  * language as `Reveal`) plus an `onViewportEnter` step trigger that drives
- * the companion canvas and the rail below - discrete per-step activation
+ * the rail below - discrete per-step activation
  * instead of scrubbing continuously with raw scroll position, which is what
  * fights momentum scrolling on touch.
  */
@@ -119,7 +119,7 @@ export default function Weekend({ data }: { data: WeekendData }) {
     offset: ["start start", "end end"],
   });
 
-  // Drives the mobile canvas + rail: a spring toward the active beat's
+  // Drives the mobile rail: a spring toward the active beat's
   // fraction, so the visual settles into each step instead of tracking raw
   // scroll position (which is what read as "stuck" on touch/momentum scroll).
   const activeBeatTarget = useMotionValue(0);
@@ -178,21 +178,7 @@ export default function Weekend({ data }: { data: WeekendData }) {
               </h2>
             </Reveal>
 
-            {/* Sticks below the fixed header (72px) so the canvas stays in view
-                while the steps scroll past; the solid band hides them underneath. */}
-            <div className="sticky top-[72px] z-10 -mx-4 mt-6 bg-brand-950 px-4 pb-6 pt-4 sm:-mx-6 sm:px-6">
-              <div className="relative">
-                <div
-                  aria-hidden
-                  className="absolute -inset-6 -z-10 rounded-[40px] bg-brand-500/10 blur-2xl"
-                />
-                <div className="relative h-64 overflow-hidden rounded-[28px] border border-white/10">
-                  <DataCanvas progress={mobileProgress} className="h-full w-full" />
-                </div>
-              </div>
-            </div>
-
-            <div className="relative mt-12">
+            <div className="relative mt-10">
               <div aria-hidden className="absolute left-1 top-2 bottom-2 w-px bg-white/10" />
               <motion.div
                 aria-hidden

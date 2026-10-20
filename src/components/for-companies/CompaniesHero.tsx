@@ -88,7 +88,9 @@ export default function CompaniesHero({ data }: { data: CompaniesHeroData }) {
               {stat.label || " "}
             </dt>
             <dd className="mt-1 text-xl font-medium tracking-tight text-white sm:text-2xl">
-              <CountUp value={stat.value} />
+              {/* Stats are in view on mount but the ledger only fades in at
+                  1.3s; start counting once it is visible. */}
+              <CountUp value={stat.value} delay={1.5} />
             </dd>
           </div>
         ))}

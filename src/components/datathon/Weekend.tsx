@@ -183,7 +183,7 @@ export default function Weekend({ data }: { data: WeekendData }) {
               <motion.div
                 aria-hidden
                 style={{ scaleY: mobileProgress }}
-                className="absolute left-1 top-2 w-px origin-top bg-gradient-to-b from-brand-300 to-white"
+                className="absolute left-1 top-2 bottom-2 w-px origin-top bg-gradient-to-b from-brand-300 to-white"
               />
               <div className="flex flex-col gap-12">
                 {data.beats.map((beat, i) => (

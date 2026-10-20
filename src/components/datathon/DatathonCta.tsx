@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import Reveal from "../motion/Reveal";
 import Magnetic from "../motion/Magnetic";
@@ -8,6 +9,15 @@ import type { DatathonCtaData } from "@/lib/types";
 export default function DatathonCta({ data }: { data: DatathonCtaData }) {
   return (
     <section className="relative overflow-hidden bg-brand-950 py-24 text-center sm:py-32">
+      <Image
+        src="/images/marketing/datathon-coding.webp"
+        alt=""
+        aria-hidden
+        fill
+        sizes="100vw"
+        className="object-cover"
+      />
+      <div aria-hidden className="absolute inset-0 bg-brand-950/80" />
       <Constellation />
       <div className="relative mx-auto max-w-content px-4 sm:px-6">
         <Reveal>

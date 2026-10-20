@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { marked } from "marked";
 import Reveal from "../motion/Reveal";
 import SplitText from "../motion/SplitText";
@@ -28,21 +27,6 @@ export default function DatathonAbout({
             dangerouslySetInnerHTML={{ __html: html }}
           />
         </Reveal>
-
-        {data.image && (
-          <Reveal delay={0.1} className="lg:hidden">
-            <div className="relative aspect-[4/3] overflow-hidden rounded-[32px] border border-white/60 shadow-[0px_15px_30px_rgba(0,0,0,0.06),0px_30px_60px_rgba(0,0,0,0.12)]">
-              <Image
-                src={data.image}
-                alt={data.imageAlt ?? ""}
-                fill
-                sizes="100vw"
-                loading="lazy"
-                className="object-cover"
-              />
-            </div>
-          </Reveal>
-        )}
 
         <Reveal delay={0.2}>
           <VideoEmbed

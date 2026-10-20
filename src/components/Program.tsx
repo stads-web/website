@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import Reveal from "./motion/Reveal";
 import SectionHeading from "./motion/SectionHeading";
@@ -16,6 +16,7 @@ function ProgramCard({ item }: { item: ProgramItem }) {
   const [flipped, setFlipped] = useState(false);
   const [hovered, setHovered] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const descriptionId = useId();
   // Hover capability is read per event: a laptop with a touchscreen can be either.
   const canHover = () => window.matchMedia("(hover: hover)").matches;
 
@@ -74,7 +75,8 @@ function ProgramCard({ item }: { item: ProgramItem }) {
         type="button"
         onClick={onActivate}
         aria-pressed={showsBack}
-        aria-label={`${item.title} - flip card`}
+        aria-label={item.title}
+        aria-describedby={descriptionId}
         style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
         className="relative block h-[220px] w-full shrink-0 text-left sm:h-[380px]"
       >
@@ -105,7 +107,7 @@ function ProgramCard({ item }: { item: ProgramItem }) {
 
           <div className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden rounded-[28px] border border-white/60 bg-brand-800 p-5 text-center [backface-visibility:hidden] [transform:rotateY(180deg)] sm:rounded-[40px] lg:p-8">
             <p className="text-sm font-medium text-white sm:text-lg">{item.title}</p>
-            <p className="mt-2 hidden text-xs leading-relaxed text-white/80 sm:mt-3 sm:block md:text-sm">
+            <p id={descriptionId} className="mt-2 hidden text-xs leading-relaxed text-white/80 sm:mt-3 sm:block md:text-sm">
               {item.description}
             </p>
             <p className="mt-2 text-xs leading-relaxed text-white/80 sm:hidden">

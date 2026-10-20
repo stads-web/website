@@ -29,16 +29,20 @@ function TierHead({ tier }: { tier: MembershipTier }) {
 
 function Marker({ included, featured }: { included: boolean; featured?: boolean }) {
   if (!included) {
-    return <span className="mx-auto block h-px w-4 bg-brand-200" aria-label="not included" />;
+    return (
+      <span className="mx-auto block h-px w-4 bg-brand-200">
+        <span className="sr-only">not included</span>
+      </span>
+    );
   }
   return (
     <span
       className={`mx-auto flex h-7 w-7 items-center justify-center rounded-full ${
         featured ? "bg-brand-800 text-white" : "bg-brand-100 text-brand-800"
       }`}
-      aria-label="included"
     >
       <Check size={14} weight="bold" aria-hidden="true" />
+      <span className="sr-only">included</span>
     </span>
   );
 }

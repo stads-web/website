@@ -90,10 +90,16 @@ export default function RootLayout({
         <ConsentProvider>
           <ScrollProgress />
           <SmoothScroll>
+            <a
+              href="#main"
+              className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[70] focus:rounded-full focus:bg-white focus:px-4 focus:py-3 focus:text-sm focus:font-semibold focus:text-brand-900 focus:shadow-card"
+            >
+              Skip to content
+            </a>
             <Header site={site} />
             <div className="relative z-10 bg-white mb-[var(--footer-h)]">
               <MeshBackdrop />
-              <div className="relative z-10">
+              <div id="main" tabIndex={-1} className="relative z-10 outline-none">
                 <PageTransition>{children}</PageTransition>
               </div>
             </div>

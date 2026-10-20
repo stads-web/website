@@ -21,13 +21,17 @@ interface ConsentState {
 const STORAGE_KEY = "stads-cookie-consent";
 
 function clearAnalyticsCookies() {
-  const host = window.location.hostname;
+  // GA sets its cookies on the widest domain it can (e.g. .stads.de while on
+  // www.stads.de), so clear the host and every parent domain except the bare TLD.
+  const parts = window.location.hostname.split(".");
+  const hosts = parts.length > 1 ? parts.slice(0, -1).map((_, i) => parts.slice(i).join(".")) : parts;
+  const domains = [null, ...hosts.flatMap((h) => [h, "." + h])];
   const names = document.cookie
     .split(";")
     .map((c) => c.split("=")[0].trim())
     .filter((n) => /^(_ga|_ga_.*|_gid|_clck|_clsk)$/.test(n));
   for (const n of names) {
-    for (const domain of [null, host, "." + host]) {
+    for (const domain of domains) {
       document.cookie = `${n}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/${domain ? `; domain=${domain}` : ""}`;
     }
   }

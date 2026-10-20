@@ -49,6 +49,14 @@ export default function Gallery({ data }: { data: GalleryData }) {
       touching = false;
       pausedUntil = Date.now() + RESUME_MS;
     };
+    // Trackpad/wheel and mouse/pen interaction pause too. Touch stays on
+    // touchstart/touchend: pointerdown fires pointercancel once the strip scrolls.
+    const pause = () => {
+      pausedUntil = Date.now() + RESUME_MS;
+    };
+    const pointerDown = (e: PointerEvent) => {
+      if (e.pointerType === "mouse" || e.pointerType === "pen") pause();
+    };
 
     const io = new IntersectionObserver(([e]) => {
       visible = e.isIntersecting;
@@ -57,6 +65,8 @@ export default function Gallery({ data }: { data: GalleryData }) {
     ul.addEventListener("touchstart", down, { passive: true });
     ul.addEventListener("touchend", up);
     ul.addEventListener("touchcancel", up);
+    ul.addEventListener("wheel", pause, { passive: true });
+    ul.addEventListener("pointerdown", pointerDown);
     const id = window.setInterval(tick, STEP_MS);
 
     return () => {
@@ -65,6 +75,8 @@ export default function Gallery({ data }: { data: GalleryData }) {
       ul.removeEventListener("touchstart", down);
       ul.removeEventListener("touchend", up);
       ul.removeEventListener("touchcancel", up);
+      ul.removeEventListener("wheel", pause);
+      ul.removeEventListener("pointerdown", pointerDown);
     };
   }, []);
 

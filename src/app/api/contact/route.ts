@@ -40,6 +40,9 @@ export async function POST(request: Request) {
   } catch {
     return NextResponse.json({ ok: false, error: "Invalid request." }, { status: 400 });
   }
+  if (!body || typeof body !== "object" || Array.isArray(body)) {
+    return NextResponse.json({ ok: false, error: "Invalid request." }, { status: 400 });
+  }
 
   // Honeypot filled or form submitted faster than a human can: pretend success.
   const tooFast = typeof body.t === "number" && Date.now() - body.t < 2500;

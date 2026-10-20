@@ -7,7 +7,7 @@ items:
     descriptionShort: "Events such as the Running Dinner, Running Cocktail, and our wine hike let members connect beyond the lecture hall. They build lasting friendships and networks across all semesters."
     image: /images/marketing/social-events.webp
     imageAlt: STADS members smiling together on a sofa at a social event, holding drinks
-    imagePosition: center 85%
+    imagePosition: 75% 85%
   - title: Data Bootcamp
     description: "The STADS Data Bootcamp offers an interactive introduction to data science. In a challenge-based format, participants work in teams to explore data, learn key concepts, and gain first hands-on experience in solving data-driven problems."
     descriptionShort: "The STADS Data Bootcamp is an interactive, challenge-based introduction to data science. In teams, participants explore data and gain their first hands-on experience with real problems."

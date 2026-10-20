@@ -19,6 +19,7 @@ Wenn Sie unsere Website besuchen, verarbeiten wir personenbezogene Daten in folg
 - beim Aufruf der Website (Server-Logfiles, anonymisierte Zugriffsstatistiken)
 - bei Ihrer Einwilligung zu Analyse-Cookies (Google Analytics 4, Microsoft Clarity)
 - wenn Sie uns per E-Mail oder über ein verlinktes Formular kontaktieren
+- wenn Sie unser Kontaktformular für Unternehmen nutzen (Abschnitt 9)
 
 ## 3. Hosting
 
@@ -44,14 +45,30 @@ Bei Ihrer Einwilligung nutzen wir zusätzlich Microsoft Clarity, einen Dienst de
 
 Wenn Sie per E-Mail oder über ein verlinktes externes Formular (z. B. Microsoft Forms) mit uns Kontakt aufnehmen, verarbeiten wir die von Ihnen mitgeteilten Daten zur Bearbeitung Ihrer Anfrage (Art. 6 Abs. 1 lit. b bzw. f DSGVO). Für extern verlinkte Formulare gelten zusätzlich die Datenschutzhinweise des jeweiligen Anbieters.
 
-## 9. Speicherdauer
+## 9. Kontaktformular
+
+Auf der Seite „For Companies“ bieten wir ein Kontaktformular für Kooperationsanfragen an. Dabei verarbeiten wir die von Ihnen eingegebenen Daten: Name, E-Mail-Adresse, Unternehmen (optional), das gewählte Thema der Anfrage und Ihre Nachricht. Zur Abwehr automatisierter Spam-Einsendungen übermittelt das Formular zusätzlich den Zeitpunkt, zu dem es geöffnet wurde, sowie ein für Menschen unsichtbares Kontrollfeld. Um massenhafte Einsendungen zu begrenzen, wird außerdem Ihre IP-Adresse zusammen mit dem Zeitpunkt der Anfrage kurzzeitig im Arbeitsspeicher des Servers vorgehalten; sie wird dabei nicht dauerhaft gespeichert und nicht an die unten genannten Dienste weitergegeben.
+
+Die Daten verarbeiten wir ausschließlich zur Bearbeitung und Beantwortung Ihrer Anfrage. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO, soweit Ihre Anfrage auf eine Zusammenarbeit mit uns gerichtet ist, im Übrigen unser berechtigtes Interesse an der Beantwortung von Anfragen (Art. 6 Abs. 1 lit. f DSGVO).
+
+Ihre Angaben werden von unserem Server an das zuständige Team weitergeleitet. Dafür setzen wir, sofern eingerichtet, folgende Dienste ein:
+
+- **Microsoft Power Automate / Microsoft Teams:** Die Anfrage wird über eine Workflow-Schnittstelle von Microsoft als Nachricht in einen internen Microsoft-Teams-Kanal übertragen. Anbieter für Kund:innen in der EU ist die Microsoft Ireland Operations Ltd., One Microsoft Place, South County Business Park, Leopardstown, Dublin 18, Irland. Eine Übermittlung an die Microsoft Corporation in den USA ist nicht auszuschließen. Weitere Informationen: [Microsoft Datenschutzerklärung](https://privacy.microsoft.com/de-de/privacystatement).
+- **Resend:** Die Anfrage wird per E-Mail über den Versanddienst der Resend, Inc., San Francisco, USA, an unser Postfach zugestellt. Dabei werden Ihre Angaben in die USA übermittelt. Weitere Informationen: [Resend Datenschutzerklärung](https://resend.com/legal/privacy-policy).
+- **FormSubmit:** Nur wenn weder über Microsoft Teams noch über Resend eine Zustellung gelungen ist (weil diese nicht eingerichtet sind oder fehlgeschlagen sind), wird die Anfrage ersatzweise über den E-Mail-Weiterleitungsdienst FormSubmit (formsubmit.co) an unser Postfach zugestellt. Dabei kann es zu einer Übermittlung in ein Drittland kommen.
+
+Kann Ihre Nachricht über keinen dieser Wege zugestellt werden, bietet Ihnen das Formular an, sie stattdessen als vorbereitete E-Mail aus Ihrem eigenen E-Mail-Programm zu senden; insoweit gilt Abschnitt 8.
+
+Ihre Daten werden gelöscht, sobald Ihre Anfrage abschließend bearbeitet ist und keine gesetzlichen Aufbewahrungspflichten entgegenstehen.
+
+## 10. Speicherdauer
 
 Personenbezogene Daten werden gelöscht, sobald der Zweck der Verarbeitung entfällt und keine gesetzlichen Aufbewahrungspflichten entgegenstehen. Analyse-Daten werden nach den bei Google Analytics bzw. Microsoft Clarity konfigurierten Aufbewahrungsfristen automatisch gelöscht.
 
-## 10. Ihre Rechte
+## 11. Ihre Rechte
 
 Sie haben das Recht auf Auskunft (Art. 15 DSGVO), Berichtigung (Art. 16 DSGVO), Löschung (Art. 17 DSGVO), Einschränkung der Verarbeitung (Art. 18 DSGVO), Datenübertragbarkeit (Art. 20 DSGVO) sowie Widerspruch gegen die Verarbeitung (Art. 21 DSGVO). Erteilte Einwilligungen können Sie jederzeit mit Wirkung für die Zukunft widerrufen. Außerdem steht Ihnen ein Beschwerderecht bei einer Datenschutzaufsichtsbehörde zu, z. B. beim Landesbeauftragten für den Datenschutz und die Informationsfreiheit Baden-Württemberg.
 
-## 11. Kontakt für Datenschutzanfragen
+## 12. Kontakt für Datenschutzanfragen
 
 Bei Fragen zum Datenschutz erreichen Sie uns unter info@stads.de.

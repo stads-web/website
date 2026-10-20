@@ -357,3 +357,13 @@ export interface SiteData {
     email: string;
   };
 }
+
+export interface GalleryItem {
+  image: string;
+  imageAlt: string;
+  imagePosition?: string;
+}
+
+export interface GalleryData {
+  items: GalleryItem[];
+}

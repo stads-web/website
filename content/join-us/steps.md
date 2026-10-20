@@ -2,6 +2,7 @@
 title: "Three steps to get started"
 steps:
   - title: "Join our WhatsApp group"
+    href: "https://chat.whatsapp.com/FEklw3cfIO87Tp8VsVhnI5"
     text: "That's where we post News Nights, workshops, and everything else happening at STADS - it's the fastest way to know what's next."
   - title: "Come to a Monday Session"
     text: "No commitment needed. Drop in, meet the team, and get a feel for what we actually do before you decide anything."

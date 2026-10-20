@@ -259,6 +259,7 @@ export interface EventsData {
 
 export interface JoinStep {
   title: string;
+  href?: string;
   text: string;
 }
 

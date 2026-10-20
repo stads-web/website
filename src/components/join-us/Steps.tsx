@@ -34,7 +34,20 @@ export default function Steps({ data }: { data: JoinStepsData }) {
                   {i + 1}
                 </span>
                 <div className="pt-2">
-                  <p className="text-lg font-medium text-brand-900">{step.title}</p>
+                  <p className="text-lg font-medium text-brand-900">
+                    {step.href ? (
+                      <a
+                        href={step.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline underline-offset-4 transition-colors hover:text-brand-600 focus-visible:rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
+                      >
+                        {step.title}
+                      </a>
+                    ) : (
+                      step.title
+                    )}
+                  </p>
                   <p className="mt-2 max-w-md leading-relaxed text-brand-900/70">{step.text}</p>
                 </div>
               </div>

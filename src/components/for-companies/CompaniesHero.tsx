@@ -27,7 +27,7 @@ export default function CompaniesHero({ data }: { data: CompaniesHeroData }) {
           room to spare; min-h-0 lets this row compress instead of forcing
           the section to overflow when a short/landscape viewport can't fit
           the centered content and the stats ledger below it both. */}
-      <div className="relative flex min-h-0 flex-1 items-center px-4 pt-24 sm:px-6 lg:pt-8">
+      <div className="relative flex min-h-0 flex-1 items-center px-4 pt-[calc(6rem+env(safe-area-inset-top,0px))] sm:px-6 lg:pt-8">
         <div className="mx-auto w-full max-w-content">
           <motion.p
             initial={{ opacity: 0, y: 16 }}

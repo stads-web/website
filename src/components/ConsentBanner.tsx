@@ -14,9 +14,9 @@ export default function ConsentBanner() {
       role="dialog"
       aria-modal="false"
       aria-labelledby="cookie-consent-heading"
-      className="fixed inset-x-0 bottom-0 z-50 border-t border-brand-100 bg-white/95 px-4 py-5 shadow-[0_-8px_24px_rgba(15,29,54,0.12)] backdrop-blur sm:px-6"
+      className="fixed inset-x-0 bottom-0 z-50 border-t border-brand-100 bg-white/95 px-4 pb-[calc(1.25rem+env(safe-area-inset-bottom,0px))] pt-5 shadow-[0_-8px_24px_rgba(15,29,54,0.12)] backdrop-blur sm:px-6"
     >
-      <div className="mx-auto flex max-w-content flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mx-auto flex max-w-content flex-col pl-safe pr-safe gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="max-w-2xl">
           <p id="cookie-consent-heading" className="font-semibold text-brand-900">
             We&apos;d like to understand how you use our site

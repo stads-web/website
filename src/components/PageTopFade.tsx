@@ -10,7 +10,7 @@ export default function PageTopFade({ image }: { image?: string }) {
     // The band fades out through a mask instead of ending in an opaque white
     // edge: below it the page is transparent over the drifting backdrop, and an
     // opaque white bottom showed up as a hard line against the backdrop's glow.
-    <div className="relative h-[220px] w-full overflow-hidden bg-gradient-to-b from-brand-800 to-transparent [-webkit-mask-image:linear-gradient(to_bottom,#000_55%,transparent)] [mask-image:linear-gradient(to_bottom,#000_55%,transparent)] sm:h-[280px]">
+    <div className="relative h-[calc(220px+env(safe-area-inset-top,0px))] w-full overflow-hidden bg-gradient-to-b from-brand-800 to-transparent [-webkit-mask-image:linear-gradient(to_bottom,#000_55%,transparent)] [mask-image:linear-gradient(to_bottom,#000_55%,transparent)] sm:h-[280px]">
       {image && (
         <>
           <Image src={image} alt="" fill priority quality={95} sizes="100vw" className="object-cover" />

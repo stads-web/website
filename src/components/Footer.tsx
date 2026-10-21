@@ -121,7 +121,7 @@ export default function Footer({ site }: { site: SiteData }) {
         className="h-28 bg-gradient-to-b from-white via-brand-200 via-40% to-brand-950 sm:h-40"
       />
 
-      <div className="relative mx-auto max-w-content px-4 pb-8 sm:px-6">
+      <div className="relative mx-auto max-w-content px-4 pb-[calc(2rem+env(safe-area-inset-bottom,0px))] sm:px-6">
         <div className="flex flex-col items-center gap-4 border-t border-white/10 pt-6 text-[13px] text-white/60 sm:flex-row sm:justify-between">
           <p>{site.footer.copyright}</p>
           <Magnetic strength={0.4}>

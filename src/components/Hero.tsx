@@ -139,7 +139,7 @@ export default function Hero({
       >
         <div
           ref={photoRef}
-          className="relative h-[280px] w-full overflow-hidden sm:h-[380px] md:h-[480px]"
+          className="relative h-[calc(280px+env(safe-area-inset-top,0px))] w-full overflow-hidden sm:h-[380px] md:h-[480px]"
         >
           <motion.div
             style={
@@ -175,7 +175,7 @@ export default function Hero({
                 ? { y: logoY, opacity: logoOpacity, rotateX, rotateY, z: LOGO_DEPTH }
                 : { y: logoY, opacity: logoOpacity }
             }
-            className="absolute inset-x-0 top-24 flex justify-center px-4 sm:top-28"
+            className="absolute inset-x-0 top-[calc(6rem+env(safe-area-inset-top,0px))] flex justify-center px-4 sm:top-28"
           >
             <motion.div
               initial={{ opacity: 0, y: 18 }}

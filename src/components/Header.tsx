@@ -141,14 +141,16 @@ export default function Header({ site }: { site: SiteData }) {
   }, [open]);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-[60]">
+    <header className="pointer-events-none fixed inset-x-0 top-0 z-[60] pl-safe pr-safe">
+      {/* The header box itself is see-through and, with the status-bar inset,
+          ~120px tall on notched iPhones: only its controls take taps. */}
       {/* Three real columns rather than a centred group with an absolutely
           placed logo - that version collided once the viewport narrowed. */}
-      <div className="relative z-20 mx-auto flex max-w-content items-center justify-between gap-6 px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-6 lg:py-4">
+      <div className="relative z-20 mx-auto flex max-w-content items-center justify-between gap-6 px-4 py-3 sm:px-6 lg:py-4">
         <Link
           href="/"
           aria-label="STADS home"
-          className="hidden shrink-0 items-center lg:flex"
+          className="pointer-events-auto hidden shrink-0 items-center lg:flex"
         >
           {/* Both logo variants are stacked in the same box and cross-fade via
               opacity instead of swapping `src` outright, which used to pop. */}
@@ -185,7 +187,7 @@ export default function Header({ site }: { site: SiteData }) {
         </Link>
 
         <nav
-          className={`mx-auto hidden items-center gap-5 rounded-full px-8 py-2 backdrop-blur-[10px] transition-colors duration-300 lg:flex xl:gap-[30px] xl:px-10 ${
+          className={`pointer-events-auto mx-auto hidden items-center gap-5 rounded-full px-8 py-2 backdrop-blur-[10px] transition-colors duration-300 lg:flex xl:gap-[30px] xl:px-10 ${
             scrolled ? "border border-brand-100 bg-white/90 shadow-card" : "border border-white/15 bg-white/20"
           }`}
         >
@@ -213,7 +215,7 @@ export default function Header({ site }: { site: SiteData }) {
         </nav>
 
         {/* The button itself stays put; only the ring answers the cursor. */}
-        <div className="group relative hidden shrink-0 items-center justify-center p-1.5 lg:flex">
+        <div className="group pointer-events-auto relative hidden shrink-0 items-center justify-center p-1.5 lg:flex">
           <span
             aria-hidden
             className={`border-beam ${scrolled ? "border-beam--dark" : ""}`}
@@ -234,8 +236,10 @@ export default function Header({ site }: { site: SiteData }) {
           </Link>
         </div>
 
+        {/* The status-bar inset lives on the bar itself (not the row), so the
+            -130% hide below also clears it; with no inset this is 0. */}
         <motion.div
-          className="flex w-full items-center justify-between lg:hidden"
+          className="flex w-full items-center justify-between pt-[max(0px,calc(env(safe-area-inset-top,0px)-0.75rem))] lg:hidden"
           animate={{ y: hidden && !open ? "-130%" : 0 }}
           transition={{ duration: prefersReducedMotion ? 0 : 0.45, ease: EASE }}
         >
@@ -243,7 +247,7 @@ export default function Header({ site }: { site: SiteData }) {
             href="/"
             aria-label="STADS home"
             onClick={() => setOpen(false)}
-            className={`relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full border transition-colors duration-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
+            className={`pointer-events-auto relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full border transition-colors duration-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
               onDark
                 ? "border-white/15 bg-brand-950/85"
                 : "border-brand-100 bg-white/95 shadow-card"
@@ -270,7 +274,7 @@ export default function Header({ site }: { site: SiteData }) {
           <div className="flex items-center">
             <button
               type="button"
-              className={`flex h-12 cursor-pointer items-center gap-3 rounded-full border pl-5 pr-4 transition-colors duration-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
+              className={`pointer-events-auto flex h-12 cursor-pointer items-center gap-3 rounded-full border pl-5 pr-4 transition-colors duration-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
                 onDark
                   ? "border-white/15 bg-brand-950/85 text-white"
                   : "border-brand-100 bg-white/95 text-brand-900 shadow-card"
@@ -296,7 +300,7 @@ export default function Header({ site }: { site: SiteData }) {
             aria-modal="true"
             aria-label="Mobile navigation"
             data-lenis-prevent
-            className="fixed inset-0 z-10 flex flex-col overflow-hidden bg-brand-950 lg:hidden"
+            className="pointer-events-auto fixed inset-0 z-10 flex flex-col overflow-hidden bg-brand-950 pl-safe pr-safe lg:hidden"
             style={{ height: "100dvh" }}
             variants={prefersReducedMotion ? undefined : overlayVariants}
             initial={prefersReducedMotion ? { opacity: 0 } : "closed"}

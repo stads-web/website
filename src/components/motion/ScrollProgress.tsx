@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { motion, useScroll, useSpring } from "framer-motion";
 
 const BAR =
-  "pointer-events-none fixed inset-x-0 top-0 z-50 h-[3px] origin-left bg-gradient-to-r from-brand-500 via-brand-600 to-brand-900";
+  "pointer-events-none fixed inset-x-0 top-[env(safe-area-inset-top,0px)] z-50 h-[3px] origin-left bg-gradient-to-r from-brand-500 via-brand-600 to-brand-900";
 
 /** Fallback for browsers without CSS scroll timelines. */
 function ScriptedBar() {

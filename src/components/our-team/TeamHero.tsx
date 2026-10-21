@@ -92,7 +92,7 @@ function MobileHero({ reduce }: { reduce: boolean }) {
   return (
     <div
       ref={ref}
-      className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-brand-950 px-4 pb-20 pt-[5.75rem] sm:px-8 lg:hidden"
+      className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-brand-950 px-4 pb-20 pt-[calc(5.75rem+env(safe-area-inset-top,0px))] sm:px-8 lg:hidden"
     >
       {/* Light source: the team photo itself, blurred. */}
       <Image

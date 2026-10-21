@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Libre_Franklin, Playfair_Display } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
@@ -39,6 +39,15 @@ const playfair = Playfair_Display({
   variable: "--font-playfair",
   display: "swap",
 });
+
+// Edge-to-edge on iPhone: the page runs behind the status bar and Safari's
+// toolbar instead of Safari painting its own strips there. Every page opens on
+// navy (hero, PageTopFade band) and the footer ends on navy, so one dark
+// theme colour fits all of them (fallback for Safari versions that tint by it).
+export const viewport: Viewport = {
+  viewportFit: "cover",
+  themeColor: "#0f1d36",
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

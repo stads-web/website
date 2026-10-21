@@ -8,7 +8,6 @@ import AnalyticsScripts from "@/components/AnalyticsScripts";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SmoothScroll from "@/components/motion/SmoothScroll";
-import ScrollProgress from "@/components/motion/ScrollProgress";
 import MeshBackdrop from "@/components/motion/MeshBackdrop";
 import FooterReveal from "@/components/motion/FooterReveal";
 import PageTransition from "@/components/motion/PageTransition";
@@ -96,7 +95,6 @@ export default function RootLayout({
         />
         <MotionProvider>
         <ConsentProvider>
-          <ScrollProgress />
           <SmoothScroll>
             <a
               href="#main"

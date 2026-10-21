@@ -106,23 +106,6 @@ html.is-scrolling .animate-drift-c {
     transform: translate3d(0, var(--drift, 0px), 0);
   }
 }
-@keyframes grow-x {
-  from {
-    transform: scaleX(0);
-  }
-  to {
-    transform: scaleX(1);
-  }
-}
-.scroll-progress {
-  transform: scaleX(0);
-}
-@supports (animation-timeline: scroll()) {
-  .scroll-progress {
-    animation: grow-x linear both;
-    animation-timeline: scroll(root);
-  }
-}
 @supports (animation-timeline: view()) {
   @media (min-width: 640px) and (prefers-reduced-motion: no-preference) {
     .scroll-drift {

@@ -1,8 +1,15 @@
 "use client";
 
 import Image from "next/image";
-import { useId, useRef, useState } from "react";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import { useEffect, useId, useRef, useState } from "react";
+import {
+  animate,
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 import Reveal from "./motion/Reveal";
 import SectionHeading from "./motion/SectionHeading";
 import Spotlight from "./motion/Spotlight";
@@ -27,6 +34,23 @@ function ProgramCard({ item }: { item: ProgramItem }) {
   const rotateY = useSpring(rotateYRaw, spring);
 
   const showsBack = hovered || flipped;
+
+  // The flip angle drives which face is visible. WebKit (iOS Safari) ignores
+  // backface-visibility for faces whose children get their own compositing
+  // layers (image, Spotlight), so the front photo drew on top of the back.
+  // Hiding the far face at 90deg works regardless and follows reversals mid-flip.
+  const flipY = useMotionValue(0);
+  const frontVisibility = useTransform(flipY, (v) => (v < 90 ? "visible" : "hidden"));
+  const backVisibility = useTransform(flipY, (v) => (v < 90 ? "hidden" : "visible"));
+  const reduceMotion = useReducedMotion();
+  useEffect(() => {
+    // Same timing as the former Tailwind `transition-transform duration-700` (ease = cubic-bezier(0.4, 0, 0.2, 1)).
+    const controls = animate(flipY, showsBack ? 180 : 0, {
+      duration: reduceMotion ? 0 : 0.7,
+      ease: [0.4, 0, 0.2, 1],
+    });
+    return () => controls.stop();
+  }, [showsBack, reduceMotion, flipY]);
 
   // Pointer handling lives on this static wrapper, never on the rotating card:
   // a card that flips away from under the cursor used to drop its own hover
@@ -80,12 +104,14 @@ function ProgramCard({ item }: { item: ProgramItem }) {
         style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
         className="relative block h-[220px] w-full shrink-0 text-left sm:h-[380px]"
       >
-        <div
-          className={`relative h-full w-full rounded-[28px] shadow-[0px_2px_6px_rgba(15,29,54,0.06)] transition-transform duration-700 [transform-style:preserve-3d] sm:rounded-[40px] sm:shadow-[0px_5px_10px_rgba(0,0,0,0.05),0px_15px_30px_rgba(0,0,0,0.05),0px_30px_60px_rgba(0,0,0,0.1)] ${
-            showsBack ? "[transform:rotateY(180deg)]" : ""
-          }`}
+        <motion.div
+          style={{ rotateY: flipY }}
+          className="relative h-full w-full rounded-[28px] shadow-[0px_2px_6px_rgba(15,29,54,0.06)] [transform-style:preserve-3d] sm:rounded-[40px] sm:shadow-[0px_5px_10px_rgba(0,0,0,0.05),0px_15px_30px_rgba(0,0,0,0.05),0px_30px_60px_rgba(0,0,0,0.1)]"
         >
-          <div className="absolute inset-0 overflow-hidden rounded-[28px] border border-white/60 bg-brand-50 p-4 backface-hidden sm:rounded-[40px] sm:p-5">
+          <motion.div
+            style={{ visibility: frontVisibility }}
+            className="absolute inset-0 overflow-hidden rounded-[28px] border border-white/60 bg-brand-50 p-4 backface-hidden sm:rounded-[40px] sm:p-5"
+          >
             {/* WebKit hides a backface per compositing layer, not per subtree: the
                 image (zoom transition) and the Spotlight become layers of their own
                 and would show through the back unless they hide their backface too. */}
@@ -106,9 +132,12 @@ function ProgramCard({ item }: { item: ProgramItem }) {
               </span>
             </div>
             <Spotlight />
-          </div>
+          </motion.div>
 
-          <div className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden rounded-[28px] border border-white/60 bg-brand-800 p-5 text-center backface-hidden [transform:rotateY(180deg)] sm:rounded-[40px] lg:p-8">
+          <motion.div
+            style={{ visibility: backVisibility }}
+            className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden rounded-[28px] border border-white/60 bg-brand-800 p-5 text-center backface-hidden [transform:rotateY(180deg)] sm:rounded-[40px] lg:p-8"
+          >
             <p className="text-sm font-medium text-white sm:text-lg">{item.title}</p>
             <p id={descriptionId} className="mt-2 hidden text-xs leading-relaxed text-white/80 sm:mt-3 sm:block md:text-sm">
               {item.description}
@@ -116,8 +145,8 @@ function ProgramCard({ item }: { item: ProgramItem }) {
             <p className="mt-2 text-xs leading-relaxed text-white/80 sm:hidden">
               {item.descriptionShort}
             </p>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </motion.button>
     </div>
   );

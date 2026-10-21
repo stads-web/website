@@ -18,6 +18,8 @@ export default function PageTopFade({ image }: { image?: string }) {
         </>
       )}
       <Constellation />
+      {/* Upper, still-dark part of the band keeps the desktop header logo white. */}
+      <div data-header-dark aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-[45%]" />
     </div>
   );
 }

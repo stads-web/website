@@ -47,6 +47,7 @@ export default function DatathonHero({ data }: { data: DatathonHeroData }) {
   return (
     <section
       ref={ref}
+      data-header-dark
       className="relative flex h-[100svh] min-h-[560px] flex-col justify-end overflow-hidden"
     >
       <motion.div style={{ y: imageY }} className="absolute inset-0">

@@ -7,7 +7,7 @@ import type { FinalCtaData } from "@/lib/types";
 
 export default function FinalCta({ data }: { data: FinalCtaData }) {
   return (
-    <section className="relative overflow-hidden bg-brand-950 py-20 text-center sm:py-28">
+    <section data-header-dark className="relative overflow-hidden bg-brand-950 py-20 text-center sm:py-28">
       <Constellation />
       <div className="relative mx-auto max-w-content px-4 sm:px-6">
         <Reveal>

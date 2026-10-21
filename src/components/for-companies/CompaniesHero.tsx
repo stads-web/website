@@ -19,7 +19,7 @@ const EASE = [0.22, 1, 0.36, 1] as const;
  */
 export default function CompaniesHero({ data }: { data: CompaniesHeroData }) {
   return (
-    <section className="relative flex min-h-[100svh] flex-col overflow-hidden bg-brand-950">
+    <section data-header-dark className="relative flex min-h-[100svh] flex-col overflow-hidden bg-brand-950">
       <PartnershipField className="absolute inset-0 pointer-events-none" />
       <div className="absolute inset-0 bg-gradient-to-b from-brand-950/10 via-brand-950/70 to-brand-950" />
 

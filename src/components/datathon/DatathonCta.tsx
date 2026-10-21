@@ -7,7 +7,7 @@ import type { DatathonCtaData } from "@/lib/types";
 
 export default function DatathonCta({ data }: { data: DatathonCtaData }) {
   return (
-    <section className="relative overflow-hidden bg-brand-950 py-24 text-center sm:py-32">
+    <section data-header-dark className="relative overflow-hidden bg-brand-950 py-24 text-center sm:py-32">
       <Constellation />
       <div className="relative mx-auto max-w-content px-4 sm:px-6">
         <Reveal>

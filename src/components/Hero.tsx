@@ -139,6 +139,7 @@ export default function Hero({
       >
         <div
           ref={photoRef}
+          data-header-dark
           className="relative h-[calc(280px+env(safe-area-inset-top,0px))] w-full overflow-hidden sm:h-[380px] md:h-[480px]"
         >
           <motion.div

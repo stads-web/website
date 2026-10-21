@@ -321,7 +321,7 @@ export default function TeamHero() {
       <h1 className="sr-only">One Team, Seven Departments</h1>
       {/* Desktop: photo as stage, exactly one window high; the board follows on scroll.
           Crop is top-biased (object-position y 5%) so faces (~29-60% of the image) stay in view. */}
-      <div ref={ref} className="relative isolate hidden h-[calc(100svh+5rem)] min-h-[calc(720px+5rem)] overflow-hidden bg-brand-950 lg:block">
+      <div ref={ref} data-header-dark className="relative isolate hidden h-[calc(100svh+5rem)] min-h-[calc(720px+5rem)] overflow-hidden bg-brand-950 lg:block">
         <motion.div style={{ y: imageY }} className="absolute inset-0">
           <motion.div
             className="relative h-[116%] w-full"

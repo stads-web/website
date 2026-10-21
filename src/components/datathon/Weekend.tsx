@@ -168,7 +168,7 @@ export default function Weekend({ data }: { data: WeekendData }) {
   }, [pinned]);
 
   return (
-    <section className="relative bg-brand-950">
+    <section data-header-dark className="relative bg-brand-950">
       {/* The ref stays mounted in both layouts so scroll tracking has a target. */}
       <div
         ref={ref}

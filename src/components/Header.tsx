@@ -76,6 +76,9 @@ function RollingLabel({ text }: { text: string }) {
 export default function Header({ site }: { site: SiteData }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  // Desktop logo floats free (no pill behind it), so it follows what is under
+  // it: sections marked data-header-dark keep it white after scrolling.
+  const [overDark, setOverDark] = useState(false);
   const [hidden, setHidden] = useState(false);
   const lastY = useRef(0);
   const pathname = usePathname();
@@ -86,6 +89,13 @@ export default function Header({ site }: { site: SiteData }) {
     const onScroll = () => {
       const y = window.scrollY;
       setScrolled(y > 40);
+      // 32px ~ vertical centre of the desktop logo.
+      setOverDark(
+        Array.from(document.querySelectorAll("[data-header-dark]")).some((el) => {
+          const r = el.getBoundingClientRect();
+          return r.top <= 32 && r.bottom > 32;
+        })
+      );
       // Mobile bar tucks away while reading downwards and returns on any
       // upward flick; it never hides near the top of the page.
       if (y < 120) setHidden(false);
@@ -95,8 +105,12 @@ export default function Header({ site }: { site: SiteData }) {
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, [pathname]);
 
   // Close the drawer on route change and when the viewport grows to desktop
   // (the overlay is lg:hidden, so an open state would otherwise stay stuck).
@@ -162,7 +176,7 @@ export default function Header({ site }: { site: SiteData }) {
           <span className="relative block aspect-[2533/534] w-[115px] xl:w-[145px]">
             <motion.span
               className="absolute inset-0"
-              animate={{ opacity: scrolled ? 0 : 1 }}
+              animate={{ opacity: scrolled && !overDark ? 0 : 1 }}
               transition={{ duration: 0.4, ease: EASE }}
             >
               <Image
@@ -176,7 +190,7 @@ export default function Header({ site }: { site: SiteData }) {
             </motion.span>
             <motion.span
               className="absolute inset-0"
-              animate={{ opacity: scrolled ? 1 : 0 }}
+              animate={{ opacity: scrolled && !overDark ? 1 : 0 }}
               transition={{ duration: 0.4, ease: EASE }}
             >
               <Image

@@ -11,6 +11,7 @@ import SmoothScroll from "@/components/motion/SmoothScroll";
 import ScrollProgress from "@/components/motion/ScrollProgress";
 import MeshBackdrop from "@/components/motion/MeshBackdrop";
 import FooterReveal from "@/components/motion/FooterReveal";
+import BottomEdgeTint from "@/components/motion/BottomEdgeTint";
 import PageTransition from "@/components/motion/PageTransition";
 import MotionProvider from "@/components/motion/MotionProvider";
 import { readContent } from "@/lib/content";
@@ -41,9 +42,9 @@ const playfair = Playfair_Display({
 });
 
 // Edge-to-edge on iPhone: the page runs behind the status bar and Safari's
-// toolbar instead of Safari painting its own strips there. Every page opens on
-// navy (hero, PageTopFade band) and the footer ends on navy, so one dark
-// theme colour fits all of them (fallback for Safari versions that tint by it).
+// toolbar. theme-color only tints Safari up to iOS 18; Safari 26 ignores it and
+// takes the colour from fixed elements at the screen edges instead (see the
+// tint band in Header.tsx and BottomEdgeTint).
 export const viewport: Viewport = {
   viewportFit: "cover",
   themeColor: "#0f1d36",
@@ -116,6 +117,7 @@ export default function RootLayout({
               <Footer site={site} />
             </FooterReveal>
           </SmoothScroll>
+          <BottomEdgeTint />
           <ConsentBanner />
           <AnalyticsScripts />
           <Analytics />

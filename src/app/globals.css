@@ -123,6 +123,12 @@ body {
   overscroll-behavior: none;
 }
 
+/* Pages opening on the PageTopFade band start on brand-800, not brand-950:
+   the status-bar tint band in Header.tsx follows suit. */
+html:has([data-page-top-fade]) .edge-tint-top {
+  background-color: #203765;
+}
+
 h1,
 h2,
 h3,

@@ -142,6 +142,17 @@ export default function Header({ site }: { site: SiteData }) {
 
   return (
     <header className="pointer-events-none fixed inset-x-0 top-0 z-[60] pl-safe pr-safe">
+      {/* Safari 26 colours the status bar from the fixed element at the top edge
+          (theme-color is ignored) and samples it at page load. The header is
+          see-through, so Safari read raw pixels - white, before the hero had
+          painted. This band gives it the page's dark top as an explicit colour;
+          it fades out with the header's dark state. 0px tall without a notch. */}
+      <div
+        aria-hidden
+        className={`${open ? "" : "edge-tint-top"} pointer-events-none fixed inset-x-0 top-0 z-30 h-[env(safe-area-inset-top,0px)] bg-brand-950 transition-opacity duration-500 ${
+          onDark ? "opacity-100" : "opacity-0"
+        }`}
+      />
       {/* The header box itself is see-through and, with the status-bar inset,
           ~120px tall on notched iPhones: only its controls take taps. */}
       {/* Three real columns rather than a centred group with an absolutely

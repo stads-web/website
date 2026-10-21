@@ -40,12 +40,11 @@ const playfair = Playfair_Display({
   display: "swap",
 });
 
-// Edge-to-edge on iPhone: the page runs behind the status bar and Safari's
-// toolbar. theme-color only tints Safari up to iOS 18. Safari 26 ignores it and
-// paints a solid strip only where a full-width fixed element sits at the screen
-// edge; with none there the page shows through, blurred (see Header.tsx).
+// No viewport-fit=cover: Safari 26 already lets the page scroll under its
+// status bar and toolbar, blurred, as long as no full-width fixed layer sits at
+// the screen edge (see --edge-gap in globals.css). All env(safe-area-*) values
+// are 0 then. theme-color only tints Safari up to iOS 18.
 export const viewport: Viewport = {
-  viewportFit: "cover",
   themeColor: "#0f1d36",
 };
 
@@ -106,7 +105,7 @@ export default function RootLayout({
               Skip to content
             </a>
             <Header site={site} />
-            <div className="relative z-10 bg-white mb-[var(--footer-h)]">
+            <div className="relative z-10 bg-white mb-[var(--footer-h)] [@media(hover:none)]:mb-0">
               <MeshBackdrop />
               <div id="main" tabIndex={-1} className="relative z-10 outline-none">
                 <PageTransition>{children}</PageTransition>

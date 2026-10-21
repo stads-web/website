@@ -62,7 +62,7 @@ export default function MeshBackdrop({ contained = false }: { contained?: boolea
     const update = () => {
       raf = 0;
       const cut = Math.max(0, window.innerHeight - page.getBoundingClientRect().bottom);
-      el.style.bottom = `${Math.round(cut)}px`;
+      el.style.bottom = `calc(${Math.round(cut)}px + var(--edge-gap))`;
     };
     const schedule = () => {
       if (!raf) raf = requestAnimationFrame(update);
@@ -85,9 +85,14 @@ export default function MeshBackdrop({ contained = false }: { contained?: boolea
       ref={ref}
       aria-hidden
       className={`pointer-events-none z-0 overflow-hidden ${
-        contained ? "absolute inset-0" : "fixed inset-x-0 top-0 bottom-[var(--footer-h)] [-webkit-mask-image:linear-gradient(to_bottom,#000_calc(100%-160px),transparent)] [mask-image:linear-gradient(to_bottom,#000_calc(100%-160px),transparent)]"
+        contained ? "absolute inset-0" : "fixed inset-x-0 top-[var(--edge-gap)] bottom-[calc(var(--footer-h)+var(--edge-gap))] [-webkit-mask-image:linear-gradient(to_bottom,#000_calc(100%-160px+var(--edge-gap)),transparent_calc(100%+var(--edge-gap)))] [mask-image:linear-gradient(to_bottom,#000_calc(100%-160px+var(--edge-gap)),transparent_calc(100%+var(--edge-gap)))]"
       }`}
     >
+      {/* Touch: the fixed box stays --edge-gap clear of the screen edges (Safari 26
+          tints its bars solid from a fixed element there, see globals.css). This
+          layer reaches back out by the same amount, and the mask stops above are
+          shifted with it, so blobs and fade land exactly where they did. */}
+      <div className={contained ? "absolute inset-0" : "absolute inset-x-0 -top-[var(--edge-gap)] -bottom-[var(--edge-gap)]"}>
       <motion.div
         style={{ x: followA.x, y: followA.y }}
         className="absolute -left-[15%] top-[8%] h-[55vw] w-[55vw] max-h-[720px] max-w-[720px] will-change-transform"
@@ -115,6 +120,7 @@ export default function MeshBackdrop({ contained = false }: { contained?: boolea
           style={{ backgroundImage: blob("rgba(168,183,209,0.32)") }}
         />
       </motion.div>
+      </div>
     </div>
   );
 }

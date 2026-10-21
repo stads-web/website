@@ -142,11 +142,11 @@ export default function Header({ site }: { site: SiteData }) {
 
   return (
     // Safari 26 (iOS) tints the status bar solid from a full-width fixed element
-    // it hits 4px below the screen top (theme-color is ignored). The see-through
-    // header therefore starts just below that point on phones, so the page shows
-    // through under the clock instead; the bar pulls itself back up by the same
-    // amount (-mt below), so nothing moves. 0 without a notch and on desktop.
-    <header className="pointer-events-none fixed inset-x-0 top-[max(0px,calc(env(safe-area-inset-top,0px)-0.75rem))] z-[60] pl-safe pr-safe lg:top-0">
+    // at the screen top (theme-color is ignored). Below lg the see-through header
+    // box therefore starts at least 8px down, so the page shows through under the
+    // clock instead; the bar pulls itself back up by the same amount (-mt below),
+    // so the buttons do not move. lg and up: top 0 as before.
+    <header className="pointer-events-none fixed inset-x-0 top-[max(8px,calc(env(safe-area-inset-top,0px)-0.75rem))] z-[60] pl-safe pr-safe lg:top-0">
       {/* The header box itself is see-through and, with the status-bar inset,
           ~120px tall on notched iPhones: only its controls take taps. */}
       {/* Three real columns rather than a centred group with an absolutely
@@ -244,7 +244,7 @@ export default function Header({ site }: { site: SiteData }) {
         {/* The status-bar inset lives on the bar itself (not the row), so the
             -130% hide below also clears it; with no inset this is 0. */}
         <motion.div
-          className="flex w-full items-center justify-between -mt-[max(0px,calc(env(safe-area-inset-top,0px)-0.75rem))] pt-[max(0px,calc(env(safe-area-inset-top,0px)-0.75rem))] lg:hidden"
+          className="flex w-full items-center justify-between -mt-[max(8px,calc(env(safe-area-inset-top,0px)-0.75rem))] pt-[max(0px,calc(env(safe-area-inset-top,0px)-0.75rem))] lg:hidden"
           animate={{ y: hidden && !open ? "-130%" : 0 }}
           transition={{ duration: prefersReducedMotion ? 0 : 0.45, ease: EASE }}
         >

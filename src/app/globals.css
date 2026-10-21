@@ -7,15 +7,32 @@
   --foreground: #0f1d36;
   /* Set at runtime once the footer has been measured; 0 until then. */
   --footer-h: 0px;
+  /* Distance full-width fixed layers keep from the screen edges on touch
+     devices: Safari 26 (iOS/iPadOS) paints its status bar / toolbar strip solid
+     when it finds such a layer at the edge. With none there the page shows
+     through, blurred. 0 on mouse devices, so desktop is untouched. */
+  --edge-gap: 0px;
+}
+@media (hover: none) {
+  :root {
+    --edge-gap: 8px;
+  }
 }
 
 html {
-  /* Matches the top of every page so an overscroll bounce never flashes white. */
-  background-color: #0f1d36;
+  /* Touch: no own background, body's white is the page colour (and Safari's
+     fallback edge colour). overscroll-behavior keeps the navy tops from bouncing. */
   overscroll-behavior: none;
   /* Firefox: thin navy thumb (brand-800) on a transparent track. */
   scrollbar-color: #203765 transparent;
   scrollbar-width: thin;
+}
+
+/* Mouse devices keep the navy canvas (scrollbar track, load flash). */
+@media (hover: hover) {
+  html {
+    background-color: #0f1d36;
+  }
 }
 
 /* Chromium/WebKit: thin navy thumb, transparent track, lighter (brand-500) on hover. */
@@ -77,6 +94,12 @@ html.is-scrolling .animate-drift-c {
   }
 }
 
+/* 3D flip faces. No autoprefixer here, so the -webkit- form is written by hand. */
+.backface-hidden {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
 /* Compositor-driven scroll effects (no JS per frame). */
 @keyframes scroll-drift {
   to {
@@ -112,14 +135,7 @@ html.is-scrolling .animate-drift-c {
 
 body {
   color: var(--foreground);
-  /* Landscape iPhone (viewport-fit=cover): keep flow content clear of the notch.
-     The inset strips stay navy like html, white only behind the content box.
-     All insets are 0 on desktop, so nothing changes there. */
-  padding-left: env(safe-area-inset-left, 0px);
-  padding-right: env(safe-area-inset-right, 0px);
-  background:
-    linear-gradient(var(--background), var(--background)) content-box,
-    #0f1d36;
+  background: var(--background);
   overscroll-behavior: none;
 }
 

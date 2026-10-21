@@ -20,16 +20,18 @@
 }
 
 html {
-  /* Touch: no own background, body's white is the page colour (and Safari's
-     fallback edge colour). overscroll-behavior keeps the navy tops from bouncing. */
+  /* overscroll-behavior keeps the navy tops from bouncing. */
   overscroll-behavior: none;
   /* Firefox: thin navy thumb (brand-800) on a transparent track. */
   scrollbar-color: #203765 transparent;
   scrollbar-width: thin;
 }
 
-/* Mouse devices keep the navy canvas (scrollbar track, load flash). */
-@media (hover: hover) {
+/* Navy canvas: every page starts dark, so Safari's strip above the page
+   (status bar at scroll 0) and the scrollbar track match the top. Not in
+   phone landscape, where Safari would paint the side insets navy beside white
+   content. */
+@media (hover: hover), (orientation: portrait) {
   html {
     background-color: #0f1d36;
   }

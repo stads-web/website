@@ -85,14 +85,17 @@ function ProgramCard({ item }: { item: ProgramItem }) {
             showsBack ? "[transform:rotateY(180deg)]" : ""
           }`}
         >
-          <div className="absolute inset-0 overflow-hidden rounded-[28px] border border-white/60 bg-brand-50 p-4 [backface-visibility:hidden] sm:rounded-[40px] sm:p-5">
-            <div className="relative h-[60%] w-full overflow-hidden rounded-[16px] border border-white/60 sm:rounded-[20px]">
+          <div className="absolute inset-0 overflow-hidden rounded-[28px] border border-white/60 bg-brand-50 p-4 backface-hidden sm:rounded-[40px] sm:p-5">
+            {/* WebKit hides a backface per compositing layer, not per subtree: the
+                image (zoom transition) and the Spotlight become layers of their own
+                and would show through the back unless they hide their backface too. */}
+            <div className="backface-hidden relative h-[60%] w-full overflow-hidden rounded-[16px] border border-white/60 sm:rounded-[20px]">
               <Image
                 src={item.image}
                 alt={item.imageAlt}
                 fill
                 sizes="(min-width: 640px) 340px, 90vw"
-                className="object-cover transition-transform duration-700 group-hover:scale-[1.06]"
+                className="backface-hidden object-cover transition-transform duration-700 [@media(hover:hover)]:group-hover:scale-[1.06]"
                 style={item.imagePosition ? { objectPosition: item.imagePosition } : undefined}
               />
             </div>
@@ -105,7 +108,7 @@ function ProgramCard({ item }: { item: ProgramItem }) {
             <Spotlight />
           </div>
 
-          <div className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden rounded-[28px] border border-white/60 bg-brand-800 p-5 text-center [backface-visibility:hidden] [transform:rotateY(180deg)] sm:rounded-[40px] lg:p-8">
+          <div className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden rounded-[28px] border border-white/60 bg-brand-800 p-5 text-center backface-hidden [transform:rotateY(180deg)] sm:rounded-[40px] lg:p-8">
             <p className="text-sm font-medium text-white sm:text-lg">{item.title}</p>
             <p id={descriptionId} className="mt-2 hidden text-xs leading-relaxed text-white/80 sm:mt-3 sm:block md:text-sm">
               {item.description}

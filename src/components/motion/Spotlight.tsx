@@ -40,7 +40,7 @@ export default function Spotlight() {
     <div
       ref={ref}
       aria-hidden
-      className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+      className="backface-hidden pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
       style={{
         background:
           "radial-gradient(340px circle at var(--x, 50%) var(--y, 50%), rgba(115,136,176,0.22), transparent 62%)",

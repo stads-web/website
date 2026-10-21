@@ -141,18 +141,12 @@ export default function Header({ site }: { site: SiteData }) {
   }, [open]);
 
   return (
-    <header className="pointer-events-none fixed inset-x-0 top-0 z-[60] pl-safe pr-safe">
-      {/* Safari 26 colours the status bar from the fixed element at the top edge
-          (theme-color is ignored) and samples it at page load. The header is
-          see-through, so Safari read raw pixels - white, before the hero had
-          painted. This band gives it the page's dark top as an explicit colour;
-          it fades out with the header's dark state. 0px tall without a notch. */}
-      <div
-        aria-hidden
-        className={`${open ? "" : "edge-tint-top"} pointer-events-none fixed inset-x-0 top-0 z-30 h-[env(safe-area-inset-top,0px)] bg-brand-950 transition-opacity duration-500 ${
-          onDark ? "opacity-100" : "opacity-0"
-        }`}
-      />
+    // Safari 26 (iOS) tints the status bar solid from a full-width fixed element
+    // it hits 4px below the screen top (theme-color is ignored). The see-through
+    // header therefore starts just below that point on phones, so the page shows
+    // through under the clock instead; the bar pulls itself back up by the same
+    // amount (-mt below), so nothing moves. 0 without a notch and on desktop.
+    <header className="pointer-events-none fixed inset-x-0 top-[max(0px,calc(env(safe-area-inset-top,0px)-0.75rem))] z-[60] pl-safe pr-safe lg:top-0">
       {/* The header box itself is see-through and, with the status-bar inset,
           ~120px tall on notched iPhones: only its controls take taps. */}
       {/* Three real columns rather than a centred group with an absolutely
@@ -250,7 +244,7 @@ export default function Header({ site }: { site: SiteData }) {
         {/* The status-bar inset lives on the bar itself (not the row), so the
             -130% hide below also clears it; with no inset this is 0. */}
         <motion.div
-          className="flex w-full items-center justify-between pt-[max(0px,calc(env(safe-area-inset-top,0px)-0.75rem))] lg:hidden"
+          className="flex w-full items-center justify-between -mt-[max(0px,calc(env(safe-area-inset-top,0px)-0.75rem))] pt-[max(0px,calc(env(safe-area-inset-top,0px)-0.75rem))] lg:hidden"
           animate={{ y: hidden && !open ? "-130%" : 0 }}
           transition={{ duration: prefersReducedMotion ? 0 : 0.45, ease: EASE }}
         >

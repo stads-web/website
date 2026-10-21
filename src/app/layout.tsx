@@ -8,6 +8,7 @@ import AnalyticsScripts from "@/components/AnalyticsScripts";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SmoothScroll from "@/components/motion/SmoothScroll";
+import ScrollProgress from "@/components/motion/ScrollProgress";
 import MeshBackdrop from "@/components/motion/MeshBackdrop";
 import FooterReveal from "@/components/motion/FooterReveal";
 import PageTransition from "@/components/motion/PageTransition";
@@ -39,11 +40,12 @@ const playfair = Playfair_Display({
   display: "swap",
 });
 
-// No viewport-fit=cover: Safari 26 already lets the page scroll under its
-// status bar and toolbar, blurred, as long as no full-width fixed layer sits at
-// the screen edge (see --edge-gap in globals.css). All env(safe-area-*) values
-// are 0 then. theme-color only tints Safari up to iOS 18.
+// viewport-fit=cover: content shows through under the status bar and Safari's
+// toolbar. Nothing fixed and full-width sits at the edges (header from
+// max(8px, inset-12px), MeshBackdrop 8px gap, footer not fixed on touch,
+// ScrollProgress off on touch). theme-color only tints Safari up to iOS 18.
 export const viewport: Viewport = {
+  viewportFit: "cover",
   themeColor: "#0f1d36",
 };
 
@@ -95,6 +97,7 @@ export default function RootLayout({
         />
         <MotionProvider>
         <ConsentProvider>
+          <ScrollProgress />
           <SmoothScroll>
             <a
               href="#main"

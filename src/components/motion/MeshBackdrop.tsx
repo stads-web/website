@@ -91,11 +91,14 @@ export default function MeshBackdrop({ contained = false }: { contained?: boolea
       {/* Touch: the fixed box stays --edge-gap clear of the screen edges (Safari 26
           tints its bars solid from a fixed element there, see globals.css). This
           layer reaches back out by the same amount, and the mask stops above are
-          shifted with it, so blobs and fade land exactly where they did. */}
-      <div className={contained ? "absolute inset-0" : "absolute inset-x-0 -top-[var(--edge-gap)] -bottom-[var(--edge-gap)]"}>
+          shifted with it, so blobs and fade land exactly where they did.
+          `invisible` (blobs: `visible`) keeps this empty box out of hit testing:
+          Safari's edge check ignores overflow clipping, so the box reaching back
+          into the edge strip would count as the fixed backdrop being there. */}
+      <div className={`invisible ${contained ? "absolute inset-0" : "absolute inset-x-0 -top-[var(--edge-gap)] -bottom-[var(--edge-gap)]"}`}>
       <motion.div
         style={{ x: followA.x, y: followA.y }}
-        className="absolute -left-[15%] top-[8%] h-[55vw] w-[55vw] max-h-[720px] max-w-[720px] will-change-transform"
+        className="visible absolute -left-[15%] top-[8%] h-[55vw] w-[55vw] max-h-[720px] max-w-[720px] will-change-transform"
       >
         <div
           className="animate-drift-a absolute inset-0"
@@ -104,7 +107,7 @@ export default function MeshBackdrop({ contained = false }: { contained?: boolea
       </motion.div>
       <motion.div
         style={{ x: followB.x, y: followB.y }}
-        className="absolute -right-[12%] top-[38%] h-[48vw] w-[48vw] max-h-[640px] max-w-[640px] will-change-transform"
+        className="visible absolute -right-[12%] top-[38%] h-[48vw] w-[48vw] max-h-[640px] max-w-[640px] will-change-transform"
       >
         <div
           className="animate-drift-b absolute inset-0"
@@ -113,7 +116,7 @@ export default function MeshBackdrop({ contained = false }: { contained?: boolea
       </motion.div>
       <motion.div
         style={{ x: followC.x, y: followC.y }}
-        className="absolute bottom-[6%] left-[22%] h-[42vw] w-[42vw] max-h-[560px] max-w-[560px] will-change-transform"
+        className="visible absolute bottom-[6%] left-[22%] h-[42vw] w-[42vw] max-h-[560px] max-w-[560px] will-change-transform"
       >
         <div
           className="animate-drift-c absolute inset-0"

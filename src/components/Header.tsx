@@ -84,6 +84,9 @@ export default function Header({ site }: { site: SiteData }) {
   const pathname = usePathname();
   const prefersReducedMotion = useReducedMotion();
   const onDark = open || !scrolled;
+  const barPad = "pt-[max(0px,calc(env(safe-area-inset-top,0px)-0.75rem))]";
+  const barAnimate = { y: hidden && !open ? "-130%" : 0 };
+  const barTransition = { duration: prefersReducedMotion ? 0 : 0.45, ease: EASE };
 
   useEffect(() => {
     const onScroll = () => {
@@ -255,13 +258,15 @@ export default function Header({ site }: { site: SiteData }) {
           </Link>
         </div>
 
-        {/* The status-bar inset lives on the bar itself (not the row), so the
-            -130% hide below also clears it; with no inset this is 0. */}
-        <motion.div
-          className="flex w-full items-center justify-between -mt-[max(8px,calc(env(safe-area-inset-top,0px)-0.75rem))] pt-[max(0px,calc(env(safe-area-inset-top,0px)-0.75rem))] lg:hidden"
-          animate={{ y: hidden && !open ? "-130%" : 0 }}
-          transition={{ duration: prefersReducedMotion ? 0 : 0.45, ease: EASE }}
-        >
+        {/* The status-bar inset lives on the sliding parts (not the row), so the
+            -130% hide below also clears it; with no inset this is 0.
+            Only the two pills slide, never a full-width box: Safari 26 hit-tests
+            the screen's top centre (ignoring clipping and pointer-events) and, if
+            a full-width fixed element is there, tints the status bar with a
+            colour sampled at that moment and keeps it. A full-width bar sliding
+            over that point during hide/show froze such a colour. */}
+        <div className="flex w-full items-center justify-between -mt-[max(8px,calc(env(safe-area-inset-top,0px)-0.75rem))] lg:hidden">
+          <motion.div className={barPad} animate={barAnimate} transition={barTransition}>
           <Link
             href="/"
             aria-label="STADS home"
@@ -289,8 +294,9 @@ export default function Header({ site }: { site: SiteData }) {
               </motion.span>
             </span>
           </Link>
+          </motion.div>
 
-          <div className="flex items-center">
+          <motion.div className={`flex items-center ${barPad}`} animate={barAnimate} transition={barTransition}>
             <button
               type="button"
               className={`pointer-events-auto flex h-12 cursor-pointer items-center gap-3 rounded-full border pl-5 pr-4 transition-colors duration-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
@@ -306,8 +312,8 @@ export default function Header({ site }: { site: SiteData }) {
               <RollingLabel text={open ? "Close" : "Menu"} />
               <MenuToggleIcon open={open} />
             </button>
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
       </div>
 
       <AnimatePresence>

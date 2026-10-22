@@ -73,6 +73,17 @@ function RollingLabel({ text }: { text: string }) {
   );
 }
 
+// Colour of each page's first pixel row on a phone at scroll 0 (measured in
+// the iOS simulator). Safari paints the status-bar strip in the top edge's
+// colour (an image there is ignored), so the strip reads as part of the page
+// top. Default: the PageTopFade band (For Students, Join us, Events, legal).
+const TOP_EDGE: Record<string, string> = {
+  "/": "#203351",
+  "/datathon": "#1c253b",
+  "/for-companies": "#0f1d36",
+  "/our-team": "#f0f3f8",
+};
+
 export default function Header({ site }: { site: SiteData }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -81,6 +92,7 @@ export default function Header({ site }: { site: SiteData }) {
   const [overDark, setOverDark] = useState(false);
   const [hidden, setHidden] = useState(false);
   const lastY = useRef(0);
+  const topEdge = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const prefersReducedMotion = useReducedMotion();
   const onDark = open || !scrolled;
@@ -89,8 +101,19 @@ export default function Header({ site }: { site: SiteData }) {
   const barTransition = { duration: prefersReducedMotion ? 0 : 0.45, ease: EASE };
 
   useEffect(() => {
+    let edgeTimer: number | undefined;
     const onScroll = () => {
       const y = window.scrollY;
+      // Top edge strip (see below): off as soon as the page moves, back only
+      // once it has settled at the top - shown during the scroll back, Safari
+      // misses it and the status-bar strip stays white.
+      const edge = topEdge.current;
+      window.clearTimeout(edgeTimer);
+      if (edge && y > 2) edge.style.display = "none";
+      else if (edge)
+        edgeTimer = window.setTimeout(() => {
+          if (window.scrollY <= 2) edge.style.display = "";
+        }, 250);
       setScrolled(y > 40);
       // 32px ~ vertical centre of the desktop logo.
       setOverDark(
@@ -110,6 +133,7 @@ export default function Header({ site }: { site: SiteData }) {
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
     return () => {
+      window.clearTimeout(edgeTimer);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
@@ -163,6 +187,7 @@ export default function Header({ site }: { site: SiteData }) {
     // box therefore starts at least 8px down, so the page shows through under the
     // clock instead; the bar pulls itself back up by the same amount (-mt below),
     // so the buttons do not move. lg and up: top 0 as before.
+    <>
     <header className="pointer-events-none fixed inset-x-0 top-[max(8px,calc(env(safe-area-inset-top,0px)-0.75rem))] z-[60] pl-safe pr-safe lg:top-0">
       {/* The header box itself is see-through and, with the status-bar inset,
           ~120px tall on notched iPhones: only its controls take taps. */}
@@ -390,5 +415,17 @@ export default function Header({ site }: { site: SiteData }) {
         )}
       </AnimatePresence>
     </header>
+    {/* iOS Safari 26 at scroll 0: the strip behind the status bar lies above
+        the page and takes the body's white. A full-width fixed strip at
+        the screen top makes Safari paint it in that colour (TOP_EDGE), so it
+        runs into the top of every page. Only at the top (see onScroll):
+        further down, content shows through under the clock. Touch portrait only. */}
+    <div
+      ref={topEdge}
+      aria-hidden
+      style={{ backgroundColor: open ? "#0f1d36" : TOP_EDGE[pathname] ?? "#273d69" }}
+      className="pointer-events-none fixed inset-x-0 top-0 z-[61] hidden h-1.5 [@media(hover:none)_and_(orientation:portrait)]:block"
+    />
+    </>
   );
 }

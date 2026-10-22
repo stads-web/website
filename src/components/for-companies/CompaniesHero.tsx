@@ -19,7 +19,14 @@ const EASE = [0.22, 1, 0.36, 1] as const;
  */
 export default function CompaniesHero({ data }: { data: CompaniesHeroData }) {
   return (
-    <section data-header-dark className="relative flex min-h-[100svh] flex-col overflow-hidden bg-brand-950">
+    // Below lg the hero runs 7rem past the small viewport so it also fills
+    // the strip behind Safari's floating toolbar (iOS 26 paints the page under
+    // it; measured on iPhone 17 Pro: 98pt below 100svh, while 100lvh only
+    // reaches 40pt into it). The ledger carries the same 7rem as bottom
+    // padding, so the stats stay at 100svh, above the toolbar. svh never
+    // changes while the toolbar shows/hides, so nothing jumps on scroll.
+    // ponytail: fixed 7rem bleed, no CSS unit exposes the toolbar height.
+    <section data-header-dark className="relative flex min-h-[calc(100svh+7rem)] flex-col overflow-hidden bg-brand-950 lg:min-h-[100svh]">
       <PartnershipField className="absolute inset-0 pointer-events-none" />
       <div className="absolute inset-0 bg-gradient-to-b from-brand-950/10 via-brand-950/70 to-brand-950" />
 
@@ -79,7 +86,7 @@ export default function CompaniesHero({ data }: { data: CompaniesHeroData }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8, ease: EASE, delay: 1.3 }}
-        className="relative mx-auto flex w-full max-w-content flex-wrap justify-between gap-x-6 gap-y-3 border-t border-white/10 px-4 py-6 sm:px-6"
+        className="relative mx-auto flex w-full max-w-content flex-wrap justify-between gap-x-6 gap-y-3 border-t border-white/10 px-4 pb-[8.5rem] pt-6 sm:px-6 lg:pb-6"
       >
         {data.stats.map((stat) => (
           <div key={stat.value}>

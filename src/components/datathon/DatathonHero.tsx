@@ -45,10 +45,14 @@ export default function DatathonHero({ data }: { data: DatathonHeroData }) {
   const s = compact ? 0.45 : 1;
 
   return (
+    // Below lg: 7rem past 100svh so the photo also fills the strip behind
+    // Safari's floating toolbar (same bleed and measurements as CompaniesHero);
+    // the content carries the same 7rem as extra bottom padding, so it stays
+    // where it was. Parallax is relative to the section, so it still covers.
     <section
       ref={ref}
       data-header-dark
-      className="relative flex h-[100svh] min-h-[560px] flex-col justify-end overflow-hidden"
+      className="relative flex h-[calc(100svh+7rem)] min-h-[calc(560px+7rem)] flex-col justify-end overflow-hidden lg:h-[100svh] lg:min-h-[560px]"
     >
       <motion.div style={{ y: imageY }} className="absolute inset-0">
         <motion.div
@@ -73,7 +77,7 @@ export default function DatathonHero({ data }: { data: DatathonHeroData }) {
 
       <motion.div
         style={{ y: contentY, opacity: contentOpacity }}
-        className="relative mx-auto w-full max-w-content px-4 pb-24 sm:px-6 sm:pb-28"
+        className="relative mx-auto w-full max-w-content px-4 pb-[13rem] sm:px-6 sm:pb-[14rem] lg:pb-28"
       >
         <motion.p
           initial={{ opacity: 0, y: 16 }}

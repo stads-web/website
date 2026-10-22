@@ -92,13 +92,34 @@ export default function Header({ site }: { site: SiteData }) {
   const [overDark, setOverDark] = useState(false);
   const [hidden, setHidden] = useState(false);
   const lastY = useRef(0);
-  const topEdge = useRef<HTMLDivElement>(null);
+  // Scroll position where the current scroll direction began (see onScroll).
+  const turnY = useRef(0);
+  const pillRow = useRef<HTMLDivElement>(null);
+  const topEdge = useRef<HTMLDivElement | null>(null);
+  const bottomEdge = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const prefersReducedMotion = useReducedMotion();
   const onDark = open || !scrolled;
+  const edgeColor = open ? "#0f1d36" : TOP_EDGE[pathname] ?? "#273d69";
   const barPad = "pt-[max(0px,calc(env(safe-area-inset-top,0px)-0.75rem))]";
-  const barAnimate = { y: hidden && !open ? "-130%" : 0 };
+  const barAnimate = hidden && !open ? "hidden" : "shown";
   const barTransition = { duration: prefersReducedMotion ? 0 : 0.45, ease: EASE };
+  // Each pill slides out sideways past its own screen edge (logo left, menu
+  // right). Measured when the animation starts, so gutter, notch inset and
+  // the Menu/Close label width are all covered. Fixed elements off-screen add
+  // no page overflow, so nothing needs clipping here.
+  const pillVariants = {
+    shown: { x: 0 },
+    hidden: (side: -1 | 1) => {
+      const row = pillRow.current;
+      if (!row) return { x: side * 200 };
+      const r = row.getBoundingClientRect();
+      const pill = (side < 0 ? row.firstElementChild : row.lastElementChild) as HTMLElement;
+      // +64px clears the pill's shadow and a landscape notch inset added after
+      // the measurement (rotating while the pills are tucked away).
+      return { x: side < 0 ? -(r.left + pill.offsetWidth + 64) : window.innerWidth - r.right + pill.offsetWidth + 64 };
+    },
+  };
 
   useEffect(() => {
     // overDark only matters for the desktop logo (lg:flex); skip the DOM
@@ -110,6 +131,11 @@ export default function Header({ site }: { site: SiteData }) {
       // status bar (~62pt on iPhone, else Safari shows a white band there),
       // off once content can show through under the clock.
       if (topEdge.current) topEdge.current.style.display = y < 70 ? "" : "none";
+      // Bottom edge strip: only once the navy footer reaches the screen
+      // bottom, so Safari tints the bar behind its toolbar navy instead of
+      // white; elsewhere content keeps showing through down there.
+      const end = document.documentElement.scrollHeight - window.innerHeight;
+      if (bottomEdge.current) bottomEdge.current.style.display = y >= end - 80 ? "" : "none";
       setScrolled(y > 40);
       // 32px ~ vertical centre of the desktop logo.
       if (desktop.matches)
@@ -119,12 +145,22 @@ export default function Header({ site }: { site: SiteData }) {
             return r.top <= 32 && r.bottom > 32;
           })
         );
-      // Mobile bar tucks away while reading downwards and returns on any
-      // upward flick; it never hides near the top of the page.
-      if (y < 120) setHidden(false);
-      else if (y - lastY.current > 8) setHidden(true);
-      else if (lastY.current - y > 8) setHidden(false);
-      lastY.current = y;
+      // Mobile pills tuck away while reading downwards and return on a
+      // deliberate upward swipe: distance is summed from the last change of
+      // direction (8px down hides, 14px up shows), so slow scrolls still count
+      // and a tiny jitter does not flash them. Always shown near the top and
+      // at the page end. iOS rubber-band positions (above 0 / past the end)
+      // are ignored (they only skip the turn tracking below).
+      if (y < 80 || y >= end - 80) setHidden(false);
+      else {
+        // Zero-delta events (Safari toolbar resize) must not reset the turn.
+        const dy = y - lastY.current;
+        if (dy && Math.sign(dy) !== Math.sign(lastY.current - turnY.current)) turnY.current = lastY.current;
+        const travel = y - turnY.current;
+        if (travel > 8) setHidden(true);
+        else if (travel < -14) setHidden(false);
+      }
+      if (y >= 0 && y <= end) lastY.current = y;
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -282,14 +318,14 @@ export default function Header({ site }: { site: SiteData }) {
         </div>
 
         {/* The status-bar inset lives on the sliding parts (not the row), so the
-            -130% hide below also clears it; with no inset this is 0.
+            pills keep it while sliding sideways; with no inset this is 0.
             Only the two pills slide, never a full-width box: Safari 26 hit-tests
             the screen's top centre (ignoring clipping and pointer-events) and, if
             a full-width fixed element is there, tints the status bar with a
             colour sampled at that moment and keeps it. A full-width bar sliding
             over that point during hide/show froze such a colour. */}
-        <div className="flex w-full items-center justify-between -mt-[max(8px,calc(env(safe-area-inset-top,0px)-0.75rem))] lg:hidden">
-          <motion.div className={barPad} animate={barAnimate} transition={barTransition}>
+        <div ref={pillRow} className="flex w-full items-center justify-between -mt-[max(8px,calc(env(safe-area-inset-top,0px)-0.75rem))] lg:hidden">
+          <motion.div className={barPad} variants={pillVariants} custom={-1} initial={false} animate={barAnimate} transition={barTransition}>
           <Link
             href="/"
             aria-label="STADS home"
@@ -319,7 +355,7 @@ export default function Header({ site }: { site: SiteData }) {
           </Link>
           </motion.div>
 
-          <motion.div className={`flex items-center ${barPad}`} animate={barAnimate} transition={barTransition}>
+          <motion.div className={`flex items-center ${barPad}`} variants={pillVariants} custom={1} initial={false} animate={barAnimate} transition={barTransition}>
             <button
               type="button"
               className={`pointer-events-auto flex h-12 cursor-pointer items-center gap-3 rounded-full border pl-5 pr-4 transition-colors duration-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
@@ -418,11 +454,28 @@ export default function Header({ site }: { site: SiteData }) {
         the screen top makes Safari paint it in that colour (TOP_EDGE), so it
         runs into the top of every page. Only near the top (see onScroll):
         further down, content shows through under the clock. Touch portrait only. */}
+    {/* Safari ignores the CSS colour of a strip this thin (<= 10px) and
+        samples its pixels instead, but only for a new element: the same
+        element keeps its first sampled colour however its background changes.
+        So a colour change (route, menu) mounts a fresh strip via key; the ref
+        callback restores the scroll-dependent display on the new node. */}
     <div
-      ref={topEdge}
+      key={edgeColor}
+      ref={(el) => {
+        topEdge.current = el;
+        if (el) el.style.display = window.scrollY < 70 ? "" : "none";
+      }}
       aria-hidden
-      style={{ backgroundColor: open ? "#0f1d36" : TOP_EDGE[pathname] ?? "#273d69" }}
+      style={{ backgroundColor: edgeColor }}
       className="pointer-events-none fixed inset-x-0 top-0 z-[61] hidden h-1.5 [@media(hover:none)_and_(orientation:portrait)]:block"
+    />
+    {/* Same trick at the page end (shown by onScroll): navy footer runs into
+        Safari's bottom bar. Sits below the cookie banner (z-50). */}
+    <div
+      ref={bottomEdge}
+      aria-hidden
+      style={{ backgroundColor: "#0f1d36", display: "none" }}
+      className="pointer-events-none fixed inset-x-0 bottom-0 z-40 hidden h-1.5 [@media(hover:none)_and_(orientation:portrait)]:block"
     />
     </>
   );

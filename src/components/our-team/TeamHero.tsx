@@ -223,7 +223,7 @@ function MobileHeroLight({ reduce }: { reduce: boolean }) {
   return (
     <div
       ref={ref}
-      className="relative isolate overflow-hidden bg-white px-4 pb-8 pt-[5rem] sm:px-8 lg:hidden"
+      className="relative isolate overflow-hidden bg-white px-4 pb-8 pt-[calc(5rem+env(safe-area-inset-top,0px))] sm:px-8 lg:hidden"
     >
       <div
         aria-hidden

@@ -20,6 +20,7 @@ Wenn Sie unsere Website besuchen, verarbeiten wir personenbezogene Daten in folg
 - bei Ihrer Einwilligung zu Analyse-Cookies (Google Analytics 4, Microsoft Clarity)
 - wenn Sie uns per E-Mail oder über ein verlinktes Formular kontaktieren
 - wenn Sie unser Kontaktformular für Unternehmen nutzen (Abschnitt 9)
+- wenn Sie das eingebettete LinkedIn-Video per Klick laden (Abschnitt 10)
 
 ## 3. Hosting
 
@@ -31,7 +32,7 @@ Zusätzlich nutzen wir Vercel Web Analytics, um zu sehen, welche Seiten wie oft 
 
 ## 5. Cookies und Einwilligung
 
-Beim ersten Besuch unserer Website werden Sie über ein Consent-Banner gefragt, ob Sie der Nutzung von Analyse-Cookies zustimmen. Technisch notwendige Cookies (z. B. zur Speicherung Ihrer Cookie-Einstellung) werden unabhängig von Ihrer Einwilligung gesetzt (Art. 6 Abs. 1 lit. f DSGVO). Alle übrigen Cookies (Google Analytics 4, Microsoft Clarity) werden erst nach Ihrer aktiven Einwilligung gesetzt (Art. 6 Abs. 1 lit. a DSGVO, § 25 Abs. 1 TTDSG). Sie können Ihre Einwilligung jederzeit mit Wirkung für die Zukunft über den Link „Cookie-Einstellungen" im Footer widerrufen oder anpassen.
+Beim ersten Besuch unserer Website werden Sie über ein Consent-Banner gefragt, ob Sie der Nutzung von Analyse-Cookies zustimmen. Technisch notwendige Cookies (z. B. zur Speicherung Ihrer Cookie-Einstellung) werden unabhängig von Ihrer Einwilligung gesetzt (Art. 6 Abs. 1 lit. f DSGVO). Alle übrigen Cookies (Google Analytics 4, Microsoft Clarity) werden erst nach Ihrer aktiven Einwilligung gesetzt (Art. 6 Abs. 1 lit. a DSGVO, § 25 Abs. 1 TDDDG). Sie können Ihre Einwilligung jederzeit mit Wirkung für die Zukunft über den Link „Cookie settings“ im Footer widerrufen oder anpassen.
 
 ## 6. Google Analytics 4
 
@@ -61,14 +62,30 @@ Kann Ihre Nachricht über keinen dieser Wege zugestellt werden, bietet Ihnen das
 
 Ihre Daten werden gelöscht, sobald Ihre Anfrage abschließend bearbeitet ist und keine gesetzlichen Aufbewahrungspflichten entgegenstehen.
 
-## 10. Speicherdauer
+## 10. Eingebettetes LinkedIn-Video
+
+Auf der Seite „Datathon“ binden wir ein Video ein, das auf LinkedIn veröffentlicht ist. Anbieter ist die LinkedIn Ireland Unlimited Company, Wilton Plaza, Wilton Place, Dublin 2, Irland („LinkedIn“). Wir nutzen dafür eine Klick-zum-Laden-Lösung: Beim Aufruf der Seite wird zunächst nur ein Vorschaubild angezeigt, das von unserem eigenen Server geladen wird. Dabei wird keine Verbindung zu LinkedIn hergestellt.
+
+Erst wenn Sie auf das Vorschaubild klicken, wird das Video von LinkedIn (www.linkedin.com) nachgeladen. Dabei wird eine Verbindung zu den Servern von LinkedIn aufgebaut und es werden u. a. Ihre IP-Adresse, Datum und Uhrzeit des Abrufs, die aufgerufene Seite sowie Informationen zu Ihrem Browser an LinkedIn übermittelt. LinkedIn kann dabei Cookies oder vergleichbare Technologien einsetzen; sind Sie bei LinkedIn angemeldet, kann LinkedIn den Abruf Ihrem Konto zuordnen. Eine Übermittlung an die LinkedIn Corporation in den USA ist nicht auszuschließen. Auf Art und Umfang der Verarbeitung durch LinkedIn haben wir keinen Einfluss.
+
+Rechtsgrundlage ist Ihre Einwilligung, die Sie durch den Klick auf das Vorschaubild erteilen (Art. 6 Abs. 1 lit. a DSGVO, § 25 Abs. 1 TDDDG). Ohne den Klick wird das Video nicht geladen. Alternativ können Sie das Video über den Link unter dem Vorschaubild direkt auf LinkedIn ansehen. Weitere Informationen: [LinkedIn Datenschutzrichtlinie](https://www.linkedin.com/legal/privacy-policy).
+
+## 11. Links zu WhatsApp und sozialen Netzwerken
+
+Auf unserer Website verlinken wir auf unsere WhatsApp-Gruppe sowie auf unsere Auftritte bei Instagram und LinkedIn. Es handelt sich um einfache Links: Beim Besuch unserer Website werden dadurch keine Daten an die jeweiligen Anbieter übertragen. Erst wenn Sie einen solchen Link anklicken, wechseln Sie zum Angebot des jeweiligen Anbieters; dort gelten dessen Datenschutzbestimmungen.
+
+- **WhatsApp:** Anbieter ist die WhatsApp Ireland Limited, Merrion Road, Dublin 4, D04 X2K5, Irland. Wenn Sie unserer WhatsApp-Gruppe beitreten, sind Ihre Telefonnummer und Ihr WhatsApp-Profil (z. B. Name und Profilbild, je nach Ihren Einstellungen) für die anderen Mitglieder der Gruppe sichtbar. Weitere Informationen: [WhatsApp Datenschutzrichtlinie](https://www.whatsapp.com/legal/privacy-policy-eea).
+- **Instagram:** Anbieter ist die Meta Platforms Ireland Limited, Merrion Road, Dublin 4, D04 X2K5, Irland. Weitere Informationen: [Instagram Datenschutzrichtlinie](https://privacycenter.instagram.com/policy).
+- **LinkedIn:** Anbieter ist die LinkedIn Ireland Unlimited Company, Wilton Plaza, Wilton Place, Dublin 2, Irland. Weitere Informationen: [LinkedIn Datenschutzrichtlinie](https://www.linkedin.com/legal/privacy-policy).
+
+## 12. Speicherdauer
 
 Personenbezogene Daten werden gelöscht, sobald der Zweck der Verarbeitung entfällt und keine gesetzlichen Aufbewahrungspflichten entgegenstehen. Analyse-Daten werden nach den bei Google Analytics bzw. Microsoft Clarity konfigurierten Aufbewahrungsfristen automatisch gelöscht.
 
-## 11. Ihre Rechte
+## 13. Ihre Rechte
 
 Sie haben das Recht auf Auskunft (Art. 15 DSGVO), Berichtigung (Art. 16 DSGVO), Löschung (Art. 17 DSGVO), Einschränkung der Verarbeitung (Art. 18 DSGVO), Datenübertragbarkeit (Art. 20 DSGVO) sowie Widerspruch gegen die Verarbeitung (Art. 21 DSGVO). Erteilte Einwilligungen können Sie jederzeit mit Wirkung für die Zukunft widerrufen. Außerdem steht Ihnen ein Beschwerderecht bei einer Datenschutzaufsichtsbehörde zu, z. B. beim Landesbeauftragten für den Datenschutz und die Informationsfreiheit Baden-Württemberg.
 
-## 12. Kontakt für Datenschutzanfragen
+## 14. Kontakt für Datenschutzanfragen
 
 Bei Fragen zum Datenschutz erreichen Sie uns unter info@stads.de.

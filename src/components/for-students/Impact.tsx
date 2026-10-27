@@ -43,7 +43,7 @@ export default function Impact({ data, body }: { data: IntroData; body: string }
               alt={data.imageAlt}
               fill
               sizes="(min-width: 768px) 500px, 90vw"
-              className="object-cover transition-transform duration-700 hover:scale-105"
+              className="object-cover object-[50%_80%] transition-transform duration-700 hover:scale-105"
             />
           </div>
         </Reveal>

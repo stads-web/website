@@ -1,7 +1,7 @@
 ---
 title: "How We Make an Impact"
-image: /images/initiativenmarkt.webp
-imageAlt: STADS tote bags laid out at an info event
+image: /images/stads-stand-schloss.webp
+imageAlt: Three STADS members at an info stand between two STADS roll-ups in front of Mannheim Palace
 whatsappLabel: "Join our WhatsApp Group"
 whatsappCta: "Click to join"
 whatsappHref: "https://chat.whatsapp.com/FEklw3cfIO87Tp8VsVhnI5"

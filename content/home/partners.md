@@ -38,6 +38,6 @@ partners:
     aspect: 12.04
   - name: "QuantCo"
     href: "https://www.quantco.com"
-    logo: "/brand/partners/quantco.webp"
-    aspect: 0.699
+    logo: "/brand/partners/quantco.svg"
+    aspect: 0.698
 ---

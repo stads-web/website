@@ -1,7 +1,7 @@
 ---
 title: "Partnering for Impact"
-image: /images/initiativenmarkt.webp
-imageAlt: STADS presenting at a university info event
+image: /images/stads-stand-schloss.webp
+imageAlt: Three STADS members at an info stand between two STADS roll-ups in front of Mannheim Palace
 ---
 
 As a student initiative at the University of Mannheim, STADS unites **motivated students** with **strong analytical and quantitative backgrounds** and a shared **passion for Data Science**.

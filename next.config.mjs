@@ -7,6 +7,21 @@ const nextConfig = {
     // Photos are only ever replaced under a new name, so let the CDN keep them for a week.
     minimumCacheTTL: 60 * 60 * 24 * 7,
   },
+  // Basic hardening. X-Frame-Options only limits who may embed *our* pages;
+  // embeds on our pages (LinkedIn, YouTube iframes) are unaffected.
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;

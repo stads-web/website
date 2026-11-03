@@ -140,7 +140,7 @@ export default function Hero({
         <div
           ref={photoRef}
           data-header-dark
-          className="relative h-[calc(280px+env(safe-area-inset-top,0px))] w-full overflow-hidden sm:h-[380px] md:h-[480px]"
+          className="relative h-[calc(280px+env(safe-area-inset-top,0px))] w-full overflow-hidden sm:h-[380px] md:h-[max(480px,calc(100vh-330px))]"
         >
           <motion.div
             style={
@@ -161,6 +161,7 @@ export default function Hero({
                 alt={data.headerImageAlt}
                 fill
                 priority
+                fetchPriority="high"
                 sizes="100vw"
                 className="object-cover"
               />
@@ -209,7 +210,7 @@ export default function Hero({
                 className="bg-gradient-to-b from-brand-500 to-brand-800 bg-clip-text font-thin italic text-transparent"
               >
                 {data.taglineAccent}
-              </LineReveal>
+              </LineReveal>{" "}
               <LineReveal
                 delay={0.3 * s}
                 duration={0.95 * s}

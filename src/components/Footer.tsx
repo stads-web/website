@@ -36,13 +36,13 @@ export default function Footer({ site }: { site: SiteData }) {
               </p>
               <p
                 lang="de"
-                className="mt-4 text-[13px] leading-snug text-brand-800/60"
+                className="mt-4 text-[13px] leading-snug text-brand-800/70"
               >
                 {site.footer.note}
               </p>
               <a
                 href={`mailto:${site.contact.email}`}
-                className="mt-4 inline-block text-[13px] text-brand-800/70 underline-offset-4 transition-colors hover:text-brand-900 hover:underline"
+                className="-mb-1 mt-3 inline-block py-1 text-[13px] text-brand-800/70 underline-offset-4 transition-colors hover:text-brand-900 hover:underline"
               >
                 {site.contact.email}
               </a>
@@ -56,7 +56,7 @@ export default function Footer({ site }: { site: SiteData }) {
                     <li key={item.href}>
                       <Link
                         href={item.href}
-                        className="text-[13px] text-brand-800/70 transition-colors hover:text-brand-900"
+                        className="-my-1 inline-block py-1 text-[13px] text-brand-800/70 transition-colors hover:text-brand-900"
                       >
                         {item.label}
                       </Link>
@@ -72,14 +72,14 @@ export default function Footer({ site }: { site: SiteData }) {
                     <li key={item.href}>
                       <Link
                         href={item.href}
-                        className="text-[13px] text-brand-800/70 transition-colors hover:text-brand-900"
+                        className="-my-1 inline-block py-1 text-[13px] text-brand-800/70 transition-colors hover:text-brand-900"
                       >
                         {item.label}
                       </Link>
                     </li>
                   ))}
                   <li>
-                    <CookieSettingsButton className="cursor-pointer text-left text-[13px] text-brand-800/70 transition-colors hover:text-brand-900" />
+                    <CookieSettingsButton className="-my-1 cursor-pointer py-1 text-left text-[13px] text-brand-800/70 transition-colors hover:text-brand-900" />
                   </li>
                 </ul>
               </div>

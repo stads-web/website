@@ -33,8 +33,9 @@ export default function SplitChars({
       initial="hidden"
       animate="visible"
       custom={delay}
-      aria-label={text}
     >
+      {/* Screen readers get the word once; the per-letter spans are hidden. */}
+      <span className="sr-only">{text}</span>
       {text.split("").map((c, i) => (
         <span
           key={`${c}-${i}`}

@@ -5,7 +5,9 @@ import { animate, useInView } from "framer-motion";
 
 /**
  * Counts the first number inside a label up from zero ("250+", "Est. 2017").
- * Labels without a number render unchanged.
+ * Labels without a number render unchanged. Server HTML (and no-JS/reduced
+ * motion) shows the real value; the count from zero only starts client-side
+ * once the label scrolls into view.
  */
 export default function CountUp({ value }: { value: string }) {
   const ref = useRef<HTMLSpanElement>(null);
@@ -13,17 +15,12 @@ export default function CountUp({ value }: { value: string }) {
   // (mobile) would sit inside the shrunken root and never count as in view.
   const inView = useInView(ref, { once: true });
   const digits = value.match(/\d+/)?.[0];
-  const [display, setDisplay] = useState(() =>
-    digits ? value.replace(digits, "0") : value
-  );
+  const [display, setDisplay] = useState(value);
 
   useEffect(() => {
     if (!digits || !inView) return;
 
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setDisplay(value);
-      return;
-    }
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const controls = animate(0, Number(digits), {
       duration: 1.4,
@@ -44,7 +41,8 @@ export default function CountUp({ value }: { value: string }) {
 
   return (
     <span ref={ref} className="tabular-nums">
-      {display}
+      <span className="sr-only">{value}</span>
+      <span aria-hidden>{display}</span>
     </span>
   );
 }

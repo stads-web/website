@@ -9,7 +9,7 @@ export default function ChallengePartners({
 }) {
   return (
     <section className="mx-auto max-w-content px-4 py-20 sm:px-6 sm:py-28">
-      <p className="font-mono text-xs uppercase tracking-[0.3em] text-brand-500">
+      <p className="font-mono text-xs uppercase tracking-[0.3em] text-brand-600">
         {data.eyebrow}
       </p>
       <h2 className="mt-3 max-w-2xl text-3xl font-medium text-brand-900 sm:text-4xl md:text-[50px] md:leading-[1.1]">
@@ -18,8 +18,11 @@ export default function ChallengePartners({
 
       <ul className="mt-14 border-t border-brand-100">
         {data.partners.map(({ name, href }, i) => (
-          <Reveal key={name} delay={0.04 * i}>
-            <li className="group flex items-baseline justify-between gap-6 border-b border-brand-100 py-6 transition-colors hover:bg-brand-50/60">
+          <li key={name}>
+            <Reveal
+              delay={0.04 * i}
+              className="group flex items-baseline justify-between gap-6 border-b border-brand-100 py-6 transition-colors hover:bg-brand-50/60"
+            >
               {href ? (
                 <a
                   href={href}
@@ -38,8 +41,8 @@ export default function ChallengePartners({
               <span className="font-mono text-xs text-brand-300">
                 {String(i + 1).padStart(2, "0")}
               </span>
-            </li>
-          </Reveal>
+            </Reveal>
+          </li>
         ))}
       </ul>
     </section>

@@ -157,7 +157,7 @@ export default function History({ data }: { data: HistoryData }) {
   return (
     <section id="history" className="pt-20 sm:pt-24">
       <div className="mx-auto w-full max-w-content px-4 sm:px-6">
-        <p className="font-mono text-xs uppercase tracking-[0.3em] text-brand-500">
+        <p className="font-mono text-xs uppercase tracking-[0.3em] text-brand-600">
           {data.eyebrow}
         </p>
         <h2 className="mt-3 text-3xl font-medium text-brand-900 sm:text-4xl md:text-[50px] md:leading-[1.1]">

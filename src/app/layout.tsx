@@ -78,6 +78,7 @@ export default function RootLayout({
 
   const organization = {
     "@type": "Organization",
+    "@id": `${siteUrl}/#organization`,
     name: "STADS – Students' Association for Data Analytics & Statistics Mannheim e.V.",
     alternateName: "STADS",
     url: siteUrl,
@@ -85,12 +86,31 @@ export default function RootLayout({
     description: siteDescription,
     email: site.contact.email,
     sameAs: site.footer.social.map((link) => link.href),
+    // Address as in content/legal/impressum.md; founding year from "Est. 2017"
+    // in content/home/nutshell.md.
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "Schloss",
+      postalCode: "68131",
+      addressLocality: "Mannheim",
+      addressCountry: "DE",
+    },
+    foundingDate: "2017",
+    memberOf: {
+      "@type": "CollegeOrUniversity",
+      name: "Universität Mannheim",
+      url: "https://www.uni-mannheim.de",
+    },
+    areaServed: "Mannheim",
   };
   const webSite = {
     "@type": "WebSite",
+    "@id": `${siteUrl}/#website`,
     name: "STADS",
     alternateName: "Students' Association for Data Analytics & Statistics Mannheim",
     url: siteUrl,
+    inLanguage: "en",
+    publisher: { "@id": `${siteUrl}/#organization` },
   };
   const jsonLd = {
     "@context": "https://schema.org",

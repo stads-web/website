@@ -4,7 +4,7 @@ import Nutshell from "@/components/Nutshell";
 import Partners from "@/components/Partners";
 import Program from "@/components/Program";
 import WhyJoin from "@/components/WhyJoin";
-import Testimonials from "@/components/Testimonials";
+import TestimonialsBadge from "@/components/TestimonialsBadge";
 import FinalCta from "@/components/FinalCta";
 import type {
   HeroData,
@@ -38,7 +38,7 @@ export default function Home() {
       <Partners data={partners.data} />
       <Program data={program.data} />
       <WhyJoin data={whyJoin.data} />
-      <Testimonials
+      <TestimonialsBadge
         data={testimonials.data}
         fallbackLinkedin={stadsLinkedin}
       />

@@ -18,6 +18,7 @@ export default function LegalPage({
           {title}
         </h1>
         <div
+          lang="de"
           className="prose prose-neutral mt-8 max-w-none prose-headings:text-brand-900 prose-a:text-brand-600"
           // Content comes from our own trusted markdown files in /content, not user input.
           dangerouslySetInnerHTML={{ __html: html }}

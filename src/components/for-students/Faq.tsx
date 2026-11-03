@@ -9,6 +9,7 @@ export default function Faq({ data }: { data: FaqData }) {
 
   return (
     <section className="mx-auto max-w-content px-4 py-16 sm:px-6 sm:py-24">
+      <h2 className="sr-only">Frequently asked questions</h2>
       <div className="flex flex-col gap-5">
         {data.items.map((item, i) => {
           const open = openIndex === i;

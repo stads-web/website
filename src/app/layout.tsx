@@ -76,8 +76,7 @@ export default function RootLayout({
 }>) {
   const { data: site } = readContent<SiteData>("global/site.md");
 
-  const jsonLd = {
-    "@context": "https://schema.org",
+  const organization = {
     "@type": "Organization",
     name: "STADS – Students' Association for Data Analytics & Statistics Mannheim e.V.",
     alternateName: "STADS",
@@ -86,6 +85,16 @@ export default function RootLayout({
     description: siteDescription,
     email: site.contact.email,
     sameAs: site.footer.social.map((link) => link.href),
+  };
+  const webSite = {
+    "@type": "WebSite",
+    name: "STADS",
+    alternateName: "Students' Association for Data Analytics & Statistics Mannheim",
+    url: siteUrl,
+  };
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [organization, webSite],
   };
 
   return (

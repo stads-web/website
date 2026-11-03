@@ -32,7 +32,7 @@ export default function PartneringIntro({
               alt={data.imageAlt}
               fill
               quality={90}
-              sizes="(min-width: 1200px) 500px, (min-width: 768px) 45vw, 100vw"
+              sizes="(min-width: 1200px) 500px, (min-width: 768px) calc((100vw - 7rem) / 2.2), (min-width: 640px) calc(100vw - 3rem), calc(100vw - 2rem)"
               className="object-cover object-[50%_80%] transition-transform duration-700 hover:scale-105"
             />
           </div>

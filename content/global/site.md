@@ -40,7 +40,7 @@ footer:
       href: "https://www.instagram.com/stadsmannheim"
       icon: instagram-logo
     - label: LinkedIn
-      href: "https://www.linkedin.com/company/stadsmannheim/posts/?feedView=all"
+      href: "https://www.linkedin.com/company/stadsmannheim/"
       icon: linkedin-logo
   copyright: "© 2026 STADS – Students' Association for Data Analytics & Statistics Mannheim e.V."
 contact:

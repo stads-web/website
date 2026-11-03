@@ -281,7 +281,7 @@ function MobileHeroLight({ reduce }: { reduce: boolean }) {
         <h2 className="text-[min(14.2vw,7.4svh)] font-medium leading-[0.92] tracking-[-0.04em] text-brand-950 sm:text-[11.5vw]">
           <Line delay={0.9} className="font-accent font-normal italic tracking-[-0.02em] text-brand-500">
             Seven
-          </Line>
+          </Line>{" "}
           <Line delay={1}>Departments</Line>
         </h2>
       </motion.div>

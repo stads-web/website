@@ -13,6 +13,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/datenschutz" },
   openGraph: {
     ...ogBase,
+    locale: "de_DE",
     title,
     description,
     url: "/datenschutz",

@@ -1,6 +1,10 @@
 "use client";
 
-import { CaretLeft, CaretRight, Quotes } from "@phosphor-icons/react/dist/ssr";
+import {
+  CaretLeft,
+  CaretRight,
+  Translate,
+} from "@phosphor-icons/react/dist/ssr";
 import {
   animate,
   motion,
@@ -9,48 +13,77 @@ import {
   useReducedMotion,
 } from "framer-motion";
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
+import Image from "next/image";
+import LinkedInLink from "./LinkedInLink";
 import Magnetic from "./motion/Magnetic";
 import Reveal from "./motion/Reveal";
 import SplitText from "./motion/SplitText";
 import Spotlight from "./motion/Spotlight";
-import type { Testimonial, TestimonialsData } from "@/lib/types";
+import type { QuoteLang, Testimonial, TestimonialsData } from "@/lib/types";
 
-/** "Anna M." -> "AM" - derives a two-letter monogram until real photos exist. */
-function initialsOf(name: string) {
-  return name
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase() ?? "")
-    .join("");
-}
+const QUOTE_MARKS: Record<QuoteLang, [string, string]> = {
+  de: ["\u201E", "\u201C"],
+  en: ["\u201C", "\u201D"],
+};
 
-function TestimonialCard({ item }: { item: Testimonial }) {
+function TestimonialCard({
+  item,
+  lang,
+}: {
+  item: Testimonial;
+  lang: QuoteLang;
+}) {
+  const [open, close] = QUOTE_MARKS[lang];
+  const paragraphs = item.quote[lang];
   return (
-    <figure className="group relative flex h-full w-[85vw] max-w-[320px] shrink-0 flex-col overflow-hidden rounded-[40px] border border-brand-100 bg-white p-8 text-left shadow-[0px_5px_10px_rgba(0,0,0,0.05),0px_15px_30px_rgba(0,0,0,0.05),0px_20px_40px_rgba(0,0,0,0.1)] transition-transform duration-300 hover:-translate-y-1.5 sm:w-[340px] sm:max-w-none">
-      <Spotlight />
-      <div className="flex items-center gap-3">
-        <span
-          aria-hidden
-          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-brand-800 text-sm font-semibold text-white"
-        >
-          {initialsOf(item.name)}
-        </span>
-        <div>
-          <p className="font-semibold text-brand-900">{item.name}</p>
-          <p className="text-sm text-brand-900/60">{item.role}</p>
+    <figure className="relative flex w-[85vw] max-w-[340px] shrink-0 flex-col pt-36 text-left transition-transform duration-300 hover:-translate-y-1.5 sm:w-[440px] sm:max-w-none sm:pt-44 lg:w-[520px]">
+      {/* Portrait stands on the card's top edge and rises out of it (room is the figure's top padding). */}
+      <Image
+        src={item.image || "/images/testimonials/placeholder.svg"}
+        alt=""
+        width={300}
+        height={360}
+        className="pointer-events-none absolute left-1/2 top-0 z-10 h-36 w-auto -translate-x-1/2 object-contain object-bottom grayscale sm:h-44"
+      />
+      {/* Card: 1px gradient border (white-ish at top, accent blue at the bottom). */}
+      <div className="rounded-[28px] bg-gradient-to-b from-white/15 via-brand-800 to-brand-400 p-px shadow-[0px_20px_40px_rgba(15,29,54,0.25)]">
+        <div className="group relative flex flex-col overflow-hidden rounded-[27px] bg-brand-950 p-6 sm:p-8">
+          <Spotlight />
+          <p className="text-lg font-semibold text-white">{item.name}</p>
+          <p lang={lang} className="mt-0.5 text-sm text-brand-200">
+            {item.role[lang]}
+          </p>
+          {/* Long quotes: slightly smaller type, paragraphs kept; a multi-part quote leads with its headline. */}
+          <blockquote
+            lang={lang}
+            className="mt-4 space-y-3 text-pretty text-[15px] leading-relaxed text-brand-300 sm:text-base"
+          >
+            {paragraphs.map((text, i) => (
+              <p
+                key={i}
+                className={
+                  i === 0 && paragraphs.length > 1
+                    ? "font-semibold text-white"
+                    : undefined
+                }
+              >
+                {open}
+                {text}
+                {close}
+              </p>
+            ))}
+          </blockquote>
+          {item.linkedin && (
+            <LinkedInLink
+              href={item.linkedin}
+              name={item.name}
+              tone="glass"
+              expand={false}
+              className="mt-6 self-center"
+            />
+          )}
         </div>
       </div>
-      <Quotes
-        size={28}
-        weight="fill"
-        className="mt-5 text-brand-200"
-        aria-hidden="true"
-      />
-      <blockquote className="mt-3 flex-1 text-balance leading-relaxed text-brand-900/80">
-        &ldquo;{item.quote}&rdquo;
-      </blockquote>
     </figure>
   );
 }
@@ -83,6 +116,10 @@ export default function Testimonials({ data }: { data: TestimonialsData }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const prefersReducedMotion = useReducedMotion();
   const x = useMotionValue(0);
+  const [lang, setLang] = useState<QuoteLang>("de");
+  // Viewport height follows the active card instead of the tallest one.
+  const height = useMotionValue(0);
+  const [sized, setSized] = useState(false);
 
   const xFor = (p: number) => geo.current.base - p * geo.current.step;
 
@@ -110,6 +147,24 @@ export default function Testimonials({ data }: { data: TestimonialsData }) {
     return () => window.removeEventListener("resize", measure);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [count, mid]);
+
+  useEffect(() => {
+    const card = trackRef.current?.children[mid * count + activeIndex]
+      ?.firstElementChild as HTMLElement | null | undefined;
+    if (!card) return;
+    // Fires on observe, so it covers index and language changes, plus resizes and font loads.
+    const ro = new ResizeObserver(() => {
+      const h = card.offsetHeight; // layout height, unaffected by the scale/reveal transforms
+      if (!sized || prefersReducedMotion) {
+        height.set(h);
+        setSized(true);
+      } else {
+        animate(height, h, { duration: 0.45, ease: [0.22, 1, 0.36, 1] });
+      }
+    });
+    ro.observe(card);
+    return () => ro.disconnect();
+  }, [activeIndex, lang, count, mid, sized, prefersReducedMotion, height]);
 
   // Dots follow the live position, so they track drag, click and arrows alike.
   useMotionValueEvent(x, "change", (latest) => {
@@ -171,8 +226,9 @@ export default function Testimonials({ data }: { data: TestimonialsData }) {
   const ring =
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2";
   const arrowCls = `flex h-10 w-10 items-center justify-center rounded-full border border-brand-300 text-brand-900 transition-colors hover:bg-brand-50 ${ring}`;
+  // Side fades plus a soft bottom edge where taller neighbouring cards are clipped.
   const edgeMask =
-    "linear-gradient(to right, transparent, #000 40px, #000 calc(100% - 40px), transparent)";
+    "linear-gradient(to right, transparent, #000 40px, #000 calc(100% - 40px), transparent), linear-gradient(to bottom, #000 calc(100% - 24px), transparent)";
   const loop = count > 1;
   const sets = loop ? SETS : 1;
 
@@ -186,47 +242,84 @@ export default function Testimonials({ data }: { data: TestimonialsData }) {
       </h2>
 
       <Reveal delay={0.2} className="mt-12">
+        <div
+          role="group"
+          aria-label="Sprache der Zitate / Quote language"
+          className="relative z-10 mb-6 flex justify-center"
+        >
+          <div className="inline-flex items-center gap-1 rounded-full border border-brand-200 bg-white p-1">
+            <Translate
+              size={16}
+              className="ml-2 mr-1 text-brand-900/50"
+              aria-hidden="true"
+            />
+            {(["de", "en"] as const).map((l) => (
+              <button
+                key={l}
+                type="button"
+                lang={l}
+                aria-label={l === "de" ? "Deutsch" : "English"}
+                aria-pressed={lang === l}
+                onClick={() => setLang(l)}
+                className={`rounded-full px-3 py-1 text-sm font-semibold transition-colors ${ring} ${
+                  lang === l
+                    ? "bg-brand-800 text-white"
+                    : "text-brand-900 hover:bg-brand-50"
+                }`}
+              >
+                {l.toUpperCase()}
+              </button>
+            ))}
+          </div>
+        </div>
         {/* pt/-mt gives the hover lift room; pb keeps the shadow uncut and the controls clear of it. */}
         <div
           ref={containerRef}
-          style={{ maskImage: edgeMask, WebkitMaskImage: edgeMask }}
+          style={{
+            maskImage: edgeMask,
+            WebkitMaskImage: edgeMask,
+            maskComposite: "intersect",
+            WebkitMaskComposite: "source-in",
+          }}
           className="-mx-4 -mt-6 overflow-hidden px-4 pb-16 pt-6 sm:-mx-6 sm:px-6"
         >
-          <motion.div
-            ref={trackRef}
-            drag={loop ? "x" : false}
-            dragMomentum={false}
-            onDragEnd={onDragEnd}
-            // One trigger for all copies: per-card whileInView would replay on far copies after a wrap.
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: "-80px" }}
-            style={{ touchAction: "pan-y", x }}
-            className={`flex w-fit gap-4 sm:gap-6 ${loop ? "cursor-grab active:cursor-grabbing" : ""}`}
-          >
-            {Array.from({ length: sets }, (_, s) =>
-              data.items.map((item, i) => {
-                const copy = s !== mid;
-                return (
-                  <motion.div
-                    key={`${s}-${item.name}`}
-                    variants={cardReveal}
-                    custom={i}
-                    className="shrink-0"
-                  >
-                    <div
-                      aria-hidden={copy || undefined}
-                      tabIndex={copy ? -1 : undefined}
-                      className={`h-full transition-[transform,opacity] duration-500 ${
-                        i === activeIndex ? "" : "scale-95 opacity-60"
-                      }`}
+          <motion.div style={sized ? { height } : undefined}>
+            <motion.div
+              ref={trackRef}
+              drag={loop ? "x" : false}
+              dragMomentum={false}
+              onDragEnd={onDragEnd}
+              // One trigger for all copies: per-card whileInView would replay on far copies after a wrap.
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, margin: "-80px" }}
+              style={{ touchAction: "pan-y", x }}
+              className={`flex w-fit items-start gap-4 sm:gap-6 ${loop ? "cursor-grab active:cursor-grabbing" : ""}`}
+            >
+              {Array.from({ length: sets }, (_, s) =>
+                data.items.map((item, i) => {
+                  const copy = s !== mid;
+                  return (
+                    <motion.div
+                      key={`${s}-${item.name}`}
+                      variants={cardReveal}
+                      custom={i}
+                      className="shrink-0"
                     >
-                      <TestimonialCard item={item} />
-                    </div>
-                  </motion.div>
-                );
-              }),
-            )}
+                      <div
+                        aria-hidden={copy || undefined}
+                        tabIndex={copy ? -1 : undefined}
+                        className={`transition-[transform,opacity] duration-500 ${
+                          i === activeIndex ? "" : "scale-95 opacity-60"
+                        }`}
+                      >
+                        <TestimonialCard item={item} lang={lang} />
+                      </div>
+                    </motion.div>
+                  );
+                }),
+              )}
+            </motion.div>
           </motion.div>
         </div>
 

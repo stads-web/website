@@ -69,10 +69,17 @@ export interface WhyJoinData {
   items: WhyJoinItem[];
 }
 
+export type QuoteLang = "de" | "en";
+
 export interface Testimonial {
   name: string;
-  role: string;
-  quote: string;
+  /** Portrait path under /public; falls back to a placeholder silhouette. */
+  image?: string;
+  /** LinkedIn profile URL; the icon only shows when set. */
+  linkedin?: string;
+  role: Record<QuoteLang, string>;
+  /** Paragraphs per language. */
+  quote: Record<QuoteLang, string[]>;
 }
 
 export interface TestimonialsData {

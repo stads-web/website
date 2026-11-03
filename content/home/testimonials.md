@@ -38,7 +38,7 @@ items:
         - "STADS was my first point of contact with Data Science and gave me the opportunity to gain practical experience while still at university. Thanks to the Data Bootcamp, I was able to learn skills within my first few months at STADS that directly helped me land my first Data Science internship. I also met many great people at STADS and grew both professionally and personally."
   - name: "Paul König"
     image: ""
-    linkedin: ""
+    linkedin: "https://www.linkedin.com/in/p-koenig/"
     role:
       de: "Vorstand 2021/22 · Ph.D. Candidate und AI/ML Researcher an der TU Clausthal"
       en: "Board 2021/22 · Ph.D. candidate and AI/ML researcher at TU Clausthal"
@@ -56,7 +56,7 @@ items:
         - "I joined STADS in my first Bachelor's semester, and I'm still happy today about what we were able to achieve together."
   - name: "Elise Wolf"
     image: ""
-    linkedin: ""
+    linkedin: "https://www.linkedin.com/in/elise-wolf/"
     role:
       de: "Vorstand 2023/24 · M.Sc. Mathematik und M.Sc. Data Science · derzeit Auslandssemester an der UC Berkeley · Research Assistant am Fraunhofer IESE"
       en: "Board 2023/24 · M.Sc. Mathematics and M.Sc. Data Science · currently on a semester abroad at UC Berkeley · Research Assistant at Fraunhofer IESE"

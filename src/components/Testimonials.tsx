@@ -9,6 +9,7 @@ import {
   animate,
   motion,
   useMotionValue,
+  useDragControls,
   useMotionValueEvent,
   useReducedMotion,
 } from "framer-motion";
@@ -280,6 +281,8 @@ export default function Testimonials({
 
   // A drag must not also count as a click on a card (or on a link/button inside it).
   const dragged = useRef(false);
+  // Swipe only for touch/pen: the mouse never starts a drag (arrows, dots and side-card clicks navigate).
+  const dragControls = useDragControls();
   // Clicking a side card moves to it, like the arrows; a real click there never reaches its buttons.
   // Keyboard clicks (detail 0) pass through, so Tab + Enter still works as before.
   const onCardClick = (e: MouseEvent, p: number) => {
@@ -349,6 +352,11 @@ export default function Testimonials({
           <motion.div
               ref={trackRef}
               drag={loop ? "x" : false}
+              dragControls={dragControls}
+              dragListener={false}
+              onPointerDown={(e) => {
+                if (loop && e.pointerType !== "mouse") dragControls.start(e);
+              }}
               dragMomentum={false}
               onDragStart={() => (dragged.current = true)}
               onPointerDownCapture={() => (dragged.current = false)}
@@ -358,7 +366,7 @@ export default function Testimonials({
               whileInView="show"
               viewport={{ once: true, margin: "-80px" }}
               style={{ touchAction: "pan-y", x }}
-              className={`flex w-fit items-stretch gap-4 sm:gap-6 ${loop ? "cursor-grab active:cursor-grabbing" : ""}`}
+              className="flex w-fit items-stretch gap-4 sm:gap-6"
             >
               {Array.from({ length: sets }, (_, s) =>
                 data.items.map((item, i) => {

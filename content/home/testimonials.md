@@ -15,7 +15,7 @@ items:
       en:
         - "My involvement with STADS has had a lasting impact on my studies. As a board member, I was able to take on responsibility and develop considerably, both personally and in terms of my soft skills. I also discovered my passion for Data Science, a field in which I went on to gain a lot more experience."
   - name: "Sina Leandra Kratzenstein"
-    image: ""
+    image: "/images/testimonials/placeholder-female.webp"
     linkedin: "https://www.linkedin.com/in/sina-leandra-kratzenstein-ba9a36283/"
     role:
       de: "Vorstand 2024/25 · B.Sc. Betriebswirtschaftslehre"
@@ -26,7 +26,7 @@ items:
       en:
         - "As a business student, I joined STADS to broaden my knowledge with new insights into Data Science. The workshops and the exchange with other students in particular opened up new perspectives for me. That's why I can recommend STADS to anyone who is keen to learn new things, keep developing and become part of an engaged community."
   - name: "Greta Riehl"
-    image: ""
+    image: "/images/testimonials/placeholder-female.webp"
     linkedin: "https://www.linkedin.com/in/greta-riehl/"
     role:
       de: "Head of Finance 2024/25 · M.Sc. Wirtschaftsmathematik · Werkstudentin KI und Data Science, weisenburger-Gruppe"
@@ -55,7 +55,7 @@ items:
         - "Former STADS members have settled on every continent, in every industry, in small start-ups, large companies or research institutes. The time we spent together at STADS always remains a fond memory."
         - "I joined STADS in my first Bachelor's semester, and I'm still happy today about what we were able to achieve together."
   - name: "Elise Wolf"
-    image: ""
+    image: "/images/testimonials/placeholder-female.webp"
     linkedin: "https://www.linkedin.com/in/elise-wolf/"
     role:
       de: "Vorstand 2023/24 · M.Sc. Mathematik und M.Sc. Data Science · derzeit Auslandssemester an der UC Berkeley · Research Assistant am Fraunhofer IESE"

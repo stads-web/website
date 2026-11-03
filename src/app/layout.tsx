@@ -17,9 +17,9 @@ import { readContent } from "@/lib/content";
 import type { SiteData } from "@/lib/types";
 import { siteUrl, ogBase, twitterBase } from "@/lib/site";
 
-const siteTitle = "STADS – Students' Association for Data Analytics & Statistics Mannheim";
+const siteTitle = "STADS – Data Science Student Association in Mannheim";
 const siteDescription =
-  "STADS is the only student-run Data Science organization at the University of Mannheim - workshops, the STADS Datathon, guest lectures, and a community of 250+ members.";
+  "STADS is the student-run Data Science association at the University of Mannheim: workshops, the STADS Datathon, guest lectures and 250+ members. Join us!";
 
 const libreFranklin = Libre_Franklin({
   subsets: ["latin"],

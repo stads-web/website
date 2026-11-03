@@ -8,6 +8,7 @@ export interface HeroData {
   headerImageAlt: string;
   taglineAccent: string;
   taglineBold: string;
+  eyebrow: string;
   primaryCta: CtaLink;
   secondaryCta: CtaLink;
 }
@@ -357,6 +358,7 @@ export interface SiteData {
     pages: CtaLink[];
     extras: CtaLink[];
     social: SocialLink[];
+    note: string;
     copyright: string;
   };
   contact: {

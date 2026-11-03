@@ -7,9 +7,9 @@ import Timeline from "@/components/events/Timeline";
 import FinalCta from "@/components/FinalCta";
 import type { EventsData } from "@/lib/types";
 
-const title = "Events – STADS";
+const title = "Data Science Events & Workshops in Mannheim – STADS";
 const description =
-  "See what's on the STADS calendar: weekly Monday Sessions, workshops, guest lectures, the Datathon, the Data Bootcamp, and the Python course.";
+  "Data Science workshops, guest lectures, the Datathon and weekly Monday Sessions in Mannheim. See what STADS has planned this semester and follow along.";
 
 export const metadata: Metadata = {
   title,

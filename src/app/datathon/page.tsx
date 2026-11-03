@@ -20,9 +20,9 @@ import type {
   PartnersData,
 } from "@/lib/types";
 
-const title = "Datathon – STADS";
+const title = "STADS Datathon Mannheim – 48h Data Science Challenge";
 const description =
-  "The STADS Datathon: 48 hours, real company datasets, and teams of students building data-driven solutions for an expert jury.";
+  "The STADS Datathon in Mannheim: 48 hours, real company datasets and student teams building data solutions for an expert jury. Follow us for the next date.";
 
 export const metadata: Metadata = {
   title,

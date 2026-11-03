@@ -7,9 +7,9 @@ import Steps from "@/components/join-us/Steps";
 import ContactCta from "@/components/ContactCta";
 import type { JoinHeroData, JoinStepsData, FinalCtaData } from "@/lib/types";
 
-const title = "Join Us – STADS";
+const title = "Join STADS – Data Science Community at Uni Mannheim";
 const description =
-  "Ready to join STADS? Three simple steps: join the WhatsApp group, drop by a Monday Session, and become an active member of the team.";
+  "Join STADS in three steps: join our WhatsApp group, drop by a Monday Session and become an active member of the Data Science community at Uni Mannheim.";
 
 export const metadata: Metadata = {
   title,

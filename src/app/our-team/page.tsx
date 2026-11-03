@@ -7,7 +7,7 @@ import TeamHero from "@/components/our-team/TeamHero";
 import ContactCta from "@/components/ContactCta";
 import type { LeadershipData, DepartmentsData, FinalCtaData } from "@/lib/types";
 
-const title = "Our Team – STADS";
+const title = "Our Team: Board & Departments – STADS Mannheim";
 const description =
   "Meet the STADS board and the seven student-run departments behind IT, Cooperation, Marketing, Education, Finance, Teambuilding, and the Datathon.";
 

@@ -3,9 +3,9 @@ import { ogBase, twitterBase } from "@/lib/site";
 import { readContent } from "@/lib/content";
 import LegalPage from "@/components/LegalPage";
 
-const title = "Impressum – STADS";
+const title = "Impressum – STADS Mannheim e.V.";
 const description =
-  "Legal notice (Impressum) for STADS - Students' Association for Data Analytics & Statistics Mannheim e.V., including contact and registration details.";
+  "Impressum der STADS – Students' Association for Data Analytics & Statistics Mannheim e.V.: Anschrift, Vorstand, Registereintrag und Kontakt.";
 
 export const metadata: Metadata = {
   title,

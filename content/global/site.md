@@ -42,6 +42,7 @@ footer:
     - label: LinkedIn
       href: "https://www.linkedin.com/company/stadsmannheim/"
       icon: linkedin-logo
+  note: "STADS ist die studentische Initiative für Data Science an der Universität Mannheim."
   copyright: "© 2026 STADS – Students' Association for Data Analytics & Statistics Mannheim e.V."
 contact:
   email: info@stads.de

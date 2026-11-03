@@ -3,9 +3,9 @@ import { ogBase, twitterBase } from "@/lib/site";
 import { readContent } from "@/lib/content";
 import LegalPage from "@/components/LegalPage";
 
-const title = "Datenschutzerklärung – STADS";
+const title = "Datenschutzerklärung – STADS Mannheim e.V.";
 const description =
-  "Privacy policy of STADS - Students' Association for Data Analytics & Statistics Mannheim e.V. - how this website handles your personal data.";
+  "Datenschutzerklärung der STADS Mannheim e.V.: wie diese Website personenbezogene Daten verarbeitet (Hosting, Analytics, Kontaktformular) und Ihre Rechte.";
 
 export const metadata: Metadata = {
   title,

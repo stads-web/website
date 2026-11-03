@@ -15,7 +15,7 @@ import type {
   FinalCtaData,
 } from "@/lib/types";
 
-const title = "For Students – STADS";
+const title = "Data Science for Students in Mannheim – STADS";
 const description =
   "Discover how STADS helps University of Mannheim students learn Data Science through workshops, Monday Sessions, real projects, and membership tiers.";
 

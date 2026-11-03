@@ -34,9 +34,15 @@ export default function Footer({ site }: { site: SiteData }) {
                   {hero.taglineBold}
                 </span>
               </p>
+              <p
+                lang="de"
+                className="mt-4 text-[13px] leading-snug text-brand-800/60"
+              >
+                {site.footer.note}
+              </p>
               <a
                 href={`mailto:${site.contact.email}`}
-                className="mt-6 inline-block text-[13px] text-brand-800/70 underline-offset-4 transition-colors hover:text-brand-900 hover:underline"
+                className="mt-4 inline-block text-[13px] text-brand-800/70 underline-offset-4 transition-colors hover:text-brand-900 hover:underline"
               >
                 {site.contact.email}
               </a>

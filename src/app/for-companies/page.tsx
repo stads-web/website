@@ -17,7 +17,7 @@ import type {
   PartnersData,
 } from "@/lib/types";
 
-const title = "For Companies – STADS";
+const title = "Recruit Data Science Talent in Mannheim – STADS";
 const description =
   "Partner with STADS, the University of Mannheim's student Data Science association, through guest lectures, workshops, the Datathon, or sponsorship.";
 

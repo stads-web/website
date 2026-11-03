@@ -5,7 +5,7 @@ subtitle: "Hear real success stories from our members:"
 items:
   - name: "Simon Schumacher"
     image: ""
-    linkedin: ""
+    linkedin: "https://www.linkedin.com/in/simon-schumacher-34a905253/"
     role:
       de: "Vorstand 2023/24 · M.Sc. Wirtschaftsinformatik · Werkstudent bei PwC"
       en: "Board 2023/24 · M.Sc. Information Systems · Working student at PwC"
@@ -16,7 +16,7 @@ items:
         - "My involvement with STADS has had a lasting impact on my studies. As a board member, I was able to take on responsibility and develop considerably, both personally and in terms of my soft skills. I also discovered my passion for Data Science, a field in which I went on to gain a lot more experience."
   - name: "Sina Leandra Kratzenstein"
     image: ""
-    linkedin: ""
+    linkedin: "https://www.linkedin.com/in/sina-leandra-kratzenstein-ba9a36283/"
     role:
       de: "Vorstand 2024/25 · B.Sc. Betriebswirtschaftslehre"
       en: "Board 2024/25 · B.Sc. Business Administration"
@@ -27,7 +27,7 @@ items:
         - "As a business student, I joined STADS to broaden my knowledge with new insights into Data Science. The workshops and the exchange with other students in particular opened up new perspectives for me. That's why I can recommend STADS to anyone who is keen to learn new things, keep developing and become part of an engaged community."
   - name: "Greta Riehl"
     image: ""
-    linkedin: ""
+    linkedin: "https://www.linkedin.com/in/greta-riehl/"
     role:
       de: "Head of Finance 2024/25 · M.Sc. Wirtschaftsmathematik · Werkstudentin KI und Data Science, weisenburger-Gruppe"
       en: "Head of Finance 2024/25 · M.Sc. Business Mathematics · Working student in AI and Data Science, weisenburger group"

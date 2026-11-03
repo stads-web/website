@@ -12,13 +12,19 @@ import {
   useMotionValueEvent,
   useReducedMotion,
 } from "framer-motion";
-import { useEffect, useRef, useState, type KeyboardEvent } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type KeyboardEvent,
+  type MouseEvent,
+  type ReactNode,
+} from "react";
 import Image from "next/image";
-import LinkedInLink from "./LinkedInLink";
+import LinkedInLink, { pillBase, pillSkin } from "./LinkedInLink";
 import Magnetic from "./motion/Magnetic";
 import Reveal from "./motion/Reveal";
 import SplitText from "./motion/SplitText";
-import Spotlight from "./motion/Spotlight";
 import type { QuoteLang, Testimonial, TestimonialsData } from "@/lib/types";
 
 const QUOTE_MARKS: Record<QuoteLang, [string, string]> = {
@@ -29,59 +35,135 @@ const QUOTE_MARKS: Record<QuoteLang, [string, string]> = {
 function TestimonialCard({
   item,
   lang,
+  onToggleLang,
+  fallbackLinkedin,
+  copy,
 }: {
   item: Testimonial;
   lang: QuoteLang;
+  onToggleLang: () => void;
+  fallbackLinkedin?: string;
+  /** Loop copy or inactive card: keep its controls out of the tab order (focus would scroll the clipped track). */
+  copy?: boolean;
 }) {
-  const [open, close] = QUOTE_MARKS[lang];
-  const paragraphs = item.quote[lang];
+  const focus = copy ? -1 : 0;
+  const other: QuoteLang = lang === "de" ? "en" : "de";
+  // Both languages sit in the same grid cell; the hidden one still takes space, so the card is as tall as the
+  // longer version and switching never changes its height. Switching crossfades (opacity + 4px rise, site easing);
+  // `visibility` flips at the end of the fade-out, so the hidden copy is out of the a11y tree and unclickable.
+  const quoteRef = useRef<HTMLQuoteElement>(null);
+  const stacked = (render: (l: QuoteLang) => ReactNode) => (
+    <div className="grid">
+      {(["de", "en"] as const).map((l) => (
+        <div
+          key={l}
+          lang={l}
+          className={`transition-[opacity,transform,visibility] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] [grid-area:1/1] motion-reduce:transition-none ${
+            l === lang ? "opacity-100" : "invisible translate-y-1 opacity-0"
+          }`}
+        >
+          {render(l)}
+        </div>
+      ))}
+    </div>
+  );
   return (
-    <figure className="relative flex w-[85vw] max-w-[340px] shrink-0 flex-col pt-36 text-left transition-transform duration-300 hover:-translate-y-1.5 sm:w-[440px] sm:max-w-none sm:pt-44 lg:w-[520px]">
-      {/* Portrait stands on the card's top edge and rises out of it (room is the figure's top padding). */}
+    <figure className="relative flex h-full w-[85vw] max-w-[340px] shrink-0 flex-col pt-32 text-left transition-transform duration-300 hover:-translate-y-1.5 sm:w-[440px] sm:max-w-none sm:pt-52 lg:w-[480px] lg:pt-56">
+      {/* Portrait stands on the card's top edge and rises out of it (room is the figure's top padding, same h-* steps).
+          Photo format: 5:6 portrait (e.g. 600x720), cut-out person on a transparent background, cropped flat at the
+          bottom edge; same frame as placeholder.webp (600x720), so real photos drop in 1:1. Shown in greyscale. */}
       <Image
-        src={item.image || "/images/testimonials/placeholder.svg"}
+        src={item.image || "/images/testimonials/placeholder.webp"}
         alt=""
         width={300}
         height={360}
-        className="pointer-events-none absolute left-1/2 top-0 z-10 h-36 w-auto -translate-x-1/2 object-contain object-bottom grayscale sm:h-44"
+        className="pointer-events-none absolute left-1/2 top-0 z-10 h-32 w-auto -translate-x-1/2 object-contain object-bottom grayscale sm:h-52 lg:h-56"
       />
-      {/* Card: 1px gradient border (white-ish at top, accent blue at the bottom). */}
-      <div className="rounded-[28px] bg-gradient-to-b from-white/15 via-brand-800 to-brand-400 p-px shadow-[0px_20px_40px_rgba(15,29,54,0.25)]">
-        <div className="group relative flex flex-col overflow-hidden rounded-[27px] bg-brand-950 p-6 sm:p-8">
-          <Spotlight />
-          <p className="text-lg font-semibold text-white">{item.name}</p>
-          <p lang={lang} className="mt-0.5 text-sm text-brand-200">
-            {item.role[lang]}
-          </p>
-          {/* Long quotes: slightly smaller type, paragraphs kept; a multi-part quote leads with its headline. */}
+      {/* Card (as in the reference, but white): 1px border that runs out into brand blue at the bottom right,
+          plus a soft blue glow in that corner. */}
+      <div className="flex flex-1 flex-col rounded-xl bg-[radial-gradient(75%_60%_at_100%_100%,#203765,#5A6E97_35%,transparent_75%),linear-gradient(#E7ECF4,#E7ECF4)] p-px shadow-[0_20px_40px_rgba(15,29,54,0.08),10px_14px_32px_-14px_rgba(32,55,101,0.45)]">
+        <div className="relative flex flex-1 flex-col overflow-hidden rounded-[11px] bg-white bg-[radial-gradient(70%_45%_at_100%_100%,rgba(90,110,151,0.22),transparent_70%)] px-6 pb-5 pt-6 sm:px-8 sm:pb-6 sm:pt-7">
+          <p className="text-xl font-bold text-brand-950">{item.name}</p>
+          <div className="mt-0.5 text-base text-brand-900">
+            {stacked((l) => item.role[l])}
+          </div>
+          {/* Paragraphs kept; a multi-part quote leads with its headline. All cards share one height: the
+              quote area is capped (13rem on phones, 17.5rem above, so portrait, card and arrows fit one
+              screen), and longer quotes scroll inside it (vertical only, so horizontal swipes still move the
+              carousel; the pb-6 padding sits under the fade). Sizing every card to the longest
+              quote instead left big empty cards and pushed them past the screen height on phones and laptops. */}
           <blockquote
-            lang={lang}
-            className="mt-4 space-y-3 text-pretty text-[15px] leading-relaxed text-brand-300 sm:text-base"
+            ref={quoteRef}
+            tabIndex={focus}
+            className="mt-3 max-h-[13rem] overflow-y-auto sm:max-h-[17.5rem] [scrollbar-color:#CBD6E7_transparent] [scrollbar-width:thin] text-pretty pb-6 text-[15px] leading-relaxed sm:text-base text-brand-900/75 [mask-image:linear-gradient(to_bottom,#000_calc(100%-1.5rem),transparent)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-500"
           >
-            {paragraphs.map((text, i) => (
-              <p
-                key={i}
-                className={
-                  i === 0 && paragraphs.length > 1
-                    ? "font-semibold text-white"
-                    : undefined
-                }
-              >
-                {open}
-                {text}
-                {close}
-              </p>
-            ))}
+            {stacked((l) => {
+              const [open, close] = QUOTE_MARKS[l];
+              const paragraphs = item.quote[l];
+              return (
+                <div className="space-y-3">
+                  {paragraphs.map((text, i) => (
+                    <p
+                      key={i}
+                      className={
+                        i === 0 && paragraphs.length > 1
+                          ? "font-semibold text-brand-900"
+                          : undefined
+                      }
+                    >
+                      {open}
+                      {text}
+                      {close}
+                    </p>
+                  ))}
+                </div>
+              );
+            })}
           </blockquote>
-          {item.linkedin && (
-            <LinkedInLink
-              href={item.linkedin}
-              name={item.name}
-              tone="glass"
-              expand={false}
-              className="mt-6 self-center"
-            />
-          )}
+          {/* Footer at the bottom of the (uniformly tall) card: LinkedIn flush left, language toggle right, one line. */}
+          <div
+            className="mt-auto flex items-center justify-between gap-3 pt-5"
+            // Taps here must not start a carousel drag.
+            onPointerDownCapture={(e) => e.stopPropagation()}
+          >
+            {/* Personal profile once set; until then the STADS company page (labelled as STADS, not the person). */}
+            {item.linkedin || fallbackLinkedin ? (
+              <LinkedInLink
+                href={item.linkedin || fallbackLinkedin!}
+                name={item.linkedin ? item.name : "STADS"}
+                tone="ink"
+                touchOpen
+                tabIndex={copy ? -1 : undefined}
+              />
+            ) : (
+              <span />
+            )}
+            {/* Same pill and colour fill as the LinkedIn button (shared classes from LinkedInLink). */}
+            <button
+              type="button"
+              tabIndex={copy ? -1 : undefined}
+              onClick={() => {
+                // The new language starts at its first line.
+                const smooth = !window.matchMedia(
+                  "(prefers-reduced-motion: reduce)",
+                ).matches;
+                quoteRef.current?.scrollTo({
+                  top: 0,
+                  behavior: smooth ? "smooth" : "auto",
+                });
+                onToggleLang();
+              }}
+              aria-label={
+                lang === "de"
+                  ? `Zitat von ${item.name} auf Englisch anzeigen`
+                  : `Show ${item.name}'s quote in German`
+              }
+              className={`${pillBase} gap-1.5 px-3.5 text-[13px] font-medium ${pillSkin.ink}`}
+            >
+              <Translate size={14} aria-hidden="true" />
+              <span lang={other}>{other.toUpperCase()}</span>
+            </button>
+          </div>
         </div>
       </div>
     </figure>
@@ -104,7 +186,13 @@ const cardReveal = {
 
 const mod = (n: number, m: number) => ((n % m) + m) % m;
 
-export default function Testimonials({ data }: { data: TestimonialsData }) {
+export default function Testimonials({
+  data,
+  fallbackLinkedin,
+}: {
+  data: TestimonialsData;
+  fallbackLinkedin?: string;
+}) {
   const containerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const count = data.items.length;
@@ -116,10 +204,14 @@ export default function Testimonials({ data }: { data: TestimonialsData }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const prefersReducedMotion = useReducedMotion();
   const x = useMotionValue(0);
-  const [lang, setLang] = useState<QuoteLang>("de");
-  // Viewport height follows the active card instead of the tallest one.
-  const height = useMotionValue(0);
-  const [sized, setSized] = useState(false);
+  // Language per person (not per rendered copy), so a card keeps its language when the loop wraps.
+  const [langs, setLangs] = useState<QuoteLang[]>(() =>
+    data.items.map(() => "de"),
+  );
+  const toggleLang = (i: number) =>
+    setLangs((ls) =>
+      ls.map((l, j) => (j === i ? (l === "de" ? "en" : "de") : l)),
+    );
 
   const xFor = (p: number) => geo.current.base - p * geo.current.step;
 
@@ -147,24 +239,6 @@ export default function Testimonials({ data }: { data: TestimonialsData }) {
     return () => window.removeEventListener("resize", measure);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [count, mid]);
-
-  useEffect(() => {
-    const card = trackRef.current?.children[mid * count + activeIndex]
-      ?.firstElementChild as HTMLElement | null | undefined;
-    if (!card) return;
-    // Fires on observe, so it covers index and language changes, plus resizes and font loads.
-    const ro = new ResizeObserver(() => {
-      const h = card.offsetHeight; // layout height, unaffected by the scale/reveal transforms
-      if (!sized || prefersReducedMotion) {
-        height.set(h);
-        setSized(true);
-      } else {
-        animate(height, h, { duration: 0.45, ease: [0.22, 1, 0.36, 1] });
-      }
-    });
-    ro.observe(card);
-    return () => ro.disconnect();
-  }, [activeIndex, lang, count, mid, sized, prefersReducedMotion, height]);
 
   // Dots follow the live position, so they track drag, click and arrows alike.
   useMotionValueEvent(x, "change", (latest) => {
@@ -204,6 +278,22 @@ export default function Testimonials({ data }: { data: TestimonialsData }) {
     move(d > count / 2 ? d - count : d);
   };
 
+  // A drag must not also count as a click on a card (or on a link/button inside it).
+  const dragged = useRef(false);
+  // Clicking a side card moves to it, like the arrows; a real click there never reaches its buttons.
+  // Keyboard clicks (detail 0) pass through, so Tab + Enter still works as before.
+  const onCardClick = (e: MouseEvent, p: number) => {
+    if (dragged.current && e.detail !== 0) {
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
+    if (p === pos.current || e.detail === 0) return;
+    e.preventDefault();
+    e.stopPropagation();
+    move(p - pos.current);
+  };
+
   const onDragEnd = (_: unknown, info: { offset: { x: number } }) => {
     const { step } = geo.current;
     let delta = step > 0 ? Math.round(-info.offset.x / step) : 0;
@@ -226,7 +316,7 @@ export default function Testimonials({ data }: { data: TestimonialsData }) {
   const ring =
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2";
   const arrowCls = `flex h-10 w-10 items-center justify-center rounded-full border border-brand-300 text-brand-900 transition-colors hover:bg-brand-50 ${ring}`;
-  // Side fades plus a soft bottom edge where taller neighbouring cards are clipped.
+  // Side fades plus a soft bottom edge.
   const edgeMask =
     "linear-gradient(to right, transparent, #000 40px, #000 calc(100% - 40px), transparent), linear-gradient(to bottom, #000 calc(100% - 24px), transparent)";
   const loop = count > 1;
@@ -242,36 +332,6 @@ export default function Testimonials({ data }: { data: TestimonialsData }) {
       </h2>
 
       <Reveal delay={0.2} className="mt-12">
-        <div
-          role="group"
-          aria-label="Sprache der Zitate / Quote language"
-          className="relative z-10 mb-6 flex justify-center"
-        >
-          <div className="inline-flex items-center gap-1 rounded-full border border-brand-200 bg-white p-1">
-            <Translate
-              size={16}
-              className="ml-2 mr-1 text-brand-900/50"
-              aria-hidden="true"
-            />
-            {(["de", "en"] as const).map((l) => (
-              <button
-                key={l}
-                type="button"
-                lang={l}
-                aria-label={l === "de" ? "Deutsch" : "English"}
-                aria-pressed={lang === l}
-                onClick={() => setLang(l)}
-                className={`rounded-full px-3 py-1 text-sm font-semibold transition-colors ${ring} ${
-                  lang === l
-                    ? "bg-brand-800 text-white"
-                    : "text-brand-900 hover:bg-brand-50"
-                }`}
-              >
-                {l.toUpperCase()}
-              </button>
-            ))}
-          </div>
-        </div>
         {/* pt/-mt gives the hover lift room; pb keeps the shadow uncut and the controls clear of it. */}
         <div
           ref={containerRef}
@@ -281,24 +341,29 @@ export default function Testimonials({ data }: { data: TestimonialsData }) {
             maskComposite: "intersect",
             WebkitMaskComposite: "source-in",
           }}
-          className="-mx-4 -mt-6 overflow-hidden px-4 pb-16 pt-6 sm:-mx-6 sm:px-6"
+          onScroll={(e) => {
+            if (e.currentTarget.scrollLeft) e.currentTarget.scrollLeft = 0;
+          }}
+          className="-mx-4 -mt-6 overflow-hidden px-4 pb-10 pt-6 sm:-mx-6 sm:px-6"
         >
-          <motion.div style={sized ? { height } : undefined}>
-            <motion.div
+          <motion.div
               ref={trackRef}
               drag={loop ? "x" : false}
               dragMomentum={false}
+              onDragStart={() => (dragged.current = true)}
+              onPointerDownCapture={() => (dragged.current = false)}
               onDragEnd={onDragEnd}
               // One trigger for all copies: per-card whileInView would replay on far copies after a wrap.
               initial="hidden"
               whileInView="show"
               viewport={{ once: true, margin: "-80px" }}
               style={{ touchAction: "pan-y", x }}
-              className={`flex w-fit items-start gap-4 sm:gap-6 ${loop ? "cursor-grab active:cursor-grabbing" : ""}`}
+              className={`flex w-fit items-stretch gap-4 sm:gap-6 ${loop ? "cursor-grab active:cursor-grabbing" : ""}`}
             >
               {Array.from({ length: sets }, (_, s) =>
                 data.items.map((item, i) => {
                   const copy = s !== mid;
+                  const active = i === activeIndex;
                   return (
                     <motion.div
                       key={`${s}-${item.name}`}
@@ -309,17 +374,25 @@ export default function Testimonials({ data }: { data: TestimonialsData }) {
                       <div
                         aria-hidden={copy || undefined}
                         tabIndex={copy ? -1 : undefined}
-                        className={`transition-[transform,opacity] duration-500 ${
-                          i === activeIndex ? "" : "scale-95 opacity-60"
+                        onClickCapture={(e) => onCardClick(e, s * count + i)}
+                        className={`h-full transition-[transform,opacity] duration-500 ${
+                          active
+                            ? ""
+                            : "cursor-pointer scale-95 opacity-60 [@media(hover:hover)]:hover:opacity-80 [&_a]:pointer-events-none [&_button]:pointer-events-none"
                         }`}
                       >
-                        <TestimonialCard item={item} lang={lang} />
+                        <TestimonialCard
+                          item={item}
+                          lang={langs[i]}
+                          onToggleLang={() => toggleLang(i)}
+                          fallbackLinkedin={fallbackLinkedin}
+                          copy={copy || !active}
+                        />
                       </div>
                     </motion.div>
                   );
                 }),
               )}
-            </motion.div>
           </motion.div>
         </div>
 

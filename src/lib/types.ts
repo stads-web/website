@@ -73,7 +73,7 @@ export type QuoteLang = "de" | "en";
 
 export interface Testimonial {
   name: string;
-  /** Portrait path under /public; falls back to a placeholder silhouette. */
+  /** Portrait path under /public (5:6, e.g. 600x720, cut-out on transparent background); falls back to /images/testimonials/placeholder.webp. */
   image?: string;
   /** LinkedIn profile URL; the icon only shows when set. */
   linkedin?: string;

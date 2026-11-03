@@ -14,6 +14,7 @@ import type {
   WhyJoinData,
   TestimonialsData,
   FinalCtaData,
+  SiteData,
 } from "@/lib/types";
 
 export default function Home() {
@@ -24,6 +25,11 @@ export default function Home() {
   const whyJoin = readContent<WhyJoinData>("home/why-join.md");
   const testimonials = readContent<TestimonialsData>("home/testimonials.md");
   const finalCta = readContent<FinalCtaData>("home/final-cta.md");
+  const site = readContent<SiteData>("global/site.md");
+  // Fallback for testimonial cards without a personal LinkedIn URL.
+  const stadsLinkedin = site.data.footer.social.find(
+    (s) => s.icon === "linkedin-logo",
+  )?.href;
 
   return (
     <main>
@@ -32,7 +38,10 @@ export default function Home() {
       <Partners data={partners.data} />
       <Program data={program.data} />
       <WhyJoin data={whyJoin.data} />
-      <Testimonials data={testimonials.data} />
+      <Testimonials
+        data={testimonials.data}
+        fallbackLinkedin={stadsLinkedin}
+      />
       <FinalCta data={finalCta.data} />
     </main>
   );

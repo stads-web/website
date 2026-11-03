@@ -21,7 +21,8 @@ export default function Offerings({ data }: { data: OfferingsData }) {
                 src={item.image}
                 alt={item.imageAlt}
                 fill
-                sizes="(min-width: 768px) 480px, 90vw"
+                quality={90}
+                sizes="(min-width: 1200px) 544px, (min-width: 768px) 50vw, 100vw"
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
               />
             </div>

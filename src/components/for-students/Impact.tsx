@@ -42,7 +42,8 @@ export default function Impact({ data, body }: { data: IntroData; body: string }
               src={data.image}
               alt={data.imageAlt}
               fill
-              sizes="(min-width: 768px) 500px, 90vw"
+              quality={90}
+              sizes="(min-width: 1200px) 500px, (min-width: 768px) 45vw, 100vw"
               className="object-cover object-[50%_80%] transition-transform duration-700 hover:scale-105"
             />
           </div>

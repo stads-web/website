@@ -272,10 +272,10 @@ function BadgeCard({
           </div>
           {/* From sm: fixed width = opened LinkedIn pill + language button, so opening the pill on hover never moves or
               rewraps name/role (they wrap for this width from the start); the pill grows leftwards inside. On touch
-              the LinkedIn button stays the round icon (no hover there). */}
-          <div className="flex shrink-0 items-center gap-2 sm:w-[13rem] sm:justify-end">
+              the LinkedIn button stays the round icon (fineOnly: expands only with a real mouse), so the width is only reserved there. */}
+          <div className="flex shrink-0 items-center gap-2 sm:justify-end sm:[@media(hover:hover)_and_(pointer:fine)]:w-[13rem]">
             {href && (
-              <LinkedInLink href={href} name={item.linkedin ? item.name : "STADS"} tone="ink" />
+              <LinkedInLink href={href} name={item.linkedin ? item.name : "STADS"} tone="ink" fineOnly />
             )}
             <button
               type="button"

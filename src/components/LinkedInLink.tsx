@@ -9,6 +9,11 @@ export const pillSkin = {
   ink: "border-brand-200 bg-white text-brand-800 [@media(hover:hover)]:hover:border-brand-800 active:border-brand-800 [@media(hover:hover)]:hover:bg-brand-800 active:bg-brand-800 [@media(hover:hover)]:hover:text-white active:text-white focus-visible:border-brand-800 focus-visible:bg-brand-800 focus-visible:text-white",
 };
 
+const OPEN_ANY =
+  "group-hover/li:ml-2.5 group-hover/li:mr-1 group-hover/li:max-w-[5rem] group-hover/li:opacity-100 group-focus-visible/li:ml-2.5 group-focus-visible/li:mr-1 group-focus-visible/li:max-w-[5rem] group-focus-visible/li:opacity-100";
+const OPEN_FINE =
+  "[@media(hover:hover)_and_(pointer:fine)]:group-hover/li:ml-2.5 [@media(hover:hover)_and_(pointer:fine)]:group-hover/li:mr-1 [@media(hover:hover)_and_(pointer:fine)]:group-hover/li:max-w-[5rem] [@media(hover:hover)_and_(pointer:fine)]:group-hover/li:opacity-100 [@media(hover:hover)_and_(pointer:fine)]:group-focus-visible/li:ml-2.5 [@media(hover:hover)_and_(pointer:fine)]:group-focus-visible/li:mr-1 [@media(hover:hover)_and_(pointer:fine)]:group-focus-visible/li:max-w-[5rem] [@media(hover:hover)_and_(pointer:fine)]:group-focus-visible/li:opacity-100";
+
 /**
  * Round LinkedIn button. With a pointer it opens into a pill and says what it
  * is (`expand`); on touch (and for keyboard focus) it is simply the icon with a
@@ -23,6 +28,7 @@ export default function LinkedInLink({
   tone = "ink",
   expand = true,
   touchOpen = false,
+  fineOnly = false,
   className = "",
   tabIndex,
 }: {
@@ -32,6 +38,8 @@ export default function LinkedInLink({
   expand?: boolean;
   /** Show the label open on touch devices (no hover there). */
   touchOpen?: boolean;
+  /** Expand only with a real mouse (hover + fine pointer); touch, tap focus and wide tablets stay a plain circle. */
+  fineOnly?: boolean;
   className?: string;
   tabIndex?: number;
 }) {
@@ -50,7 +58,7 @@ export default function LinkedInLink({
       {expand && (
       <span
         aria-hidden
-        className={`${touchOpen ? "[@media(hover:none)]:ml-2.5 [@media(hover:none)]:mr-1 [@media(hover:none)]:max-w-[5rem] [@media(hover:none)]:opacity-100 " : ""}max-w-0 overflow-hidden whitespace-nowrap text-[13px] font-medium opacity-0 transition-[max-width,opacity,margin] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/li:ml-2.5 group-hover/li:mr-1 group-hover/li:max-w-[5rem] group-hover/li:opacity-100 group-focus-visible/li:ml-2.5 group-focus-visible/li:mr-1 group-focus-visible/li:max-w-[5rem] group-focus-visible/li:opacity-100 motion-reduce:transition-none`}
+        className={`${touchOpen ? "[@media(hover:none)]:ml-2.5 [@media(hover:none)]:mr-1 [@media(hover:none)]:max-w-[5rem] [@media(hover:none)]:opacity-100 " : ""}max-w-0 overflow-hidden whitespace-nowrap text-[13px] font-medium opacity-0 transition-[max-width,opacity,margin] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${fineOnly ? OPEN_FINE : OPEN_ANY} motion-reduce:transition-none`}
       >
         LinkedIn
       </span>

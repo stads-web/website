@@ -3,8 +3,8 @@
 import { CaretLeft, CaretRight, Quotes, Translate } from "@phosphor-icons/react/dist/ssr";
 import {
   animate,
+  frame as fmFrame,
   motion,
-  useDragControls,
   useInView,
   useMotionValue,
   useReducedMotion,
@@ -13,6 +13,7 @@ import {
 } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
+import { flushSync } from "react-dom";
 import LinkedInLink, { pillBase, pillSkin } from "./LinkedInLink";
 import Reveal from "./motion/Reveal";
 import SplitText from "./motion/SplitText";
@@ -51,7 +52,7 @@ const face =
  *   800    in its plate slot; old strap gone from ~330 ms
  *   800-1100  strap drops into the clip of the new front card and swings with a short overshoot
  * Backward is the mirror image (leaving card swings out to the right, turning the other way, and tucks into the
- * first plate slot while the previous card comes forward from the back). Dots switch at ~600 ms, before the strap.
+ * first plate slot while the previous card comes forward from the back). Dots switch immediately.
  * Every card is always rendered; its slot is its distance from the active card. Plates fan out right (slot 1) and
  * left (slot 2), so there is a card edge to click on both sides.
  */
@@ -71,10 +72,12 @@ const OUT_Y = [0, 1, 3, 4, 4, 3, 2, 1, 0];
 const OUT_SCALE = [1, 1, 1, 0.99, 0.99, 0.98, 0.98, 0.97, 0.97];
 // Next card: in front by ~270 ms with a soft settle.
 const deckSpring = { type: "spring", stiffness: 210, damping: 26, mass: 1 } as const;
-const DOTS_DELAY = 600;
 const SWAP_AT = 233;
 const STRAP_DELAY = 0.8;
 const STRAP_OUT_DELAY = 0.33;
+
+// Keyframes whose first value may be null (= start from the current value).
+const kf = <T,>(first: T | null | undefined, rest: T[]) => [first ?? null, ...rest] as [null, ...T[]];
 
 const deckVariants = {
   slot: ({ p }: { p: number }) => ({
@@ -83,13 +86,23 @@ const deckVariants = {
     transition: { ...deckSpring, delay: p === 0 ? 0.06 : 0.03 * p },
   }),
   // The old front card: swings out (left going forward, right going back), then tucks into its new plate slot.
-  out: ({ p, d }: { p: number; d: number }) => {
+  // After a swipe it continues from where the finger let go (`from`, x in % of the card width): that offset fades
+  // out along the swing and is gone at its peak. Without a swipe it starts from wherever the card is right now
+  // (null), so a click during a running move takes over smoothly instead of jumping.
+  out: ({ p, d, from }: { p: number; d: number; from?: Offset }) => {
     const end = slot(p);
+    const fade = (k: number) => (k >= 4 ? 0 : 1 - OUT_X[k] / OUT_X[4]);
     return {
-      x: [...OUT_X.map((v) => pct(v * d)), pct(end.x)],
-      rotate: [...OUT_ROT.map((v) => v * d), end.rotate],
-      y: [...OUT_Y, end.y],
-      scale: [...OUT_SCALE, end.scale],
+      x: kf(from && pct(from.x), [
+        ...OUT_X.slice(1).map((v, k) => pct(v * d + (from ? from.x * fade(k + 1) : 0))),
+        pct(end.x),
+      ]),
+      rotate: kf(from && from.rot, [
+        ...OUT_ROT.slice(1).map((v, k) => v * d + (from ? from.rot * fade(k + 1) : 0)),
+        end.rotate,
+      ]),
+      y: kf(null, [...OUT_Y.slice(1), end.y]),
+      scale: kf(null, [...OUT_SCALE.slice(1), end.scale]),
       transition: { duration: DURATION, times: TIMES, ease: "easeInOut" },
     };
   },
@@ -228,34 +241,41 @@ function BadgeCard({
 }
 
 
-/** Finger-following swipe layer (touch/pen only; the mouse never drags). Tilts a little with the offset. */
+type Offset = { x: number; rot: number };
+
+/** Finger-following swipe layer (touch/pen only; the mouse never drags). Tilts a little with the offset, the same
+ *  way the card tilts when it swings out, so the hand-over to the deck move is seamless. */
 function Swipe({
   enabled,
   onSwipe,
   children,
 }: {
   enabled: boolean;
-  onSwipe: (d: number) => void;
+  onSwipe: (d: number, from: Offset) => void;
   children: ReactNode;
 }) {
   const x = useMotionValue(0);
-  const rotate = useTransform(x, [-300, 0, 300], [-6, 0, 6]);
-  const controls = useDragControls();
-  const onDragEnd = (_: unknown, info: PanInfo) => {
+  const rotate = useTransform(x, [-300, 0, 300], [4, 0, -4]);
+  const ref = useRef<HTMLDivElement>(null);
+  const onDragEnd = (e: PointerEvent, info: PanInfo) => {
+    if (e.pointerType === "mouse") return;
     const d = info.offset.x + info.velocity.x * 0.2;
-    animate(x, 0, { type: "spring", stiffness: 300, damping: 30 });
-    if (Math.abs(d) > 80) onSwipe(d < 0 ? 1 : -1);
+    if (Math.abs(d) <= 80) {
+      // Too short: spring back, no change.
+      animate(x, 0, { type: "spring", stiffness: 300, damping: 30 });
+      return;
+    }
+    // Hand the finger offset over to the card's own swing-out: commit the move synchronously, then zero this layer,
+    // on the next frame (when the swing-out keyframes start), so the card neither snaps back nor moves twice.
+    const from = { x: (x.get() / (ref.current?.offsetWidth || 1)) * 100, rot: rotate.get() };
+    flushSync(() => onSwipe(d < 0 ? 1 : -1, from));
+    fmFrame.update(() => x.jump(0));
   };
   return (
     <motion.div
-      drag={enabled ? "x" : false}
-      dragControls={controls}
-      dragListener={false}
-      dragMomentum={false}
-      onPointerDown={(e) => {
-        if (enabled && e.pointerType !== "mouse") controls.start(e);
-      }}
-      onDragEnd={onDragEnd}
+      ref={ref}
+      onPan={enabled ? (e, info) => { if (e.pointerType !== "mouse") x.set(info.offset.x); } : undefined}
+      onPanEnd={enabled ? onDragEnd : undefined}
       style={{ x, rotate, touchAction: "pan-y" }}
       className="relative h-full"
     >
@@ -273,10 +293,11 @@ export default function TestimonialsBadge({
 }) {
   const n = data.items.length;
   const reduce = !!useReducedMotion();
-  // dir 0 = nothing moved yet (every card simply sits in its slot).
-  const [[index, dir], setPage] = useState<[number, number]>([0, 0]);
-  // Dots switch once the new card has (mostly) settled.
-  const [dotIndex, setDotIndex] = useState(0);
+  // dir 0 = nothing moved yet (every card simply sits in its slot). prev = the card that was in front before this
+  // move (the one that swings out); from = where a swipe let go of it.
+  const [{ index, dir, prev, from }, setPage] = useState<{ index: number; dir: number; prev: number; from?: Offset }>(
+    { index: 0, dir: 0, prev: 0 },
+  );
   const [langs, setLangs] = useState<QuoteLang[]>(() => data.items.map(() => "de"));
   const [hover, setHover] = useState(false);
   const [focus, setFocus] = useState(false);
@@ -284,20 +305,16 @@ export default function TestimonialsBadge({
   const rootRef = useRef<HTMLDivElement>(null);
   const inView = useInView(rootRef, { amount: 0.4 });
 
-  const go = (d: number) => setPage(([i]) => [mod(i + d, n), d]);
-  // Dots jump by their own distance; only a single step forward/backward plays the full deck move.
-  const goTo = (i: number) => i !== index && setPage([i, i > index ? 1 : -1]);
+  const go = (d: number, from?: Offset) => setPage((s) => ({ index: mod(s.index + d, n), dir: d, prev: s.index, from }));
+  // Dots jump by their own distance; the old front card still swings out and tucks into its new slot.
+  const goTo = (i: number) =>
+    setPage((s) => (i === s.index ? s : { index: i, dir: i > s.index ? 1 : -1, prev: s.index }));
 
   // Layer swap of the travelling card; keyed by index so a new move starts unswapped in its first frame.
   const [swappedAt, setSwappedAt] = useState(-1);
   const swapped = swappedAt === index;
   useEffect(() => {
     const t = setTimeout(() => setSwappedAt(index), reduce ? 0 : SWAP_AT);
-    return () => clearTimeout(t);
-  }, [index, reduce]);
-
-  useEffect(() => {
-    const t = setTimeout(() => setDotIndex(index), reduce ? 0 : DOTS_DELAY);
     return () => clearTimeout(t);
   }, [index, reduce]);
 
@@ -321,140 +338,135 @@ export default function TestimonialsBadge({
 
   const item = data.items[index];
   const ring = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2";
-  // Which deck move a card plays: the special paths only for the card leaving (forward) / arriving (backward).
-  const variantFor = (p: number) => {
-    if (reduce || dir === 0) return "slot";
-    // The old front card is now at slot n-1 (forward) or slot 1 (backward).
-    if ((dir === 1 && p === n - 1) || (dir === -1 && p === 1)) return "out";
-    return "slot";
-  };
+  // Which deck move a card plays: only the old front card swings out; every other card springs to its slot.
+  const variantFor = (i: number) => (reduce || dir === 0 || i !== prev ? "slot" : "out");
 
-  // Stacking: front on top, plates below in order; the travelling card is on top (out) / at the back (in) until the swap.
-  const zFor = (p: number) => {
-    const v = variantFor(p);
-    if (v === "out") return swapped ? n - p : n + 1;
-    return n - p;
-  };
+  // Stacking: front on top, plates below in order; the swinging card stays on top until the swap.
+  const zFor = (i: number, p: number) => (variantFor(i) === "out" && !swapped ? n + 1 : n - p);
 
   return (
-    <section className="mx-auto max-w-content overflow-x-clip px-4 py-16 text-center sm:px-6 sm:py-24">
-      <p className="text-2xl font-medium text-brand-900 sm:text-3xl md:text-[50px] md:leading-[1.1]">
-        <SplitText text={data.title} />
-      </p>
-      <h2 className="mx-auto max-w-2xl text-balance text-2xl font-medium text-brand-900 sm:text-3xl md:text-[50px] md:leading-[1.1]">
-        <SplitText text={data.subtitle} delay={0.15} />
-      </h2>
+    // Clip sideways at the full viewport width, not at the content column, so the swinging card and the plates are
+    // never cut at a visible edge (and the page never scrolls sideways).
+    <section className="overflow-x-clip">
+      <div className="mx-auto max-w-content px-4 py-16 text-center sm:px-6 sm:py-24">
+        <p className="text-2xl font-medium text-brand-900 sm:text-3xl md:text-[50px] md:leading-[1.1]">
+          <SplitText text={data.title} />
+        </p>
+        <h2 className="mx-auto max-w-2xl text-balance text-2xl font-medium text-brand-900 sm:text-3xl md:text-[50px] md:leading-[1.1]">
+          <SplitText text={data.subtitle} delay={0.15} />
+        </h2>
 
-      <Reveal delay={0.2} className="mt-20 sm:mt-24">
-        <div
-          ref={rootRef}
-          role="region"
-          aria-roledescription="carousel"
-          aria-label="Testimonials"
-          onKeyDown={onKey}
-          onMouseEnter={() => setHover(true)}
-          onMouseLeave={() => setHover(false)}
-          onFocus={() => setFocus(true)}
-          onBlur={(e) => {
-            if (!e.currentTarget.contains(e.relatedTarget as Node)) setFocus(false);
-          }}
-          onTouchStart={() => setTouched(true)}
-        >
-          {/* All cards share one grid cell, so the deck is as tall as the tallest card over all people and both
-              languages (each card stacks DE and EN): every card always shows its full content, nothing jumps. */}
-          <div className="relative isolate mx-auto grid w-full max-w-[680px]">
-            {/* Pointer only: the space left/right of the deck turns back/forward, with a soft arrow on hover.
-                Touch swipes instead; keyboard uses the dots and the arrow keys. */}
-            {n > 1 &&
-              ([-1, 1] as const).map((d) => (
-                <div
-                  key={d}
-                  aria-hidden
-                  onClick={() => go(d)}
-                  className={`group/side absolute inset-y-0 hidden w-[min(14rem,calc((100vw-100%)/2))] cursor-pointer items-center [@media(hover:hover)]:flex ${
-                    d === -1 ? "right-full justify-end pr-6" : "left-full justify-start pl-6"
-                  }`}
-                >
-                  <span className="flex h-11 w-11 items-center justify-center rounded-full border border-brand-200 bg-white/80 text-brand-800 opacity-0 shadow-card transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/side:opacity-100 group-active/side:scale-95">
-                    {d === -1 ? <CaretLeft size={18} weight="bold" /> : <CaretRight size={18} weight="bold" />}
-                  </span>
-                </div>
-              ))}
-            {data.items.map((it, i) => {
-              const p = mod(i - index, n);
-              const front = p === 0;
-              return (
-                <motion.div
-                  key={it.name}
-                  custom={{ p, d: dir === -1 ? -1 : 1 }}
-                  variants={deckVariants}
-                  initial={false}
-                  animate={variantFor(p)}
-                  transition={reduce ? { duration: 0 } : undefined}
-                  style={{ zIndex: zFor(p) }}
-                  // Peeking plates: the right one turns forward, the left one back. Their content is inert, so clicks
-                  // fall through to here; the front card has no handler, so its LinkedIn/language buttons never navigate.
-                  onClick={p === 1 ? () => go(1) : p === 2 && n > 2 ? () => go(-1) : undefined}
-                  className={`relative [grid-area:1/1] ${p === 1 || (p === 2 && n > 2) ? "cursor-pointer" : ""}`}
-                >
-                  <Swipe enabled={front && n > 1} onSwipe={go}>
-                    <Clip strap={front} reduce={reduce} />
-                    {/* Reduced motion: plain crossfade of the front content instead of the deck move. */}
-                    <motion.div
-                      key={reduce && front ? `f${index}` : "card"}
-                      initial={reduce && front ? { opacity: 0 } : false}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 0.25 }}
-                      className="h-full"
-                      {...(front
-                        ? { role: "group", "aria-roledescription": "slide", "aria-label": `${i + 1} / ${n}: ${it.name}` }
-                        : { "aria-hidden": true, inert: true })}
-                    >
-                      <BadgeCard
-                        item={it}
-                        lang={langs[i]}
-                        onToggleLang={() =>
-                          setLangs((ls) => ls.map((l, j) => (j === i ? (l === "de" ? "en" : "de") : l)))
-                        }
-                        fallbackLinkedin={fallbackLinkedin}
-                        shadow={front ? SHADOW_FRONT : p < 3 ? SHADOW_PLATE : ""}
-                      />
-                    </motion.div>
-                  </Swipe>
-                </motion.div>
-              );
-            })}
-          </div>
-
-          <p className="sr-only" aria-live={autoplay ? "off" : "polite"} aria-atomic="true">
-            {`Testimonial ${index + 1} von ${n}: ${item.name}`}
-          </p>
-
-          {n > 1 && (
-            <div className="mt-6 flex items-center justify-center">
-              <div className="flex items-center">
-                {data.items.map((_, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    aria-label={`Go to testimonial ${i + 1}`}
-                    aria-current={i === index ? "true" : undefined}
-                    onClick={() => goTo(i)}
-                    // 24x24px tap target around the same small dot (dots end up slightly further apart than before).
-                    className={`group/dot flex h-6 min-w-6 items-center justify-center rounded-full ${ring}`}
+        <Reveal delay={0.2} className="mt-20 sm:mt-24">
+          <div
+            ref={rootRef}
+            role="region"
+            aria-roledescription="carousel"
+            aria-label="Testimonials"
+            onKeyDown={onKey}
+            onMouseEnter={() => setHover(true)}
+            onMouseLeave={() => setHover(false)}
+            onFocus={() => setFocus(true)}
+            onBlur={(e) => {
+              if (!e.currentTarget.contains(e.relatedTarget as Node)) setFocus(false);
+            }}
+            onTouchStart={() => setTouched(true)}
+          >
+            {/* All cards share one grid cell, so the deck is as tall as the tallest card over all people and both
+                languages (each card stacks DE and EN): every card always shows its full content, nothing jumps. */}
+            <div className="relative isolate mx-auto grid w-full max-w-[680px]">
+              {/* Pointer only: the space left/right of the deck turns back/forward, with a soft arrow on hover.
+                  Touch swipes instead; keyboard uses the dots and the arrow keys. */}
+              {n > 1 &&
+                ([-1, 1] as const).map((d) => (
+                  <div
+                    key={d}
+                    aria-hidden
+                    onClick={() => go(d)}
+                    className={`group/side absolute inset-y-0 hidden w-[min(14rem,calc((100vw-100%)/2))] cursor-pointer items-center [@media(hover:hover)]:flex ${
+                      d === -1 ? "right-full justify-end pr-6" : "left-full justify-start pl-6"
+                    }`}
                   >
-                    <span
-                      className={`block h-1.5 rounded-full transition-all duration-300 ${
-                        i === dotIndex ? "w-6 bg-brand-800" : "w-1.5 bg-brand-200 [@media(hover:hover)]:group-hover/dot:bg-brand-400"
-                      }`}
-                    />
-                  </button>
+                    <span className="flex h-11 w-11 items-center justify-center rounded-full border border-brand-200 bg-white/80 text-brand-800 opacity-0 shadow-card transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/side:opacity-100 group-active/side:scale-95">
+                      {d === -1 ? <CaretLeft size={18} weight="bold" /> : <CaretRight size={18} weight="bold" />}
+                    </span>
+                  </div>
                 ))}
-              </div>
+              {data.items.map((it, i) => {
+                const p = mod(i - index, n);
+                const front = p === 0;
+                return (
+                  <motion.div
+                    key={it.name}
+                    custom={{ p, d: dir === -1 ? -1 : 1, from }}
+                    variants={deckVariants}
+                    initial={false}
+                    animate={variantFor(i)}
+                    transition={reduce ? { duration: 0 } : undefined}
+                    style={{ zIndex: zFor(i, p) }}
+                    // Peeking plates: the right one turns forward, the left one back. Their content is inert, so clicks
+                    // fall through to here; the front card has no handler, so its LinkedIn/language buttons never navigate.
+                    onClick={p === 1 ? () => go(1) : p === 2 && n > 2 ? () => go(-1) : undefined}
+                    className={`relative [grid-area:1/1] ${p === 1 || (p === 2 && n > 2) ? "cursor-pointer" : ""}`}
+                  >
+                    <Swipe enabled={front && n > 1} onSwipe={go}>
+                      <Clip strap={front} reduce={reduce} />
+                      {/* Reduced motion: plain crossfade of the front content instead of the deck move. */}
+                      <motion.div
+                        key={reduce && front ? `f${index}` : "card"}
+                        initial={reduce && front ? { opacity: 0 } : false}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.25 }}
+                        className="h-full"
+                        {...(front
+                          ? { role: "group", "aria-roledescription": "slide", "aria-label": `${i + 1} / ${n}: ${it.name}` }
+                          : { "aria-hidden": true, inert: true })}
+                      >
+                        <BadgeCard
+                          item={it}
+                          lang={langs[i]}
+                          onToggleLang={() =>
+                            setLangs((ls) => ls.map((l, j) => (j === i ? (l === "de" ? "en" : "de") : l)))
+                          }
+                          fallbackLinkedin={fallbackLinkedin}
+                          shadow={front ? SHADOW_FRONT : p < 3 ? SHADOW_PLATE : ""}
+                        />
+                      </motion.div>
+                    </Swipe>
+                  </motion.div>
+                );
+              })}
             </div>
-          )}
-        </div>
-      </Reveal>
+
+            <p className="sr-only" aria-live={autoplay ? "off" : "polite"} aria-atomic="true">
+              {`Testimonial ${index + 1} von ${n}: ${item.name}`}
+            </p>
+
+            {n > 1 && (
+              <div className="mt-6 flex items-center justify-center">
+                <div className="flex items-center">
+                  {data.items.map((_, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      aria-label={`Go to testimonial ${i + 1}`}
+                      aria-current={i === index ? "true" : undefined}
+                      onClick={() => goTo(i)}
+                      // 24x24px tap target around the same small dot (dots end up slightly further apart than before).
+                      className={`group/dot flex h-6 min-w-6 items-center justify-center rounded-full ${ring}`}
+                    >
+                      <span
+                        className={`block h-1.5 rounded-full transition-all duration-300 ${
+                          i === index ? "w-6 bg-brand-800" : "w-1.5 bg-brand-200 [@media(hover:hover)]:group-hover/dot:bg-brand-400"
+                        }`}
+                      />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </Reveal>
+      </div>
     </section>
   );
 }

@@ -76,37 +76,94 @@ const SWAP_AT = 233;
 const STRAP_DELAY = 0.8;
 const STRAP_OUT_DELAY = 0.33;
 
-// Keyframes whose first value may be null (= start from the current value).
-const kf = <T,>(first: T | null | undefined, rest: T[]) => [first ?? null, ...rest] as [null, ...T[]];
+// Swipe fling: the released card keeps going in the swipe direction in one decelerating move, fades out at the end,
+// is placed in its slot while invisible (and already below the new front card), then fades in there.
+// The ease is a cubic bezier [x1, y1, 0.3, 1] whose start slope y1/x1 is chosen so the card leaves at the finger's
+// release speed (at least FLING_FLOOR, so a slow release still leaves). All control points stay in [0, 1], so the
+// curve is monotonic.
+const FLING_OFF = 120; // % of the card width
+const FLING_MIN = 0.3;
+const FLING_MAX = 0.6;
+const FLING_FLOOR = 1; // minimum start slope (= average speed of the move)
+const FLING_HIDE = FLING_MAX + 0.05; // s: jump to the slot (swap happens at FLING_MAX, before this)
+const FLING_T = FLING_HIDE + 0.25;
+const LAND = 0.25; // s: fade-in when a fling is interrupted
+
+// Keyframes whose first value is null (= start from the current value).
+const kf = <T,>(rest: T[]) => [null, ...rest] as [null, ...T[]];
 
 const deckVariants = {
   slot: ({ p }: { p: number }) => ({
     ...slot(p),
     x: pct(slot(p).x),
+    opacity: 1,
     transition: { ...deckSpring, delay: p === 0 ? 0.06 : 0.03 * p },
   }),
-  // The old front card: swings out (left going forward, right going back), then tucks into its new plate slot.
-  // After a swipe it continues from where the finger let go (`from`, x in % of the card width): that offset fades
-  // out along the swing and is gone at its peak. Without a swipe it starts from wherever the card is right now
-  // (null), so a click during a running move takes over smoothly instead of jumping.
-  out: ({ p, d, from }: { p: number; d: number; from?: Offset }) => {
+  // The old front card after a click/autoplay: swings out (left going forward, right going back), then tucks into
+  // its new plate slot. Starts from wherever the card is right now (null), so a click during a running move takes
+  // over smoothly instead of jumping.
+  out: ({ p, d }: { p: number; d: number }) => {
     const end = slot(p);
-    const fade = (k: number) => (k >= 4 ? 0 : 1 - OUT_X[k] / OUT_X[4]);
     return {
-      x: kf(from && pct(from.x), [
-        ...OUT_X.slice(1).map((v, k) => pct(v * d + (from ? from.x * fade(k + 1) : 0))),
-        pct(end.x),
-      ]),
-      rotate: kf(from && from.rot, [
-        ...OUT_ROT.slice(1).map((v, k) => v * d + (from ? from.rot * fade(k + 1) : 0)),
-        end.rotate,
-      ]),
-      y: kf(null, [...OUT_Y.slice(1), end.y]),
-      scale: kf(null, [...OUT_SCALE.slice(1), end.scale]),
-      transition: { duration: DURATION, times: TIMES, ease: "easeInOut" },
+      x: kf([...OUT_X.slice(1).map((v) => pct(v * d)), pct(end.x)]),
+      rotate: kf([...OUT_ROT.slice(1).map((v) => v * d), end.rotate]),
+      y: kf([...OUT_Y.slice(1), end.y]),
+      scale: kf([...OUT_SCALE.slice(1), end.scale]),
+      opacity: 1,
+      transition: { duration: DURATION, times: TIMES, ease: "easeInOut", opacity: { duration: 0.2 } },
+    };
+  },
+  // The old front card after a swipe (see FLING_*).
+  fling: ({ p, d, from }: { p: number; d: number; from?: Offset }) => {
+    const end = slot(p);
+    const f = flingPath(d, from ?? { x: 0, rot: 0, v: 0 });
+    const a = f.duration / FLING_T;
+    const h = FLING_HIDE / FLING_T;
+    const t = { duration: FLING_T, times: [0, a, h - 0.001, h, 1], ease: [f.ease, "linear", "linear", "linear"] };
+    const settle = { duration: f.duration, ease: f.ease };
+    return {
+      x: [f.x0, f.x1, f.x1, end.x, end.x].map(pct),
+      rotate: [f.r0, f.r1, f.r1, end.rotate, end.rotate],
+      y: end.y,
+      scale: end.scale,
+      opacity: [1, 1, 0, 0, 1],
+      transition: {
+        x: t,
+        rotate: t,
+        y: settle,
+        scale: settle,
+        opacity: { duration: FLING_T, times: [0, 0.6 * a, a, h, 1], ease: "linear" },
+      },
+    };
+  },
+  // A fling interrupted by the next move before it reached its slot: appear there (no travel back across the
+  // screen), fading in.
+  land: ({ p }: { p: number }) => {
+    const end = slot(p);
+    return {
+      x: pct(end.x),
+      rotate: end.rotate,
+      y: end.y,
+      scale: end.scale,
+      opacity: [0, 1],
+      transition: { ...deckSpring, x: { duration: 0 }, rotate: { duration: 0 }, opacity: { duration: LAND, ease: "linear" } },
     };
   },
 };
+
+/** Start/end of a fling in % of the card width. Never moves toward the centre: the start is clamped to the swipe
+ *  side and the end is at least 20% further out. d = 1 goes left (forward), d = -1 goes right (back). */
+function flingPath(d: number, from: Offset) {
+  const x0 = d > 0 ? Math.min(from.x, 0) : Math.max(from.x, 0);
+  const x1 = -d * Math.max(FLING_OFF, Math.abs(x0) + 20);
+  const dist = Math.abs(x1 - x0);
+  const speed = Math.max(0, -d * from.v); // release speed along the fling, %/s
+  // A start slope of 4 is a lively decelerating curve: use it to pick the duration, then fit the slope exactly.
+  const duration = speed > 0 ? Math.min(FLING_MAX, Math.max(FLING_MIN, (4 * dist) / speed)) : FLING_MAX;
+  const k = Math.max(FLING_FLOOR, (speed * duration) / dist);
+  const ease: [number, number, number, number] = k <= 4 ? [0.2, 0.2 * k, 0.3, 1] : [1 / k, 1, 0.3, 1];
+  return { x0, x1, r0: from.rot, r1: from.rot + 4 * d, duration, ease };
+}
 
 /** Clip slot (on every card) plus the strap that hangs out of it upwards (front card only); decorative. */
 function Clip({ strap, reduce }: { strap: boolean; reduce: boolean }) {
@@ -241,10 +298,12 @@ function BadgeCard({
 }
 
 
-type Offset = { x: number; rot: number };
+/** Where a swipe let go: x in % of the card width, rotation in degrees, release velocity in % per second. */
+type Offset = { x: number; rot: number; v: number };
+const FLICK = 300; // px/s: a release faster than this counts as a deliberate flick
 
-/** Finger-following swipe layer (touch/pen only; the mouse never drags). Tilts a little with the offset, the same
- *  way the card tilts when it swings out, so the hand-over to the deck move is seamless. */
+/** Finger-following swipe layer (touch/pen only; the mouse never drags). Tilts a little with the offset; the fling
+ *  continues from exactly this position, rotation and speed. */
 function Swipe({
   enabled,
   onSwipe,
@@ -255,26 +314,39 @@ function Swipe({
   children: ReactNode;
 }) {
   const x = useMotionValue(0);
+  const base = useRef(0);
   const rotate = useTransform(x, [-300, 0, 300], [4, 0, -4]);
   const ref = useRef<HTMLDivElement>(null);
+  // No longer the front card (e.g. it changed mid-pan and onPanEnd never came): never leave it offset.
+  useEffect(() => {
+    if (!enabled) animate(x, 0, { type: "spring", stiffness: 300, damping: 35 });
+  }, [enabled, x]);
   const onDragEnd = (e: PointerEvent, info: PanInfo) => {
     if (e.pointerType === "mouse") return;
-    const d = info.offset.x + info.velocity.x * 0.2;
-    if (Math.abs(d) <= 80) {
-      // Too short: spring back, no change.
-      animate(x, 0, { type: "spring", stiffness: 300, damping: 30 });
+    const ox = x.get();
+    const vx = info.velocity.x;
+    // A fast flick against the drag means "no": cancel. Otherwise the drag direction decides.
+    const agree = Math.abs(vx) < FLICK || Math.sign(vx) === Math.sign(ox);
+    if (!agree || Math.abs(ox + vx * 0.2) <= 80) {
+      // Spring back, no change. Critically damped (ω ≈ 17.3) and seeded only with finger speed toward the centre,
+      // capped at ω·|offset| so it never overshoots past 0: one monotonic move back.
+      const toward = Math.min(Math.max(-Math.sign(ox) * vx, 0), 17 * Math.abs(ox));
+      animate(x, 0, { type: "spring", stiffness: 300, damping: 35, velocity: -Math.sign(ox) * toward });
       return;
     }
-    // Hand the finger offset over to the card's own swing-out: commit the move synchronously, then zero this layer,
-    // on the next frame (when the swing-out keyframes start), so the card neither snaps back nor moves twice.
-    const from = { x: (x.get() / (ref.current?.offsetWidth || 1)) * 100, rot: rotate.get() };
-    flushSync(() => onSwipe(d < 0 ? 1 : -1, from));
+    // Hand the finger offset over to the card's fling: commit the move synchronously, then zero this layer on the
+    // next frame (when the fling keyframes start), so the card neither snaps back nor moves twice.
+    const w = ref.current?.offsetWidth || 1;
+    const from = { x: (x.get() / w) * 100, rot: rotate.get(), v: (vx / w) * 100 };
+    flushSync(() => onSwipe(ox < 0 ? 1 : -1, from));
     fmFrame.update(() => x.jump(0));
   };
   return (
     <motion.div
       ref={ref}
-      onPan={enabled ? (e, info) => { if (e.pointerType !== "mouse") x.set(info.offset.x); } : undefined}
+      // A new touch catches the card where it is (e.g. mid spring-back) instead of fighting the running spring.
+      onPanStart={enabled ? () => { x.stop(); base.current = x.get(); } : undefined}
+      onPan={enabled ? (e, info) => { if (e.pointerType !== "mouse") x.set(base.current + info.offset.x); } : undefined}
       onPanEnd={enabled ? onDragEnd : undefined}
       style={{ x, rotate, touchAction: "pan-y" }}
       className="relative h-full"
@@ -294,10 +366,19 @@ export default function TestimonialsBadge({
   const n = data.items.length;
   const reduce = !!useReducedMotion();
   // dir 0 = nothing moved yet (every card simply sits in its slot). prev = the card that was in front before this
-  // move (the one that swings out); from = where a swipe let go of it.
-  const [{ index, dir, prev, from }, setPage] = useState<{ index: number; dir: number; prev: number; from?: Offset }>(
-    { index: 0, dir: 0, prev: 0 },
-  );
+  // move (the one that swings out); from = where a swipe let go of it; move = counter of moves (keys the layer swap).
+  // at = when the move started; land = a card whose fling this move interrupted (it fades in at its slot).
+  type Page = { index: number; dir: number; prev: number; from?: Offset; move: number; at: number; land?: number };
+  const [{ index, dir, prev, from, move, land }, setPage] = useState<Page>({ index: 0, dir: 0, prev: 0, move: 0, at: 0 });
+  const step = (s: Page, i: number, d: number, from?: Offset, at = performance.now()): Page => ({
+    index: i,
+    dir: d,
+    prev: s.index,
+    from,
+    move: s.move + 1,
+    at,
+    land: s.from && at - s.at < FLING_HIDE * 1000 + 50 ? s.prev : undefined, // +50ms: framer starts the timeline a frame later
+  });
   const [langs, setLangs] = useState<QuoteLang[]>(() => data.items.map(() => "de"));
   const [hover, setHover] = useState(false);
   const [focus, setFocus] = useState(false);
@@ -305,18 +386,29 @@ export default function TestimonialsBadge({
   const rootRef = useRef<HTMLDivElement>(null);
   const inView = useInView(rootRef, { amount: 0.4 });
 
-  const go = (d: number, from?: Offset) => setPage((s) => ({ index: mod(s.index + d, n), dir: d, prev: s.index, from }));
+  const go = (d: number, from?: Offset) => {
+    if (n < 2) return;
+    const at = performance.now();
+    setPage((s) => step(s, mod(s.index + d, n), d, from, at));
+  };
   // Dots jump by their own distance; the old front card still swings out and tucks into its new slot.
-  const goTo = (i: number) =>
-    setPage((s) => (i === s.index ? s : { index: i, dir: i > s.index ? 1 : -1, prev: s.index }));
+  const goTo = (i: number) => {
+    const at = performance.now();
+    setPage((s) => (i === s.index ? s : step(s, i, i > s.index ? 1 : -1, undefined, at)));
+  };
+  // Latest animated deck offset of every card, so a swipe on a card that is still settling into the front slot
+  // hands over its full on-screen position (deck offset + finger offset) without a snap.
+  const deckPos = useRef<Record<number, { x: number; rotate: number }>>({});
 
-  // Layer swap of the travelling card; keyed by index so a new move starts unswapped in its first frame.
+  // Layer swap of the travelling card; keyed by the move counter so every new move (even back to the same index)
+  // starts unswapped in its first frame. A fling stays on top until it has faded out.
+  const flung = !!from;
   const [swappedAt, setSwappedAt] = useState(-1);
-  const swapped = swappedAt === index;
+  const swapped = swappedAt === move;
   useEffect(() => {
-    const t = setTimeout(() => setSwappedAt(index), reduce ? 0 : SWAP_AT);
+    const t = setTimeout(() => setSwappedAt(move), reduce ? 0 : flung ? FLING_MAX * 1000 : SWAP_AT);
     return () => clearTimeout(t);
-  }, [index, reduce]);
+  }, [move, flung, reduce]);
 
   const autoplay = n > 1 && !reduce && !hover && !focus && !touched && inView;
   useEffect(() => {
@@ -327,22 +419,32 @@ export default function TestimonialsBadge({
   }, [autoplay, index]);
 
   const onKey = (e: KeyboardEvent) => {
-    if (e.key === "ArrowLeft") {
-      e.preventDefault();
-      go(-1);
-    } else if (e.key === "ArrowRight") {
-      e.preventDefault();
-      go(1);
-    }
+    const d = e.key === "ArrowLeft" ? -1 : e.key === "ArrowRight" ? 1 : 0;
+    if (!d || n < 2) return;
+    e.preventDefault();
+    // Focus inside the front card would fall to <body> once that card turns inert: after the commit, move it to the
+    // same control on the new front card, or to the current dot if there is none (not the region itself: a focusable
+    // region would also take focus on every mouse click and keep autoplay paused).
+    const sel = "a[href],button";
+    const card = (e.target as Element).closest("[data-front]");
+    const k = card ? Array.from(card.querySelectorAll(sel)).indexOf(e.target as Element) : -1;
+    flushSync(() => go(d));
+    if (!card) return;
+    const next = k < 0 ? null : rootRef.current?.querySelector("[data-front]")?.querySelectorAll<HTMLElement>(sel)[k];
+    (next ?? rootRef.current?.querySelector<HTMLElement>("[aria-current]"))?.focus({ preventScroll: true });
   };
 
   const item = data.items[index];
   const ring = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2";
   // Which deck move a card plays: only the old front card swings out; every other card springs to its slot.
-  const variantFor = (i: number) => (reduce || dir === 0 || i !== prev ? "slot" : "out");
+  const variantFor = (i: number) =>
+    reduce || dir === 0 ? "slot" : i === prev ? (flung ? "fling" : "out") : i === land ? "land" : "slot";
 
-  // Stacking: front on top, plates below in order; the swinging card stays on top until the swap.
-  const zFor = (i: number, p: number) => (variantFor(i) === "out" && !swapped ? n + 1 : n - p);
+  // Stacking: front on top, plates below in order; the leaving card stays on top until the swap.
+  const zFor = (i: number, p: number) => {
+    const v = variantFor(i);
+    return (v === "out" || v === "fling") && !swapped ? n + 1 : n - p;
+  };
 
   return (
     // Clip sideways at the full viewport width, not at the content column, so the swinging card and the plates are
@@ -403,12 +505,23 @@ export default function TestimonialsBadge({
                     animate={variantFor(i)}
                     transition={reduce ? { duration: 0 } : undefined}
                     style={{ zIndex: zFor(i, p) }}
+                    onUpdate={(l) => {
+                      const c = (deckPos.current[i] ??= { x: 0, rotate: 0 });
+                      if (l.x !== undefined) c.x = parseFloat(String(l.x));
+                      if (l.rotate !== undefined) c.rotate = Number(l.rotate);
+                    }}
                     // Peeking plates: the right one turns forward, the left one back. Their content is inert, so clicks
                     // fall through to here; the front card has no handler, so its LinkedIn/language buttons never navigate.
                     onClick={p === 1 ? () => go(1) : p === 2 && n > 2 ? () => go(-1) : undefined}
                     className={`relative [grid-area:1/1] ${p === 1 || (p === 2 && n > 2) ? "cursor-pointer" : ""}`}
                   >
-                    <Swipe enabled={front && n > 1} onSwipe={go}>
+                    <Swipe
+                      enabled={front && n > 1}
+                      onSwipe={(d, f) => {
+                        const c = deckPos.current[i];
+                        go(d, c ? { ...f, x: f.x + c.x, rot: f.rot + c.rotate } : f);
+                      }}
+                    >
                       <Clip strap={front} reduce={reduce} />
                       {/* Reduced motion: plain crossfade of the front content instead of the deck move. */}
                       <motion.div
@@ -418,7 +531,12 @@ export default function TestimonialsBadge({
                         transition={{ duration: 0.25 }}
                         className="h-full"
                         {...(front
-                          ? { role: "group", "aria-roledescription": "slide", "aria-label": `${i + 1} / ${n}: ${it.name}` }
+                          ? {
+                              role: "group",
+                              "aria-roledescription": "slide",
+                              "aria-label": `${i + 1} / ${n}: ${it.name}`,
+                              "data-front": true,
+                            }
                           : { "aria-hidden": true, inert: true })}
                       >
                         <BadgeCard

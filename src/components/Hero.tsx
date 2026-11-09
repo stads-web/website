@@ -221,21 +221,12 @@ export default function Hero({
             </h1>
           </motion.div>
 
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 * s, ease: EASE, delay: 0.5 * s }}
-            className="mt-6 text-xs font-medium uppercase tracking-[0.3em] text-brand-900/60 sm:text-sm"
-          >
-            {data.eyebrow}
-          </motion.p>
-
           {subtext && (
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 * s, ease: EASE, delay: 0.6 * s }}
-              className="mx-auto mt-4 max-w-xl text-balance text-brand-900/70"
+              className="mx-auto mt-6 max-w-xl text-balance text-brand-900/70"
             >
               {subtext}
             </motion.p>

@@ -15,7 +15,7 @@ items:
       en:
         - "My involvement with STADS has had a lasting impact on my studies. As a board member, I was able to take on responsibility and develop considerably, both personally and in terms of my soft skills. I also discovered my passion for Data Science, a field in which I went on to gain a lot more experience."
   - name: "Sina Leandra Kratzenstein"
-    image: "/images/testimonials/placeholder-female.webp"
+    image: "/images/testimonials/sina-kratzenstein.webp"
     linkedin: "https://www.linkedin.com/in/sina-leandra-kratzenstein-ba9a36283/"
     role:
       de: "Vorstand 2024/25 · B.Sc. Betriebswirtschaftslehre"
@@ -26,7 +26,7 @@ items:
       en:
         - "As a business student, I joined STADS to broaden my knowledge with new insights into Data Science. The workshops and the exchange with other students in particular opened up new perspectives for me. That's why I can recommend STADS to anyone who is keen to learn new things, keep developing and become part of an engaged community."
   - name: "Greta Riehl"
-    image: "/images/testimonials/placeholder-female.webp"
+    image: "/images/testimonials/greta-riehl.webp"
     linkedin: "https://www.linkedin.com/in/greta-riehl/"
     role:
       de: "Head of Finance 2024/25 · M.Sc. Wirtschaftsmathematik · Werkstudentin KI und Data Science, weisenburger-Gruppe"
@@ -37,7 +37,7 @@ items:
       en:
         - "STADS was my first point of contact with Data Science and gave me the opportunity to gain practical experience while still at university. Thanks to the Data Bootcamp, I was able to learn skills within my first few months at STADS that directly helped me land my first Data Science internship. I also met many great people at STADS and grew both professionally and personally."
   - name: "Paul König"
-    image: ""
+    image: "/images/testimonials/paul-koenig.webp"
     linkedin: "https://www.linkedin.com/in/p-koenig/"
     role:
       de: "Vorstand 2021/22 · Ph.D. Candidate und AI/ML Researcher an der TU Clausthal"
@@ -65,4 +65,15 @@ items:
         - "Ich bin zu STADS gekommen, weil ich mich neben meinem Wirtschaftsmathe-Studium auch praktisch mit Data Science beschäftigen wollte und habe dort schnell gemerkt, wie viel man voneinander lernen kann, wenn Studierende in den Austausch miteinander gehen. Was STADS für mich aber wirklich besonders gemacht hat, waren die Menschen, die zu engen Freunden geworden sind. Zu erleben, wie wir unsere Begeisterung für AI durch Programmierkurse, Projekte und den Datathon an andere Studierende weitergeben konnten, war für mich eine der schönsten Erfahrungen."
       en:
         - "I came to STADS because, alongside my business mathematics studies, I also wanted to work with Data Science in practice, and I quickly realized how much you can learn from each other when students start exchanging ideas. But what really made STADS special for me were the people, who became close friends. Seeing how we were able to pass on our enthusiasm for AI to other students through coding courses, projects and the Datathon was one of the most wonderful experiences for me."
+  - name: "Arved Schreiber"
+    image: "/images/testimonials/arved-schreiber.webp"
+    linkedin: "https://www.linkedin.com/in/arved-schreiber-4a6b64218/"
+    role:
+      de: "Mitglied im Kooperations-Department 2024/25 · M.Sc. Data Science (abgeschlossen) · Consultant bei d-fine"
+      en: "Corporate Relations 2024/25 · M.Sc. Data Science · Consultant at d-fine"
+    quote:
+      de:
+        - "STADS war eine tolle Gelegenheit, neben dem Studium wertvolle Erfahrungen zu sammeln. Im Python-Kurs habe ich programmieren gelernt, dieses Wissen bei Hackathons angewendet und als Teil des Corporate-Relations-Teams die Chance gehabt, führende Unternehmen kennenzulernen. Rückblickend haben mich diese Erfahrungen beruflich geprägt und waren eine wertvolle Grundlage für meinen Start als Consultant."
+      en:
+        - "STADS was a great opportunity to gain valuable experience beyond my university studies. I learned how to code through the Python course, applied those skills at hackathons, and had the chance to connect with leading companies as part of the Corporate Relations team. Looking back, these experiences helped shape my professional journey and provided a valuable foundation for starting my career as a Consultant."
 ---

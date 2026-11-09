@@ -8,7 +8,6 @@ export interface HeroData {
   headerImageAlt: string;
   taglineAccent: string;
   taglineBold: string;
-  eyebrow: string;
   primaryCta: CtaLink;
   secondaryCta: CtaLink;
 }

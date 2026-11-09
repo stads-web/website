@@ -260,7 +260,7 @@ function BadgeCard({
                 alt=""
                 fill
                 sizes="56px"
-                className="object-cover object-top grayscale"
+                className="object-cover object-top"
               />
             </div>
             <div className="min-w-0">

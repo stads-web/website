@@ -1,3 +1,8 @@
+// Mirrors src/lib/site.ts (a .mjs config cannot import the TypeScript module).
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://www.stads.de").replace(/\/$/, "");
+const isProduction = process.env.VERCEL_ENV === "production";
+const indexable = !process.env.VERCEL_ENV || isProduction;
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
@@ -7,9 +12,24 @@ const nextConfig = {
     // Photos are only ever replaced under a new name, so let the CDN keep them for a week.
     minimumCacheTTL: 60 * 60 * 24 * 7,
   },
-  // Old Webflow URL.
   async redirects() {
-    return [{ source: "/team", destination: "/our-team", permanent: true }];
+    return [
+      // Old Webflow URL.
+      { source: "/team", destination: "/our-team", permanent: true },
+      // Production only: reaching the live site through any *.vercel.app address
+      // sends visitors (and search engines) to the real domain. Preview deployments
+      // are built with VERCEL_ENV=preview and keep working on their own URLs.
+      ...(isProduction
+        ? [
+            {
+              source: "/:path*",
+              has: [{ type: "host", value: ".*\\.vercel\\.app" }],
+              destination: `${siteUrl}/:path*`,
+              permanent: true,
+            },
+          ]
+        : []),
+    ];
   },
   // Basic hardening. X-Frame-Options only limits who may embed *our* pages;
   // embeds on our pages (LinkedIn, YouTube iframes) are unaffected.
@@ -22,6 +42,8 @@ const nextConfig = {
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           { key: "X-Frame-Options", value: "SAMEORIGIN" },
           { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+          // Preview deployments must never show up in search results.
+          ...(indexable ? [] : [{ key: "X-Robots-Tag", value: "noindex, nofollow" }]),
         ],
       },
     ];

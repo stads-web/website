@@ -102,37 +102,6 @@ export async function POST(request: Request) {
     return res.ok;
   };
 
-  // Keyless relay used only when Resend is not configured or rejected everything.
-  // FormSubmit refuses requests without Origin/Referer, so present the site's own.
-  const viaFormSubmit = async (to: string) => {
-    const origin = process.env.SITE_URL ?? new URL(request.url).origin;
-    const res = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(to)}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Origin: origin,
-        Referer: `${origin}/for-companies`,
-      },
-      body: JSON.stringify({
-        _subject: subject,
-        _replyto: email,
-        _captcha: "false",
-        _template: "box",
-        Track: track,
-        Name: name,
-        Company: company || "-",
-        Email: email,
-        Message: message,
-      }),
-    });
-    const json = (await res.json().catch(() => ({}))) as { success?: string | boolean; message?: string };
-    const ok = res.ok && (json.success === true || json.success === "true");
-    // Visible in the Vercel function logs, e.g. "This form needs Activation".
-    if (!ok) console.error("[contact] FormSubmit:", to, res.status, json.message);
-    return ok;
-  };
-
   // Teams ping: a Workflows (Power Automate) webhook posts an Adaptive Card into
   // a channel or chat. No mail involved, so no spam filter can swallow it.
   // TEAMS_MENTION_EMAIL optionally @-mentions one person so they get a personal alert.
@@ -223,11 +192,8 @@ export async function POST(request: Request) {
         }
       }
     }
-    // The keyless relay only runs when nothing else is configured or worked.
-    if (!ok) {
-      const results = await Promise.all(recipients.map((to) => viaFormSubmit(to).catch(() => false)));
-      ok = results.some(Boolean);
-    }
+    // Nothing configured or every provider failed: the client then offers the
+    // message as a prepared mail (see ContactForm), so nothing typed is lost.
     if (!ok) throw new Error("no mail provider accepted the message");
     return NextResponse.json({ ok: true });
   } catch {

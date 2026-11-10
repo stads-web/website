@@ -27,7 +27,11 @@ export default function AnalyticsScripts() {
             c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
             t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
             y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-          })(window, document, "clarity", "script", "${CLARITY_ID}");`}
+          })(window, document, "clarity", "script", "${CLARITY_ID}");
+          // Clarity Consent API v2: this code only runs after "Accept all",
+          // so tell Clarity that storage is allowed. Calls made before the
+          // tag has loaded are queued by the stub above.
+          window.clarity("consentv2", { ad_Storage: "granted", analytics_Storage: "granted" });`}
         </Script>
       )}
     </>

@@ -32,11 +32,11 @@ Zusätzlich nutzen wir Vercel Web Analytics, um zu sehen, welche Seiten wie oft 
 
 ## 5. Cookies und Einwilligung
 
-Beim ersten Besuch unserer Website werden Sie über ein Consent-Banner gefragt, ob Sie der Nutzung von Analyse-Cookies zustimmen. Technisch notwendige Cookies (z. B. zur Speicherung Ihrer Cookie-Einstellung) werden unabhängig von Ihrer Einwilligung gesetzt (Art. 6 Abs. 1 lit. f DSGVO). Alle übrigen Cookies (Google Analytics 4, Microsoft Clarity) werden erst nach Ihrer aktiven Einwilligung gesetzt (Art. 6 Abs. 1 lit. a DSGVO, § 25 Abs. 1 TDDDG). Sie können Ihre Einwilligung jederzeit mit Wirkung für die Zukunft über den Link „Cookie settings“ im Footer widerrufen oder anpassen.
+Beim ersten Besuch unserer Website werden Sie über ein Consent-Banner gefragt, ob Sie der Nutzung von Analyse-Cookies zustimmen. Ihre Cookie-Einstellung speichern wir im lokalen Speicher Ihres Browsers; das ist technisch erforderlich und erfolgt unabhängig von Ihrer Einwilligung (Art. 6 Abs. 1 lit. f DSGVO). Alle übrigen Cookies (Google Analytics 4, Microsoft Clarity) werden erst nach Ihrer aktiven Einwilligung gesetzt (Art. 6 Abs. 1 lit. a DSGVO, § 25 Abs. 1 TDDDG). Sie können Ihre Einwilligung jederzeit mit Wirkung für die Zukunft über den Link „Cookie settings“ im Footer widerrufen oder anpassen.
 
 ## 6. Google Analytics 4
 
-Bei Ihrer Einwilligung nutzen wir Google Analytics 4, einen Webanalysedienst der Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland ("Google"). Google Analytics verwendet Cookies bzw. vergleichbare Technologien, die eine Analyse der Benutzung unserer Website ermöglichen (u. a. besuchte Seiten, Verweildauer, Herkunft des Zugriffs, verwendetes Gerät). Die IP-Adresse wird von Google innerhalb der EU gekürzt bzw. anonymisiert, bevor sie ggf. in die USA übermittelt wird. Rechtsgrundlage ist Ihre Einwilligung (Art. 6 Abs. 1 lit. a DSGVO). Mit Google besteht ein Auftragsverarbeitungsvertrag. Weitere Informationen: [Google Datenschutzerklärung](https://policies.google.com/privacy).
+Bei Ihrer Einwilligung nutzen wir Google Analytics 4, einen Webanalysedienst der Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland ("Google"). Google Analytics verwendet Cookies bzw. vergleichbare Technologien, die eine Analyse der Benutzung unserer Website ermöglichen (u. a. besuchte Seiten, Verweildauer, Herkunft des Zugriffs, verwendetes Gerät). Eine Übermittlung von Daten an Server von Google in den USA ist nicht auszuschließen. Rechtsgrundlage ist Ihre Einwilligung (Art. 6 Abs. 1 lit. a DSGVO). Mit Google besteht ein Auftragsverarbeitungsvertrag. Weitere Informationen: [Google Datenschutzerklärung](https://policies.google.com/privacy).
 
 ## 7. Microsoft Clarity
 
@@ -44,7 +44,7 @@ Bei Ihrer Einwilligung nutzen wir zusätzlich Microsoft Clarity, einen Dienst de
 
 ## 8. Kontaktaufnahme
 
-Wenn Sie per E-Mail oder über ein verlinktes externes Formular (z. B. Microsoft Forms) mit uns Kontakt aufnehmen, verarbeiten wir die von Ihnen mitgeteilten Daten zur Bearbeitung Ihrer Anfrage (Art. 6 Abs. 1 lit. b bzw. f DSGVO). Für extern verlinkte Formulare gelten zusätzlich die Datenschutzhinweise des jeweiligen Anbieters.
+Wenn Sie per E-Mail oder über ein verlinktes externes Formular (z. B. Microsoft Forms) mit uns Kontakt aufnehmen, verarbeiten wir die von Ihnen mitgeteilten Daten zur Bearbeitung Ihrer Anfrage (Art. 6 Abs. 1 lit. b bzw. f DSGVO). Für extern verlinkte Formulare gelten zusätzlich die Datenschutzhinweise des jeweiligen Anbieters. Unser E-Mail-Postfach betreiben wir bei Microsoft (Microsoft 365, Microsoft Ireland Operations Ltd., Dublin, Irland).
 
 ## 9. Kontaktformular
 
@@ -56,7 +56,6 @@ Ihre Angaben werden von unserem Server an das zuständige Team weitergeleitet. D
 
 - **Microsoft Power Automate / Microsoft Teams:** Die Anfrage wird über eine Workflow-Schnittstelle von Microsoft als Nachricht in einen internen Microsoft-Teams-Kanal übertragen. Anbieter für Kund:innen in der EU ist die Microsoft Ireland Operations Ltd., One Microsoft Place, South County Business Park, Leopardstown, Dublin 18, Irland. Eine Übermittlung an die Microsoft Corporation in den USA ist nicht auszuschließen. Weitere Informationen: [Microsoft Datenschutzerklärung](https://privacy.microsoft.com/de-de/privacystatement).
 - **Resend:** Die Anfrage wird per E-Mail über den Versanddienst der Resend, Inc., San Francisco, USA, an unser Postfach zugestellt. Zusätzlich senden wir über denselben Dienst eine automatische Bestätigungs-E-Mail an die von Ihnen angegebene E-Mail-Adresse; sie enthält einen festen Text und keine Ihrer Angaben. Resend verarbeitet Ihre Angaben (Name, E-Mail-Adresse, Unternehmen, Nachricht) sowie technische Zustelldaten als Auftragsverarbeiter nach Art. 28 DSGVO auf Servern in der von uns gewählten EU-Region (Irland). Eine Übermittlung in die USA, etwa durch Zugriffe der Resend, Inc., kann nicht ausgeschlossen werden; sie ist durch die EU-Standardvertragsklauseln als Bestandteil der Auftragsverarbeitungsvereinbarung von Resend abgesichert. Zweck und Rechtsgrundlage entsprechen den oben genannten (Art. 6 Abs. 1 lit. b bzw. f DSGVO). Weitere Informationen: [Resend Datenschutzerklärung](https://resend.com/legal/privacy-policy).
-- **FormSubmit:** Nur wenn weder über Microsoft Teams noch über Resend eine Zustellung gelungen ist (weil diese nicht eingerichtet sind oder fehlgeschlagen sind), wird die Anfrage ersatzweise über den E-Mail-Weiterleitungsdienst FormSubmit (formsubmit.co) an unser Postfach zugestellt. Dabei kann es zu einer Übermittlung in ein Drittland kommen.
 
 Kann Ihre Nachricht über keinen dieser Wege zugestellt werden, bietet Ihnen das Formular an, sie stattdessen als vorbereitete E-Mail aus Ihrem eigenen E-Mail-Programm zu senden; insoweit gilt Abschnitt 8.
 

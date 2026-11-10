@@ -15,7 +15,7 @@ import PageTransition from "@/components/motion/PageTransition";
 import MotionProvider from "@/components/motion/MotionProvider";
 import { readContent } from "@/lib/content";
 import type { SiteData } from "@/lib/types";
-import { siteUrl, ogBase, twitterBase } from "@/lib/site";
+import { siteUrl, indexable, ogBase, twitterBase } from "@/lib/site";
 
 const siteTitle = "STADS – Data Science Student Association in Mannheim";
 const siteDescription =
@@ -54,6 +54,8 @@ export const metadata: Metadata = {
   title: siteTitle,
   description: siteDescription,
   alternates: { canonical: "/" },
+  // Preview deployments are kept out of search results (see indexable in lib/site.ts).
+  ...(indexable ? {} : { robots: { index: false, follow: false } }),
   openGraph: {
     ...ogBase,
     title: siteTitle,

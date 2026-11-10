@@ -203,7 +203,7 @@ export async function POST(request: Request) {
       if (results.some(Boolean)) {
         try {
           const base = (process.env.SITE_URL ?? new URL(request.url).origin).replace(/\/+$/, "");
-          const mail = confirmationMail(`${base}/brand/stads-mark-mail.png`, `${base}/datenschutz`, TRACKS.includes(track) ? track : undefined);
+          const mail = confirmationMail(`${base}/brand/stads-mark-email.png`, `${base}/datenschutz`, TRACKS.includes(track) ? track : undefined);
           const res = await fetch("https://api.resend.com/emails", {
             method: "POST",
             headers: {

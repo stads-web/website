@@ -1,13 +1,12 @@
 // Fixed template on purpose: no user-supplied input may end up in this mail,
 // otherwise the contact form could be abused as a spam relay.
-const DE = [
-  "vielen Dank für Ihre Anfrage und Ihr Interesse an einer Zusammenarbeit mit STADS. Wir haben Ihre Nachricht erhalten und melden uns in den nächsten Tagen bei Ihnen.",
-  "Bei Rückfragen können Sie einfach auf diese E-Mail antworten.",
-];
-const EN = [
-  "thank you for your request and your interest in working with STADS. We have received your message and will get back to you within the next few days.",
-  "If you have any questions, simply reply to this email.",
-];
+// Only whitelisted track values are ever passed in (validated in route.ts).
+const TOPIC_DE: Record<string, string> = {
+  Recruiting: "Recruiting",
+  "Datathon sponsorship": "Datathon-Sponsoring",
+  "Workshop or lecture": "Workshop oder Vortrag",
+  "Something else": "Sonstiges",
+};
 
 const SIGNATURE_TEXT = `--
 Cooperation Team
@@ -68,17 +67,36 @@ const SIGNATURE_HTML = `<p style="font-size: 18px; color: rgb(0, 41, 117);"><fon
 
 const p = (t: string) => `<p style="font-family: Arial; font-size: 14px; line-height: 22px; color: rgb(0, 41, 117);">${t}</p>`;
 
-export function confirmationMail(logoUrl: string) {
+const esc = (t: string) => t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+export function confirmationMail(logoUrl: string, privacyUrl: string, track?: string) {
+  const topic = track && Object.hasOwn(TOPIC_DE, track) ? track : undefined;
+  const de = [
+    "vielen Dank für Ihre Anfrage und Ihr Interesse an einer Zusammenarbeit mit STADS. Wir haben Ihre Nachricht erhalten und melden uns innerhalb von 3 Werktagen bei Ihnen.",
+    ...(topic ? [`Thema Ihrer Anfrage: ${TOPIC_DE[topic]}`] : []),
+    "Ihr Ansprechpartner ist Gabriel Schmiedecke (Team Lead Cooperation). Bei Rückfragen können Sie einfach auf diese E-Mail antworten.",
+  ];
+  const en = [
+    "thank you for your request and your interest in working with STADS. We have received your message and will get back to you within 3 working days.",
+    ...(topic ? [`Topic of your request: ${topic}`] : []),
+    "Your contact person is Gabriel Schmiedecke (Team Lead Cooperation). If you have any questions, simply reply to this email.",
+  ];
+  const footDe = "Diese E-Mail wurde automatisch erstellt. Falls Sie keine Anfrage gestellt haben, können Sie diese Nachricht ignorieren. Informationen zum Datenschutz:";
+  const footEn = "This email was generated automatically. If you did not submit a request, you can ignore this message. Privacy information:";
+  const foot = (t: string) =>
+    `<p style="font-family: Arial; font-size: 12px; line-height: 18px; color: #6b7280;">${t} <a href="${esc(privacyUrl)}" style="color: #6b7280;">${esc(privacyUrl)}</a></p>`;
   const text = [
-    "Guten Tag,", "", ...DE.flatMap((t) => [t, ""]), "Viele Grüße", "Ihr STADS Cooperation Team",
+    "Guten Tag,", "", ...de.flatMap((t) => [t, ""]), "Viele Grüße", "Ihr STADS Cooperation Team",
     "", "---", "",
-    "Hello,", "", ...EN.flatMap((t) => [t, ""]), "Best regards", "Your STADS Cooperation Team",
+    "Hello,", "", ...en.flatMap((t) => [t, ""]), "Best regards", "Your STADS Cooperation Team",
+    "", `${footDe} ${privacyUrl}`, `${footEn} ${privacyUrl}`,
     "", SIGNATURE_TEXT,
   ].join("\n");
   const html = [
-    p("Guten Tag,"), ...DE.map(p), p("Viele Grüße<br>Ihr STADS Cooperation Team"),
+    p("Guten Tag,"), ...de.map((t) => p(esc(t))), p("Viele Grüße<br>Ihr STADS Cooperation Team"),
     '<hr style="border: none; border-top: 1px solid rgb(0, 46, 133);">',
-    p("Hello,"), ...EN.map(p), p("Best regards<br>Your STADS Cooperation Team"),
+    p("Hello,"), ...en.map((t) => p(esc(t))), p("Best regards<br>Your STADS Cooperation Team"),
+    foot(footDe), foot(footEn),
     SIGNATURE_HTML.split("LOGO_URL").join(logoUrl),
   ].join("\n");
   return { subject: "Ihre Anfrage bei STADS / Your request to STADS", text, html };

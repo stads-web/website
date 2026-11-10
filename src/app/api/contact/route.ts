@@ -202,8 +202,8 @@ export async function POST(request: Request) {
       // Never contains user input and never affects the response.
       if (results.some(Boolean)) {
         try {
-          const logo = `${(process.env.SITE_URL ?? new URL(request.url).origin).replace(/\/+$/, "")}/brand/stads-mark-mail.png`;
-          const mail = confirmationMail(logo);
+          const base = (process.env.SITE_URL ?? new URL(request.url).origin).replace(/\/+$/, "");
+          const mail = confirmationMail(`${base}/brand/stads-mark-mail.png`, `${base}/datenschutz`, TRACKS.includes(track) ? track : undefined);
           const res = await fetch("https://api.resend.com/emails", {
             method: "POST",
             headers: {

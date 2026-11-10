@@ -7,6 +7,10 @@ const nextConfig = {
     // Photos are only ever replaced under a new name, so let the CDN keep them for a week.
     minimumCacheTTL: 60 * 60 * 24 * 7,
   },
+  // Old Webflow URL.
+  async redirects() {
+    return [{ source: "/team", destination: "/our-team", permanent: true }];
+  },
   // Basic hardening. X-Frame-Options only limits who may embed *our* pages;
   // embeds on our pages (LinkedIn, YouTube iframes) are unaffected.
   async headers() {

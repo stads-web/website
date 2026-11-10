@@ -16,7 +16,7 @@ contact:
   name: "Gabriel Schmiedecke"
   role: "Cooperations"
   initials: "GS"
-  photo: "/images/team/cooperation.webp"
+  photo: "/images/team/lead-cooperation-gabriel-schmiedecke.webp"
   email: "gabriel.schmiedecke@stads.de"
   linkedin: "https://www.linkedin.com/in/gabriel-schmiedecke-393b943a5/"
   note: "Tell us what you're planning - we'll make sure it lands with the right people."

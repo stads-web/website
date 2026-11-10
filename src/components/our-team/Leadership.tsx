@@ -10,19 +10,26 @@ import type { LeadershipData, TeamMember } from "@/lib/types";
 function MemberCard({ member, index }: { member: TeamMember; index: number }) {
   return (
     <Reveal delay={0.1 * index}>
-      <div className="group mx-auto w-full max-w-[340px] sm:max-w-none">
+      <figure className="group mx-auto w-full max-w-[340px] sm:max-w-none">
         <div className="relative aspect-[4/5] overflow-hidden rounded-[32px] border border-brand-100 shadow-[0px_10px_20px_rgba(15,29,54,0.06),0px_30px_60px_rgba(15,29,54,0.10)]">
           <PortraitFrame
             photo={member.photo}
             name={member.name}
+            alt={`${member.name}, ${member.role} member, STADS Mannheim`}
             initials={member.initials}
           />
           <Spotlight />
         </div>
 
         {/* Caption sits under the portrait so the person is never covered. */}
-        <NameTag name={member.name} role={member.role} linkedin={member.linkedin} className="mt-5" />
-      </div>
+        <NameTag
+          as="figcaption"
+          name={member.name}
+          role={member.role}
+          linkedin={member.linkedin}
+          className="mt-5"
+        />
+      </figure>
     </Reveal>
   );
 }

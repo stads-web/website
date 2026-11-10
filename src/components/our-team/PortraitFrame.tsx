@@ -28,12 +28,15 @@ const OVERSCAN = 1.1;
 function PortraitFrame({
   photo,
   name,
+  alt,
   initials,
   onTilt,
   sizes = "(min-width: 1280px) 300px, (min-width: 640px) 45vw, 90vw",
 }: {
   photo?: string;
   name: string;
+  /** Alt text for search engines and screen readers; defaults to `name`. */
+  alt?: string;
   initials: string;
   onTilt?: (rotateX: number, rotateY: number) => void;
   /** Override when the frame is rendered larger (or smaller) than a team card. */
@@ -81,7 +84,7 @@ function PortraitFrame({
     <div className="absolute inset-0">
       <Image
         src={photo}
-        alt={name}
+        alt={alt ?? name}
         fill
         quality={95}
         sizes={sizes}

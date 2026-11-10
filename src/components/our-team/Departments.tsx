@@ -12,6 +12,13 @@ import type { Department, DepartmentsData } from "@/lib/types";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
+/** "Ben Stickel, Lead of the IT team, STADS Mannheim" - the name leads, for image search. */
+function portraitAlt(dept: Department) {
+  return dept.lead
+    ? `${dept.lead}, Lead of the ${dept.name} team, STADS Mannheim`
+    : `${dept.name} team, STADS Mannheim`;
+}
+
 /**
  * Narrow screens: no hover and no hidden content - every department is a
  * complete, always-visible entry (clean portrait, then name, lead, text).
@@ -28,7 +35,7 @@ function StackedDepartments({ items }: { items: Department[] }) {
                 <div className="relative aspect-[4/5] overflow-hidden rounded-[28px] border border-brand-100 shadow-[0px_10px_20px_rgba(15,29,54,0.06),0px_30px_60px_rgba(15,29,54,0.10)]">
                   <PortraitFrame
                     photo={dept.photo}
-                    name={`${dept.name} – ${dept.lead ?? "STADS"}`}
+                    name={dept.lead ?? dept.name} alt={portraitAlt(dept)}
                     initials={dept.initials}
                   />
                   <span className="absolute left-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-sm">
@@ -80,7 +87,7 @@ export default function Departments({ data }: { data: DepartmentsData }) {
               >
                 <PortraitFrame
                   photo={dept.photo}
-                  name={`${dept.name} – ${dept.lead ?? "STADS"}`}
+                  name={dept.lead ?? dept.name} alt={portraitAlt(dept)}
                   initials={dept.initials}
                 />
               </div>

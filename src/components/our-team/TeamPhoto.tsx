@@ -13,7 +13,7 @@ export default function TeamPhoto() {
         <div className="overflow-hidden rounded-3xl border border-brand-100 shadow-[0px_5px_10px_rgba(0,0,0,0.05),0px_15px_30px_rgba(0,0,0,0.05),0px_30px_60px_rgba(0,0,0,0.1)]">
           <Image
             src="/images/team/team.webp"
-            alt="Das STADS-Team"
+            alt="The STADS team, Mannheim"
             width={4266}
             height={3197}
             quality={95}

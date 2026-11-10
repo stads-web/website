@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { readContent } from "@/lib/content";
 import type { CompanyContactData } from "@/lib/types";
+import { confirmationMail } from "./confirmation";
 
 export const runtime = "nodejs";
 
@@ -197,6 +198,30 @@ export async function POST(request: Request) {
     if (process.env.RESEND_API_KEY) {
       const results = await Promise.all(recipients.map((to) => viaResend(to).catch(() => false)));
       ok = ok || results.some(Boolean);
+      // One fixed-text confirmation to the submitter, only after a Resend delivery.
+      // Never contains user input and never affects the response.
+      if (results.some(Boolean)) {
+        try {
+          const logo = `${(process.env.SITE_URL ?? new URL(request.url).origin).replace(/\/+$/, "")}/brand/stads-mark-mail.png`;
+          const mail = confirmationMail(logo);
+          const res = await fetch("https://api.resend.com/emails", {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              from: process.env.CONTACT_FROM ?? "STADS Website <onboarding@resend.dev>",
+              to: [email],
+              reply_to: recipients[0],
+              ...mail,
+            }),
+          });
+          if (!res.ok) console.error("[contact] Confirmation:", res.status, await res.text().catch(() => ""));
+        } catch (err) {
+          console.error("[contact] Confirmation:", "request failed", String(err));
+        }
+      }
     }
     // The keyless relay only runs when nothing else is configured or worked.
     if (!ok) {

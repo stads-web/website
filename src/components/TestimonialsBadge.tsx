@@ -461,6 +461,7 @@ export default function TestimonialsBadge({
         <Reveal delay={0.2} className="mt-20 sm:mt-24">
           <div
             ref={rootRef}
+            className="group/deck"
             role="region"
             aria-roledescription="carousel"
             aria-label="Testimonials"
@@ -488,7 +489,7 @@ export default function TestimonialsBadge({
                       d === -1 ? "right-full justify-end pr-6" : "left-full justify-start pl-6"
                     }`}
                   >
-                    <span className="flex h-11 w-11 items-center justify-center rounded-full border border-brand-200 bg-white/80 text-brand-800 opacity-0 shadow-card transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/side:opacity-100 group-active/side:scale-95">
+                    <span className="flex h-11 w-11 items-center justify-center rounded-full border border-brand-200 bg-white/80 text-brand-800 opacity-0 shadow-card transition-[opacity,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none group-hover/deck:opacity-100 group-focus-within/deck:opacity-100 group-active/side:scale-95">
                       {d === -1 ? <CaretLeft size={18} weight="bold" /> : <CaretRight size={18} weight="bold" />}
                     </span>
                   </div>

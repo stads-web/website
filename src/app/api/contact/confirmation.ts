@@ -39,7 +39,7 @@ const SIGNATURE_HTML = `<p style="font-size: 18px; color: rgb(0, 41, 117);"><fon
           <tbody>
             <tr height="25" style="vertical-align: middle">
               <td width="30" style="vertical-align: middle; padding-left: 10px; padding-right: 10px;"><img src="https://lh3.googleusercontent.com/d/107VBo0PnQzciE75nkkCsky4TwGqYKQ_Z" alt="E-Mail" width="13" style="display: block" /></td>
-              <td><a href="mailto:anfragen@stads.de" style="text-decoration: none; color: rgb(0, 41, 117); font-size: 12px;">anfragen&commat;stads.de</a></td>
+              <td><a href="mailto:anfragen@stads.de" style="text-decoration: none; color: rgb(0, 41, 117); font-size: 12px;">anfragen&#64;stads.de</a></td>
             </tr>
             <tr height="25" style="vertical-align: middle">
               <td width="30" style="vertical-align: middle; padding-left: 10px; padding-right: 10px;"><img src="https://lh3.googleusercontent.com/d/1j3DOa0goGqjPHwTCWccL6I9E5pJNNtx6" alt="Website" width="13" style="display: block" /></td>

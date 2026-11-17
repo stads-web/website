@@ -46,6 +46,12 @@ const nextConfig = {
           ...(indexable ? [] : [{ key: "X-Robots-Tag", value: "noindex, nofollow" }]),
         ],
       },
+      // Link-preview image is a PNG, not a page: keep it out of the search index.
+      // Not blocked in robots.txt, so link previews can still fetch it.
+      {
+        source: "/opengraph-image",
+        headers: [{ key: "X-Robots-Tag", value: "noindex" }],
+      },
     ];
   },
 };
